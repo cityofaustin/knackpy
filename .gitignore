@@ -1,0 +1,7 @@
+.env
+*.pyc
+.DS_Store
+__pycache__
+*.zip
+*.log
+test_secrets.py
