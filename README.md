@@ -32,19 +32,19 @@ from knackpy import Knack
 )
 
 >>> kn.data
-[{'STORE_ID': 30424, 'INSPECTION_DATE': 1479448800000, 'KNACK_ID': '58598262bcb3437b51194040'},...]
+[{'store_id': 30424, 'inspection_date': 1479448800000, 'id': '58598262bcb3437b51194040'},...]
 
 >>> kn.data_raw
 ['field_1': 30424, 'field_1_raw': 30424, 'field_2': '11/18/2016',...]
 
 >>> kn.fields
-{'field_1_raw': {'label': 'STORE_ID', 'key': 'field_1,required': False, 'type': 'auto_increment'},...}
+{'field_1': {'label': 'store_id', 'key': 'field_1,required': False, 'type': 'auto_increment'},...}
 
->>> kn.field_map
-{'STORE_ID': 'field_1', 'INSPECTION_DATE': 'field_2', 'STORE_STATUS': 'field_3',...}
+>>> kn.fieldnames
+{'store_id', 'inspection_date', 'store_status',...}
 
 >>>kn.to_csv('data.csv')
-"STORE_ID","INSPECTION_DATE","STORE_STATUS"
+"store_id","inspection_date","store_status"
 "30424","11-18-2016","OPEN"
 "30200","10-01-2013","CLOSED"
 ...
