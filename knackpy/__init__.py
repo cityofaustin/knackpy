@@ -10,7 +10,7 @@ import arrow
 import requests
 
 class Knack(object):
-        
+
     def __init__(
             self, obj=None, scene=None, view=None, field_obj=None, filters=None, app_id=None,
             api_key=None, timeout=10, include_ids=True, id_fieldname='id',
@@ -125,7 +125,6 @@ class Knack(object):
                 '''
             )
           
-        #  get data from view or object
         self.endpoint = self.get_endpoint()
         self.data_raw = self.get_data(self.endpoint, 'records', self.filters)
         
@@ -133,27 +132,19 @@ class Knack(object):
             logging.warning('No data found at {}'.format(self.endpoint))
 
         if self.view and self.scene and self.field_obj and self.api_key:
-            #  get field metadata for views with field objects and api key
             self.get_fields(self.field_obj)
-            #  create fieldmap from metadata
-            self.process_fields()
+            self.process_fields()  #  assign self.fields and self.fieldnames
+        
+        elif self.view and self.scene and not self.api_key:
+            self.extract_fields()  #  assign self.fieldnames
+            self.data = self.data_raw
 
         elif self.obj:
-            #  get field metadata for object
             self.get_fields([self.obj])
-            #  create fieldmap from metadata
-            self.process_fields()
-
-        elif self.view and self.scene:
-            #  extract knack fieldnames from data
-            #  if api_key and/or field_obj unavailable
-            self.extract_fields()
+            self.process_fields()  #  assign self.fields and self.fieldnames
 
         if self.data_raw and self.fields:
-            #  parse data and send to self.data_parsed
-            self.parse_data()
-        else:
-            self.data = self.data_raw
+            self.data = self.parse_data()
 
 
     def get_data(self, endpoint, record_type, filters=None):
@@ -186,7 +177,7 @@ class Knack(object):
         }
         
         if not self.api_key:
-            #  use 'knack' as api key for public views
+            #  'knack' must be used as api key for public views
             headers['x-knack-rest-api-key'] = 'knack'
 
         current_page = 1
@@ -536,80 +527,3 @@ def insert_record(record_dict, knack_object, app_id, api_key, timeout=10):
     )
 
     return req.json()
-
-
-
-
-if __name__=='__main__':
-
-    from test_secrets import app_id, api_key
-
-    apps = [
-        {   
-            #  view-based request with api_key
-            'scene' : 'scene_73',
-            'view' : 'view_197',
-            'field_obj' : ['object_12', 'object_11'],
-            'app_id' : app_id,
-            'api_key' : api_key,
-            'page_limit' : 1,
-            'rows_per_page' : 10
-        },
-        {   
-            #  view-based request without api_key
-            'scene' : 'scene_467',
-            'view' : 'view_1329',
-            'field_obj' : ['object_31'],
-            'app_id' : app_id,
-            'page_limit' : 1,
-            'rows_per_page' : 10
-        },
-        {   
-            #  object-based request
-            'obj' : 'object_12',
-            'app_id' : app_id,
-            'api_key' : api_key,
-            'page_limit' : 1,
-            'rows_per_page' : 10
-        }
-
-    ]
-
-    app = apps[0]
-    #  view-based request with api_key
-
-    kn = Knack(
-        scene=app['scene'],
-        view=app['view'],
-        field_obj=app['field_obj'],
-        app_id=app['app_id'],
-        api_key=app['api_key'],
-        page_limit=1,
-        rows_per_page=10
-    )
-
-    kn.to_csv('app0.csv')
-
-    app = apps[2]
-    #  view-based request with api_key
-    kn2 = Knack(
-        obj=app['obj'],
-        app_id=app['app_id'],
-        api_key=app['api_key'],
-        page_limit=1,
-        rows_per_page=10
-    )
-
-    kn2.to_csv('app1.csv')
-
-    if not kn.data:
-        raise Exception("No data rerieved for view-based request with api_key")
-
-    if len(kn.data) > 10:
-        raise Exception("More records retrieved than expected")
-
-    if not kn.fields:
-        raise Exception("No fields rerieved view-based request with api_key")
-
-    if not kn.fieldnames:
-        raise Exception("No fieldnames created for view-based request with api_key")
