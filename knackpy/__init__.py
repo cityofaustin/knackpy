@@ -462,6 +462,7 @@ class Knack(object):
         None
         '''
         with open(filename, 'w', newline='\n') as fout:
+            self.fieldnames.sort()
 
             writer = csv.DictWriter(fout, fieldnames=self.fieldnames, delimiter=delimiter)
             writer.writeheader()
