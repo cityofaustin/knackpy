@@ -42,7 +42,7 @@ class TestClass:
         #       delete filename
         return
 
-    def test_page_row_limit(self):
+    def test_scene_view_with_api_key(self):
         from knackpy import Knack
 
         app = self.apps['scene_view_with_api_key']
