@@ -1,5 +1,7 @@
 #  todo:
-#  test csv, page limit, no app key
+#  tests
+#  no support for time, date ranges, timer, image, or files
+
 import csv
 import json
 import logging
@@ -7,13 +9,11 @@ import logging
 import arrow
 import requests
 
-import pdb
-
 class Knack(object):
         
     def __init__(
             self, obj=None, scene=None, view=None, field_obj=None, filters=None, app_id=None,
-            api_key=None, timeout=10, include_ids=True, id_outfield='id',
+            api_key=None, timeout=10, include_ids=True, id_fieldname='id',
             localize=True, tzinfo='US/Central', raw_connections=False,
             rows_per_page=1000, page_limit=10
         ):
@@ -47,7 +47,7 @@ class Knack(object):
             field metadata for view-based requests.
         include_ids : bool (optional | default : True)
             When true, Knack record IDs will be included in the parsed data.
-        id_outfield : string (optional | default : 'id')
+        id_fieldname : string (optional | default : 'id')
             The name that should be assigned to the the Knack record ID field.
             Make sure this field name does not match any existing
             field names in your application.
@@ -81,13 +81,13 @@ class Knack(object):
         self.api_key = api_key
         self.timeout = float(timeout)
         self.include_ids = include_ids
-        self.id_outfield = id_outfield
+        self.id_fieldname = id_fieldname
         self.tzinfo = tzinfo
         self.raw_connections = raw_connections
         self.rows_per_page = rows_per_page
         self.page_limit = page_limit
         self.fields = None
-        self.field_map = None
+        self.fieldnames = None
         self.endpoint = None
         self.data_raw = None
         self.data = None
@@ -136,20 +136,20 @@ class Knack(object):
             #  get field metadata for views with field objects and api key
             self.get_fields(self.field_obj)
             #  create fieldmap from metadata
-            self.create_field_map()
+            self.process_fields()
 
         elif self.obj:
-            #  get field mdetadata for object
+            #  get field metadata for object
             self.get_fields([self.obj])
             #  create fieldmap from metadata
-            self.create_field_map()
+            self.process_fields()
 
         elif self.view and self.scene:
             #  extract knack fieldnames from data
             #  if api_key and/or field_obj unavailable
             self.extract_fields()
 
-        if self.data_raw and self.field_map:
+        if self.data_raw and self.fields:
             #  parse data and send to self.data_parsed
             self.parse_data()
         else:
@@ -229,11 +229,11 @@ class Knack(object):
         '''
         Get field data from Knack objects
         
-        Returns self.fields : A dictionary of field metadata where each entry
+        Returns self.fields : A list of field metadata where each entry
+        is a field
 
         '''
         fields = []
-        raw_fields = {}
 
         for obj in objects:  
             print('Get field data for {}'.format(obj))
@@ -244,112 +244,199 @@ class Knack(object):
 
             fields = fields + field_data
 
-        for field in fields:
-            if field['key'] + '_raw' not in raw_fields:
-                '''
-                not all Knack fields have a 'raw' object
-                so create one here
-                '''
-                raw_fields[field['key'] + '_raw'] = field  # 
-        
-        self.fields = raw_fields
+        self.fields = fields
         return self.fields
     
     def extract_fields(self):
         '''
         Extract field names from list of knack records.
-        Assign list of fieldnames to self.fields.
+        Useful if field metadata is unavilable.
         '''
         keys = [key for row in self.data_raw for key in row]
-        self.fields = list( set(keys) )
-        return self.fields
+        self.fieldnames = list( set(keys) )
+        return self.fieldnames
 
-    def create_field_map(self): 
-        field_map = {}
-        
-        for field in self.fields:
-            new_field = field.replace('_raw', '')
-            field_map[self.fields[field]['label']] = new_field
+    def process_fields(self): 
 
         if self.include_ids:
-            #  update field map with map to record id field
-            field_map[self.id_outfield] = 'id'
+            #  create an 'id' field
+            self.fields.append({ 
+                'key' : 'id',
+                'label' : self.id_fieldname,
+                'type' : 'id'
+            })
 
-        self.field_map = field_map
-        return self.field_map
+        field_dict = {}
+        for field in self.fields:
+            field_dict[field['key']] = field
+
+        self.fields = field_dict
+        
+        return self.fields
 
     def parse_data(self):
-        print('parse knack data')
         '''
-        Parse Knack record objects and replace "raw" field names with field labels
+        Replace Knack field names with field labels and extract
+        subfields.
 
-        returns self.data (list of record dictionaries)
+        Returns self.data (list of record dictionaries)
         '''
+        
         parsed_data = []
+        
+        #  unique fieldnames that *actually appear in the data* are collected here
+        fieldnames = []  
+
         count = 0
 
         for record in self.data_raw:
             count += 1
             new_record = {}  #  parsed record goes here
             
-            for key in record:  
+            for field in self.fields.keys():
 
-                try:
-                    record[key] = record[key].strip()
-                except AttributeError:
-                    pass
-
-                if key in self.fields:
-                    field_label = self.fields[key]['label']
-                    field_type = self.fields[key]['type']
-
+                if field in record:
+                    field_label = self.fields[field]['label']
+                
                 else:
                     continue
 
-                if field_type == 'address':
-                    #  convert location field to lat/lon  
-                    new_record['LATITUDE'] = record[key]['latitude']
-                    new_record['LONGITUDE'] = record[key]['longitude']
+                if '{}_raw'.format(field) in record:
+                    '''
+                    Check if 'raw' field exists. If raw field exists,
+                    data will be extracted from raw field based on field type.
+                    Raw fields are not available when fields are empty or
+                    calculated (and possibly some other cases)
+                    '''
+                    field_type = self.fields[field]['type']
+                    field = '{}_raw'.format(field)
 
-                elif field_type in ['date', 'date_time']:
-                    if record[key]:
-                        d = int( record[key]['unix_timestamp'] )  #  this "unix" timestamp has milliseconds
+                    if field_type == 'address':
+                        #  extract subfields
+                        for subfield in [
+                            'latitude',
+                            'longitude',
+                            'formatted_value',
+                            'street',
+                            'city',
+                            'state',
+                            'country',
+                            'zip'
+                        ]:
+                            if subfield in record[field]:
+                                #  generate label for subfield
+                                subfield_label = '{}_{}'.format(field_label, subfield)
+                                #  assign subfield value if field exists
+                                new_record[subfield_label] = record[field][subfield]
+                                fieldnames.append(subfield_label)
 
-                        if self.tzinfo:
-                            #  convert from mills and replace timezone
-                            d = arrow.get(d / 1000).replace(tzinfo=self.tzinfo)
-                            #  convert back to mills
-                            d = d.timestamp * 1000
+                    elif field_type =='name':
+                        #  extract subfields
+                        for subfield in [
+                            'title',
+                            'first',
+                            'middle',
+                            'last'
+                        ]:
+                            if subfield in record[field]:
+                                #  generate label for subfield
+                                subfield_label = '{}_{}'.format(field_label, subfield)
+                                #  assign subfield value if field exists
+                                new_record[subfield_label] = record[field][subfield]
+                                fieldnames.append(subfield_label)
+
+                    elif field_type =='email':
+                        #  extract subfields
+                        for subfield in [
+                            'email',
+                            'label',
+                        ]:
+                            if subfield in record[field]:
+                                #  generate label for subfield
+                                subfield_label = '{}_{}'.format(field_label, subfield)
+                                #  assign subfield value if field exists
+                                new_record[subfield_label] = record[field][subfield]
+                                fieldnames.append(subfield_label)
+
+                    elif field_type =='multiple_choice':
+                        fieldnames.append(field_label)
+
+                        field_val = stringify_ambiguous_field(record[field])
+                        new_record[field_label] = field_val
+
+                    elif field_type =='link':
+                        #  extract subfields
+                        for subfield in [
+                            'url',
+                            'label',
+                        ]:
+
+                            if subfield in record[field]:
+                                #  generate label for subfield
+                                subfield_label = '{}_{}'.format(field_label, subfield)
+                                #  assign subfield value if field exists
+                                new_record[subfield_label] = record[field][subfield]
+                                fieldnames.append(subfield_label)
+
+                    elif field_type in ['date', 'date_time']:
+                        fieldnames.append(field_label)
+                        #  get unix timestamps from datetime fields
+                        #  ignore other subfields
+                        if record[field]:
+                            #  this "unix" timestamp has milliseconds
+                            d = int( record[field]['unix_timestamp'] )
+
+                            if self.tzinfo:
+                                #  convert from mills and replace timezone
+                                d = arrow.get(d / 1000).replace(tzinfo=self.tzinfo)
+                                #  convert back to mills
+                                d = d.timestamp * 1000
+                        else:
+                            d = ''
+
+                        new_record[field_label] = d
+
+                    elif field_type == 'connection':
+                        fieldnames.append(field_label)
+
+                        if self.raw_connections:
+                            #  assign entire connection dict to field
+                            new_record[field_label] = record[field]
+                        
+                        elif record[field]:
+                            #  assign only connection identifier
+                            #  (aka display field) to label
+                            new_record[field_label] = record[field][0]['identifier']
+                        else:
+                            #  connection is empty
+                            new_record[field_label] = ''
+
                     else:
-                        d = ''
+                        fieldnames.append(field_label)
 
-                    new_record[field_label] = d
+                        #  handle raw fields whose value is an empty list
+                        try:
+                            length = len(record[field]) > 0
 
-                elif field_type == 'connection':
-                    if self.raw_connections:
-                        #  assign entire connection dict to field
-                        new_record[field_label] = record[key]
-                    
-                    elif record[key]:
-                        #  assign only connection identifier
-                        #  (aka display field) to label
-                        new_record[field_label] = record[key][0]['identifier']
-                    else:
-                        #  connection is empty
-                        new_record[field_label] = ''
+                        except TypeError:
+                            length = True
+
+                        if length:
+                            new_record[field_label] = record[field]
+                        else:
+                            new_record[field_label] = ''
 
                 else:
-                    new_record[field_label] = record[key]
-
-            if self.include_ids:
-                new_record[self.id_outfield] = record['id']
+                    #  raw not in record
+                    new_record[field_label] = record[field]
+                    fieldnames.append(field_label)
 
             parsed_data.append(new_record)
 
         self.data = parsed_data
-
+        self.fieldnames = list(set(fieldnames))
+        
         return self.data
-
 
     def get_endpoint(self):
         '''
@@ -365,6 +452,7 @@ class Knack(object):
         if self.obj:
             self.endpoint = 'https://api.knack.com/v1/objects/{}/records?rows_per_page={}'.format( self.obj, self.rows_per_page ) 
             return self.endpoint
+
 
     def to_csv(self, filename, delimiter=","):
         '''
@@ -383,18 +471,26 @@ class Knack(object):
         None
         '''
         with open(filename, 'w', newline='\n') as fout:
-            
-            if self.field_map:
-                fieldnames = self.field_map.keys()
-            else:
-                fieldnames = self.fields
 
-            writer = csv.DictWriter(fout, fieldnames=fieldnames, delimiter=delimiter)
+            writer = csv.DictWriter(fout, fieldnames=self.fieldnames, delimiter=delimiter)
             writer.writeheader()
             for row in self.data:
                 writer.writerow(row)
 
         return None
+
+
+#  helper functions
+def stringify_ambiguous_field( *field_values ):
+        #  return a comma-separated string of field values
+        #  or just field value if only one value is present
+        #  useful for fieldtypes that may be a string or an array
+        #  e.g., multiple selection multiple choice
+        #  https://stackoverflow.com/questions/836387/how-can-i-tell-if-a-python-variable-is-a-string-or-a-list
+        if len(field_values) > 1:
+            return ','.join(str(f) for f in field_values)
+        else:
+            return field_values[0]
 
 def update_record(record_dict, knack_object, id_key, app_id, api_key, timeout=10):
     print('update knack record')
@@ -442,3 +538,78 @@ def insert_record(record_dict, knack_object, app_id, api_key, timeout=10):
     return req.json()
 
 
+
+
+if __name__=='__main__':
+
+    from test_secrets import app_id, api_key
+
+    apps = [
+        {   
+            #  view-based request with api_key
+            'scene' : 'scene_73',
+            'view' : 'view_197',
+            'field_obj' : ['object_12', 'object_11'],
+            'app_id' : app_id,
+            'api_key' : api_key,
+            'page_limit' : 1,
+            'rows_per_page' : 10
+        },
+        {   
+            #  view-based request without api_key
+            'scene' : 'scene_467',
+            'view' : 'view_1329',
+            'field_obj' : ['object_31'],
+            'app_id' : app_id,
+            'page_limit' : 1,
+            'rows_per_page' : 10
+        },
+        {   
+            #  object-based request
+            'obj' : 'object_12',
+            'app_id' : app_id,
+            'api_key' : api_key,
+            'page_limit' : 1,
+            'rows_per_page' : 10
+        }
+
+    ]
+
+    app = apps[0]
+    #  view-based request with api_key
+
+    kn = Knack(
+        scene=app['scene'],
+        view=app['view'],
+        field_obj=app['field_obj'],
+        app_id=app['app_id'],
+        api_key=app['api_key'],
+        page_limit=1,
+        rows_per_page=10
+    )
+
+    kn.to_csv('app0.csv')
+
+    app = apps[2]
+    #  view-based request with api_key
+    kn2 = Knack(
+        obj=app['obj'],
+        app_id=app['app_id'],
+        api_key=app['api_key'],
+        page_limit=1,
+        rows_per_page=10
+    )
+
+    kn2.to_csv('app1.csv')
+
+    if not kn.data:
+        raise Exception("No data rerieved for view-based request with api_key")
+
+    if len(kn.data) > 10:
+        raise Exception("More records retrieved than expected")
+
+    if not kn.fields:
+        raise Exception("No fields rerieved view-based request with api_key")
+
+    if not kn.fieldnames:
+        raise Exception("No fieldnames created for view-based request with api_key")

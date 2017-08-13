@@ -12,5 +12,7 @@ setup(
     install_requires=[
       'arrow',
       'requests'
-    ]
+    ],
+    test_suite='nose.collector',
+    tests_require=['nose'],
 )
