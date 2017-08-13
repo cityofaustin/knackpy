@@ -5,3 +5,4 @@ __pycache__
 *.zip
 *.log
 test_secrets.py
+knackpy.egg-info
