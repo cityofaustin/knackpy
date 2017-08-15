@@ -32,7 +32,7 @@ from knackpy import Knack
     )
 
 >>> kn.data_raw
-['field_1': 30424, 'field_1_raw': 30424, 'field_2': '11/18/2016',...]
+[{'field_1': 30424, 'field_1_raw': 30424, 'field_2': '11/18/2016'},...]
 
 ```
 
