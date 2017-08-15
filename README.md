@@ -81,7 +81,7 @@ Field metadata is available when working with objects or when reference objects 
 Write an instance to csv.
 
 ```python
->>>kn.to_csv('data.csv')
+>>> kn.to_csv('data.csv')
 "store_id","inspection_date","store_status"
 "30424","11-18-2016","OPEN"
 "30200","10-01-2013","CLOSED"
