@@ -69,10 +69,10 @@ Field metadata is available when working with objects or when reference objects 
 
 ```python
 >>> kn.fields
-{'field_1': {'label': 'store_id', 'key': 'field_1,required': False, 'type': 'auto_increment'},...}
+{'field_1': {' ': 'store_id', 'key': 'field_1,required': False, 'type': 'auto_increment'},...}
 
 >>> kn.fieldnames
-{'store_id', 'inspection_date', 'store_status',...}
+['store_id', 'inspection_date', 'store_status',...]
 
 >>> kn.field_map
 {'store_id' : 'field_1', 'store_status' : 'field_2',...}
