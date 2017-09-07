@@ -5,6 +5,7 @@
 import csv
 import json
 import logging
+import pdb
 
 import arrow
 import requests
@@ -388,10 +389,11 @@ class Knack(object):
                             d = int( record[field]['unix_timestamp'] )
 
                             if self.tzinfo:
-                                #  convert from mills and replace timezone
-                                d = arrow.get(d / 1000).replace(tzinfo=self.tzinfo)
+                                d = arrow.get(0).shift(seconds=d/1000).replace(tzinfo=self.tzinfo)
+
                                 #  convert back to mills
                                 d = d.timestamp * 1000
+                                
                         else:
                             d = ''
 
