@@ -1,11 +1,9 @@
 #  todo:
-#  tests
 #  no support for time, date ranges, timer, image, or files
 
 import csv
 import json
 import logging
-import pdb
 
 import arrow
 import requests
@@ -361,6 +359,7 @@ class Knack(object):
                                 fieldnames.append(subfield_label)
 
                     elif field_type =='multiple_choice':
+                            
                         fieldnames.append(field_label)
 
                         field_val = stringify_ambiguous_field(record[field])
@@ -381,6 +380,7 @@ class Knack(object):
                                 fieldnames.append(subfield_label)
 
                     elif field_type in ['date', 'date_time']:
+                        
                         fieldnames.append(field_label)
                         #  get unix timestamps from datetime fields
                         #  ignore other subfields
@@ -483,7 +483,6 @@ class Knack(object):
 
         return None
 
-
 #  helper functions
 def stringify_ambiguous_field( *field_values ):
         #  return a comma-separated string of field values
@@ -493,8 +492,10 @@ def stringify_ambiguous_field( *field_values ):
         #  https://stackoverflow.com/questions/836387/how-can-i-tell-if-a-python-variable-is-a-string-or-a-list
         if len(field_values) > 1:
             return ','.join(str(f) for f in field_values)
-        else:
+        elif len(field_values) == 1 and field_values[0]:
             return field_values[0]
+        else:
+            return ''
 
 def update_record(record_dict, knack_object, id_key, app_id, api_key, timeout=10):
     print('update knack record')
