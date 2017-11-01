@@ -1,7 +1,8 @@
+app_id='your_api_key'
+api_key='your_app_id'
+        
 class TestClass:
     def setUp(self):
-        from test_secrets import app_id, api_key
-
         self.apps = {
             'scene_view_with_api_key' :
                 {   

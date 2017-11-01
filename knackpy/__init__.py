@@ -1,6 +1,3 @@
-#  todo:
-#  no support for time, date ranges, timer, image, or files
-
 import csv
 import json
 import logging
@@ -12,7 +9,7 @@ class Knack(object):
 
     def __init__(
             self, obj=None, scene=None, view=None, ref_obj=None, filters=None, app_id=None,
-            api_key=None, timeout=10, include_ids=True, id_fieldname='id',
+            api_key=None, timeout=10, max_attempts=5, include_ids=True, id_fieldname='id',
             localize=True, tzinfo='US/Central', raw_connections=False,
             rows_per_page=1000, page_limit=10
         ):
@@ -33,6 +30,9 @@ class Knack(object):
             See: https://www.knack.com/developer-documentation/#filters
         timeout : numeric (optional | default : 10)
             Number of seconds before http request timeout
+        max_attempts : number (optional | default : 5)
+            The maximum number times knackpy will attempt to send a request,
+            in the event of timeout.
         obj : string (required if scene + view are not specified)
             A Knack object idenfiter in format "object_xx". If specified, the
             instance will retrieve data from an object endpoint.
@@ -79,6 +79,7 @@ class Knack(object):
         self.app_id = app_id
         self.api_key = api_key
         self.timeout = float(timeout)
+        self.max_attempts = max_attempts
         self.include_ids = include_ids
         self.id_fieldname = id_fieldname
         self.tzinfo = tzinfo
@@ -192,9 +193,28 @@ class Knack(object):
             if filters:
                 params['filters'] = json.dumps(filters)
 
-            req = requests.get(
-                endpoint, headers=headers, params=params, timeout=self.timeout
-            )
+            #  logic to retry request on timeout
+            attempts = 0
+            while attempts < self.max_attempts:
+
+                attempts += 1
+
+                try:
+                    req = requests.get(
+                        endpoint, 
+                        headers=headers,
+                        params=params,
+                        timeout=self.timeout                    )
+
+                    break
+
+                except requests.exceptions.Timeout as e:
+                    #  handle error unless max tries
+                    if attempts < self.max_attempts:
+                        logging.info("Request timeout. Trying again...")
+                        continue
+                    else:
+                        raise e
 
             if req.status_code == 200:
                 data = data + req.json()[record_type]
@@ -497,9 +517,9 @@ def stringify_ambiguous_field(field_data):
         else:
             return ''
 
-def update_record(record_dict, knack_object, id_key, app_id, api_key, timeout=10):
+def update_record(record_dict, knack_object, id_key, app_id, api_key, timeout=10, max_attempts=5):
     print('update knack record')
-
+    
     knack_id = record_dict[id_key]  #  extract knack ID and remove from update object
 
     del record_dict[id_key]
@@ -511,18 +531,34 @@ def update_record(record_dict, knack_object, id_key, app_id, api_key, timeout=10
         'x-knack-rest-api-key': api_key,
         'Content-type': 'application/json'
     }
-    
-    req = requests.put(
-            update_endpoint, 
-            headers=headers,
-            json=record_dict,
-            timeout=timeout
-    )
+
+    attempts = 0
+    while attempts < max_attempts:
+
+        attempts += 1
+
+        try:
+            req = requests.put(
+                update_endpoint, 
+                headers=headers,
+                json=record_dict,
+                timeout=timeout
+            )
+
+            break
+
+        except requests.exceptions.Timeout as e:
+            #  handle error unless max tries
+            if attempts < max_attempts:
+                logging.info("Request timeout. Trying again...")
+                continue
+            else:
+                raise e
 
     return req.json()
-    
 
-def insert_record(record_dict, knack_object, app_id, api_key, timeout=10):
+ 
+def insert_record(record_dict, knack_object, app_id, api_key, timeout=10, max_attempts=5):
     print('update knack record')
     
     insert_endpoint = 'https://api.knack.com/v1/objects/{}/records'.format(knack_object)
@@ -532,12 +568,28 @@ def insert_record(record_dict, knack_object, app_id, api_key, timeout=10):
         'x-knack-rest-api-key': api_key,
         'Content-type': 'application/json'
     }
+    
+    attempts = 0
+    while attempts < max_attempts:
 
-    req = requests.post(
-        insert_endpoint,
-        headers=headers,
-        json=record_dict,
-        timeout=timeout
-    )
+        attempts += 1
+
+        try:
+            req = requests.post(
+                insert_endpoint,
+                headers=headers,
+                json=record_dict,
+                timeout=timeout
+            )
+
+            break
+
+        except requests.exceptions.Timeout as e:
+            #  handle error unless max tries
+            if attempts < max_attempts:
+                logging.info("Request timeout. Trying again...")
+                continue
+            else:
+                raise e
 
     return req.json()
