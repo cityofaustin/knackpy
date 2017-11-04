@@ -15,7 +15,7 @@ Knackpy requires [Arrow](http://arrow.readthedocs.io/en/latest/) and [Requests](
 - Object and view-based requests
 - Filters
 - Parsing of fieldnames and field labels
-- Datetime localization
+- Create and update records
 - CSV output
 
 ## Quick Start
@@ -42,13 +42,12 @@ Provide a list of the view's reference objects to return humanized field names.
       scene='scene_34',
       view='view_10',
       ref_obj=['object_1', 'object_2'],
-      app_id='abc123',
+      app_id='myappid',
       api_key='topsecretapikey'
     )
  
 >>> kn.data
 [{'store_id': 30424, 'inspection_date': 1479448800000, 'id': '58598262bcb3437b51194040'},...]
-
 ```
 
 Or retrieve data directly from an object.
@@ -113,6 +112,36 @@ Write an instance to csv.
 "30424","11-18-2016","OPEN"
 "30200","10-01-2013","CLOSED"
 ...
+```
+
+Create a new record.
+
+```python
+>>> record = {'field_1': 30424}
+
+>>> response = knackpy.insert_record(
+      record,
+      'object_12',
+      'myappid',
+      'topsecretapikey'
+    )
+
+{ 'id':'6a204bd89f3c8348afd5c77c717a097a', field_1': 30424, ...}
+```
+
+Update a record.
+
+```python
+>>> record = {'id':'6a204bd89f3c8348afd5c77c717a097a','field_1': 2049}
+
+>>> response = knackpy.update_record(
+      record,
+      'object_12',
+      'myappid',
+      'topsecretapikey',
+    )
+
+{ 'id':'6a204bd89f3c8348afd5c77c717a097a', field_1': 2049, ...}
 ```
 
 ## License
