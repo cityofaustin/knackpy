@@ -517,7 +517,7 @@ def stringify_ambiguous_field(field_data):
         else:
             return ''
 
-def update_record(record_dict, knack_object, id_key, app_id, api_key, timeout=10, max_attempts=5):
+def update_record(record_dict, knack_object, app_id, api_key, id_key='id', timeout=10, max_attempts=5):
     print('update knack record')
     
     knack_id = record_dict[id_key]  #  extract knack ID and remove from update object
