@@ -5,16 +5,30 @@ import pdb
 import arrow
 import requests
 
+
 class Knack(object):
 
     def __init__(
-            self, obj=None, scene=None, view=None, ref_obj=None, filters=None, app_id=None,
-            api_key=None, timeout=10, max_attempts=5, include_ids=True, id_fieldname='id',
-            localize=True, tzinfo='US/Central', raw_connections=False,
-            rows_per_page=1000, page_limit=10
+            self,
+            api_key=None,
+            app_id=None,
+            filters=None,
+            include_ids=True,
+            id_key='id',
+            localize=True,
+            max_attempts=5,
+            obj=None,
+            page_limit=10,
+            raw_connections=False,
+            rows_per_page=1000,
+            ref_obj=None,
+            scene=None,
+            timeout=10,
+            tzinfo='US/Central',
+            view=None,
         ):
         '''  
-        Class to interact with Knack application via the API as
+        Class to interact with Knack application records via the API as
         documented at https://www.knack.com/developer-documentation/
         
         Parameters
@@ -46,7 +60,7 @@ class Knack(object):
             field metadata for view-based requests.
         include_ids : bool (optional | default : True)
             When true, Knack record IDs will be included in the parsed data.
-        id_fieldname : string (optional | default : 'id')
+        id_key : string (optional | default : 'id')
             The name that should be assigned to the the Knack record ID field.
             Make sure this field name does not match any existing
             field names in your application.
@@ -81,7 +95,7 @@ class Knack(object):
         self.timeout = float(timeout)
         self.max_attempts = max_attempts
         self.include_ids = include_ids
-        self.id_fieldname = id_fieldname
+        self.id_key = id_key
         self.tzinfo = tzinfo
         self.raw_connections = raw_connections
         self.rows_per_page = rows_per_page
@@ -96,24 +110,17 @@ class Knack(object):
         if not app_id:
             raise Exception('app_id is required.')
 
-        if not api_key:
-            logging.warning(
-                '''
-                API key is required to access private views and objects.
-                '''
-            )
-
         if not (self.view and self.scene) and not self.obj:
             raise Exception(
                 '''
-                Knack instance must specify an object or a view/scene
+                Records instance must specify an object or a view/scene
                 '''
             )
         
         if self.obj and (self.view or self.scene):
             raise Exception(
                 ''''
-                Knack instance must specify an object or view/scene,
+                Records instance must specify an object or view/scene,
                 but not both.
                 '''
             )
@@ -275,7 +282,7 @@ class Knack(object):
             #  create an 'id' field
             self.fields.append({ 
                 'key' : 'id',
-                'label' : self.id_fieldname,
+                'label' : self.id_key,
                 'type' : 'id'
             })
 
@@ -382,7 +389,7 @@ class Knack(object):
                             
                         fieldnames.append(field_label)
 
-                        field_val = stringify_ambiguous_field(record[field])
+                        field_val = _stringify_ambiguous_field(record[field])
                         new_record[field_label] = field_val
 
                     elif field_type =='link':
@@ -503,28 +510,90 @@ class Knack(object):
 
         return None
 
-#  helper functions
-def stringify_ambiguous_field(field_data):
-        #  return a comma-separated string of field values
-        #  or just field value if only one value is present
-        #  useful for fieldtypes that may be a string or an array
-        if type(field_data) is not list:
-            return field_data
-        elif len(field_data) > 1:
-            return ','.join(str(f) for f in field_data)
-        elif len(field_data) == 1:
-            return field_data[0]
+
+class App(object):
+
+    def __init__(
+        self,
+        app_id=None,
+        timeout=10,
+    ):
+        '''
+        Class to retrieve Knack application metadata
+
+        Parameters
+        ----------
+        app_id : string (required)
+            Knack application ID string
+        timeout : numeric (optional | default : 10)
+            Number of seconds before http request timeout
+        '''
+        self.api_key = api_key
+        self.timeout= float(10)
+
+        if not app_id:
+            raise Exception('app_id is required.')
+
+        self.app = self.get_app_data()
+
+    def get_app_data(self):
+        endpoint = 'https://loader.knack.com/v1/applications/{}'.format(self.app_id)
+        res = requests.get(endpoint, timeout=self.timeout)
+        
+        if res.status_code == 200:
+            return res.json()['application']
         else:
-            return ''
+            raise Exception(req.text)
 
-def update_record(record_dict, knack_object, app_id, api_key, id_key='id', timeout=10, max_attempts=5):
-    print('update knack record')
+       
+#  helper functions
+def _stringify_ambiguous_field(field_data):
+    '''
+    Handle ambiguous Knack fields that may be a string or an array.
+    Return a comma-separated string of field values (for arrays)
+    or a field value string if only one value is present
+    '''
+    if type(field_data) is not list:
+        return field_data
+    elif len(field_data) > 1:
+        return ','.join(str(f) for f in field_data)
+    elif len(field_data) == 1:
+        return field_data[0]
+    else:
+        return ''
+
+
+def record(
+        data,
+        obj_key=None,
+        app_id=None,
+        api_key=None,
+        id_key='id',
+        method=None,
+        timeout=10,
+        max_attempts=5
+    ):
     
-    knack_id = record_dict[id_key]  #  extract knack ID and remove from update object
+    '''
+    Knack API request wrapper creating, updating, and deleting Knack records.
+    '''
+    endpoint = 'https://api.knack.com/v1/objects/{}/records'.format(obj_key)
+    
+    if method != 'create':
+        _id = data[id_key]
+        endpoint = '{}/{}'.format(endpoint, _id)
 
-    del record_dict[id_key]
+    if method == 'create':
+        method = 'POST'
+    
+    elif method == 'update':
+        method = 'PUT'
 
-    update_endpoint = 'https://api.knack.com/v1/objects/{}/records/{}'.format(knack_object, knack_id)
+    elif method == 'delete':
+        method = 'DELETE'
+
+    else:
+        raise Exception('Invalid method: {}'.format(method))
 
     headers = { 
         'x-knack-application-id': app_id,
@@ -532,64 +601,56 @@ def update_record(record_dict, knack_object, app_id, api_key, id_key='id', timeo
         'Content-type': 'application/json'
     }
 
+    return _record_request(
+        data,
+        endpoint,
+        headers,
+        method,
+        timeout=timeout,
+        max_attempts=max_attempts
+    )
+
+
+def _record_request(data, endpoint, headers, method, timeout=10, max_attempts=5):
+    '''
+    Build and send a Knack create/update/delete record request
+    '''
+    s = requests.Session()
+    
+    req = requests.Request(
+        method,
+        endpoint,
+        json=data,
+        headers=headers,
+    )
+
+    prepped = req.prepare()
+
     attempts = 0
+
     while attempts < max_attempts:
 
         attempts += 1
 
         try:
-            req = requests.put(
-                update_endpoint, 
-                headers=headers,
-                json=record_dict,
+
+            res = s.send(
+                prepped,
                 timeout=timeout
             )
-
+            
             break
 
         except requests.exceptions.Timeout as e:
-            #  handle error unless max tries
             if attempts < max_attempts:
-                logging.info("Request timeout. Trying again...")
+                logging.info("Request timeout.")
                 continue
             else:
                 raise e
 
-    return req.json()
+    if res.status_code == 200:
+        return res.json()
+    else:
+        raise Exception(req.text)
 
- 
-def insert_record(record_dict, knack_object, app_id, api_key, timeout=10, max_attempts=5):
-    print('update knack record')
-    
-    insert_endpoint = 'https://api.knack.com/v1/objects/{}/records'.format(knack_object)
-    
-    headers = {
-        'x-knack-application-id': app_id,
-        'x-knack-rest-api-key': api_key,
-        'Content-type': 'application/json'
-    }
-    
-    attempts = 0
-    while attempts < max_attempts:
 
-        attempts += 1
-
-        try:
-            req = requests.post(
-                insert_endpoint,
-                headers=headers,
-                json=record_dict,
-                timeout=timeout
-            )
-
-            break
-
-        except requests.exceptions.Timeout as e:
-            #  handle error unless max tries
-            if attempts < max_attempts:
-                logging.info("Request timeout. Trying again...")
-                continue
-            else:
-                raise e
-
-    return req.json()

@@ -11,7 +11,8 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3'
     ],
-    description='Python API wrapper for interacting with Knack applications.',
+    description='A Python API wrapper for interacting with Knack applications.',
+    long_description='A Python API wrapper for interacting with Knack applications.',
     install_requires=[
       'arrow',
       'requests'
@@ -23,5 +24,5 @@ setup(
     test_suite='nose.collector',
     tests_require=['nose'],
     url='http://github.com/cityofaustin/knack-py',
-    version='0.0.5',
+    version='0.0.9',
 )
