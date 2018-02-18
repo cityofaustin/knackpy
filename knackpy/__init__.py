@@ -510,43 +510,21 @@ class Knack(object):
 
         return None
 
-
-class App(object):
-
-    def __init__(
-        self,
-        app_id=None,
-        timeout=10,
-    ):
-        '''
-        Class to retrieve Knack application metadata
-
-        Parameters
-        ----------
-        app_id : string (required)
-            Knack application ID string
-        timeout : numeric (optional | default : 10)
-            Number of seconds before http request timeout
-        '''
-        self.api_key = api_key
-        self.timeout= float(10)
-
-        if not app_id:
-            raise Exception('app_id is required.')
-
-        self.app = self.get_app_data()
-
-    def get_app_data(self):
-        endpoint = 'https://loader.knack.com/v1/applications/{}'.format(self.app_id)
-        res = requests.get(endpoint, timeout=self.timeout)
-        
-        if res.status_code == 200:
-            return res.json()['application']
-        else:
-            raise Exception(req.text)
+#  helper functions
+def get_app_data(app_id, timeout=10):
+    '''
+    Get a Knack app configuration object
+    '''
+    endpoint = 'https://loader.knack.com/v1/applications/{}'.format(app_id)
+    res = requests.get(endpoint, timeout=timeout)
+    
+    if res.status_code == 200:
+        return res.json()['application']
+    else:
+        raise Exception(req.text)
 
        
-#  helper functions
+
 def _stringify_ambiguous_field(field_data):
     '''
     Handle ambiguous Knack fields that may be a string or an array.
