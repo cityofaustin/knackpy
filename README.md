@@ -23,7 +23,7 @@ Knackpy requires [Arrow](http://arrow.readthedocs.io/en/latest/) and [Requests](
 Get data from a Knack view.
 
 ```python
-from knackpy import Knack
+>>> from knackpy import Knack
 
 >>> kn = Knack(
       scene='scene_34',
@@ -117,13 +117,16 @@ Write an instance to csv.
 Create a new record.
 
 ```python
+>>> import knackpy
+
 >>> record = {'field_1': 30424}
 
->>> response = knackpy.insert_record(
+>>> response = knackpy.record(
       record,
-      'object_12',
-      'myappid',
-      'topsecretapikey'
+      obj_key='object_12',
+      apd_id='myappid',
+      api_ley='topsecretapikey',
+      method='create'
     )
 
 { 'id':'6a204bd89f3c8348afd5c77c717a097a', field_1': 30424, ...}
@@ -132,17 +135,30 @@ Create a new record.
 Update a record.
 
 ```python
+>>> import knackpy
+
 >>> record = {'id':'6a204bd89f3c8348afd5c77c717a097a','field_1': 2049}
 
->>> response = knackpy.update_record(
+>>> response = knackpy.record(
       record,
-      'object_12',
-      'myappid',
-      'topsecretapikey',
+      obj_key='object_12',
+      apd_id='myappid',
+      api_ley='topsecretapikey',
+      method='update'
     )
-
+    
 { 'id':'6a204bd89f3c8348afd5c77c717a097a', field_1': 2049, ...}
 ```
+Get an application configuration data (objects, scenes, etc.)
+
+```python
+>>> from knackpy import get_app_data
+
+>>> my_app = get_app_data('myAppIdString')
+
+>>> my_app['name']
+
+'John's Amazing App'
 
 ## License
 
