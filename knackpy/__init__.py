@@ -629,6 +629,6 @@ def _record_request(data, endpoint, headers, method, timeout=10, max_attempts=5)
     if res.status_code == 200:
         return res.json()
     else:
-        raise Exception(req.text)
+        raise Exception(res.text)
 
 
