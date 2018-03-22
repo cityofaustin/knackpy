@@ -159,6 +159,7 @@ Get an application configuration data (objects, scenes, etc.)
 >>> my_app['name']
 
 'John's Amazing App'
+```
 
 ## License
 
