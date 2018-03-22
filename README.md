@@ -149,7 +149,7 @@ Update a record.
     
 { 'id':'6a204bd89f3c8348afd5c77c717a097a', field_1': 2049, ...}
 ```
-Get an application configuration data (objects, scenes, etc.)
+Get an app's configuration data (objects, scenes, etc.)
 
 ```python
 >>> from knackpy import get_app_data
