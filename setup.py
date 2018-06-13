@@ -1,5 +1,9 @@
 from setuptools import setup
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+
 setup(
     author='John Clary',
     author_email='john.clary@austintexas.gov',
@@ -12,17 +16,17 @@ setup(
         'Programming Language :: Python :: 3'
     ],
     description='A Python API wrapper for interacting with Knack applications.',
-    long_description='A Python API wrapper for interacting with Knack applications.',
+    long_description=long_description,
     install_requires=[
       'arrow',
       'requests'
     ],
-    keywords='knack api api-client integration',
+    keywords='knack api api-client integration python',
     license='Public Domain',
     name='knackpy',
     packages=['knackpy'],
     test_suite='nose.collector',
     tests_require=['nose'],
-    url='http://github.com/cityofaustin/knack-py',
-    version='0.0.11',
+    url='http://github.com/cityofaustin/knackpy',
+    version='0.0.12',
 )
