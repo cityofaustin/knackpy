@@ -124,14 +124,6 @@ class Knack(object):
                 but not both.
                 '''
             )
-
-        if (self.view and self.scene) and not (self.ref_obj and self.api_key) :
-            logging.warning(
-                '''
-                ref_obj and api_key are required for retrieving fieldnames.
-                Raw field names will be used.
-                '''
-            )
           
         self.endpoint = self.get_endpoint()
         self.data_raw = self.get_data(self.endpoint, 'records', self.filters)
