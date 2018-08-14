@@ -54,7 +54,7 @@ Or retrieve data directly from an object.
 
 ```python
 >>> kn = Knack(
-      obj='object_1'
+      obj='object_1',
       app_id='abc123',
       api_key='topsecretapikey'
     )
