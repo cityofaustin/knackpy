@@ -124,8 +124,8 @@ Create a new record.
 >>> response = knackpy.record(
       record,
       obj_key='object_12',
-      apd_id='myappid',
-      api_ley='topsecretapikey',
+      api_id='myappid',
+      api_key='topsecretapikey',
       method='create'
     )
 
@@ -142,8 +142,8 @@ Update a record.
 >>> response = knackpy.record(
       record,
       obj_key='object_12',
-      apd_id='myappid',
-      api_ley='topsecretapikey',
+      app_id='myappid',
+      api_key='topsecretapikey',
       method='update'
     )
     
