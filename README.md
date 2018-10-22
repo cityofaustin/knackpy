@@ -84,7 +84,7 @@ You can also pass a [filter](https://www.knack.com/developer-documentation/#filt
     }
 
 >>> kn = Knack(
-      obj='object_1'
+      obj='object_1',
       app_id='abc123',
       api_key='topsecretapikey',
       filters=filters
