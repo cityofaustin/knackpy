@@ -12,7 +12,6 @@ setup(
         'Intended Audience :: Developers',
         # Pick your license as you wish (should match "license" above)
         'License :: Public Domain',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3'
     ],
     description='A Python API wrapper for interacting with Knack applications.',
@@ -28,5 +27,5 @@ setup(
     test_suite='nose.collector',
     tests_require=['nose'],
     url='http://github.com/cityofaustin/knackpy',
-    version='0.0.12',
+    version='0.0.13',
 )
