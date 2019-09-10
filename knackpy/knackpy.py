@@ -369,7 +369,7 @@ class Knack(object):
 
                         fieldnames.append(field_label)
 
-                        field_val = _stringify_ambiguous_field(record[field])
+                        field_val = self._stringify_ambiguous_field(record[field])
                         new_record[field_label] = field_val
 
                     elif field_type == "link":
@@ -486,7 +486,7 @@ class Knack(object):
             )
             return self.endpoint
 
-    def _stringify_ambiguous_field(field_data):
+    def _stringify_ambiguous_field(self, field_data):
         """
         Handle ambiguous Knack fields that may be a string or an array.
         Return a comma-separated string of field values (for arrays)
