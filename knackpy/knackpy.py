@@ -465,6 +465,23 @@ class Knack(object):
                 self.obj, self.rows_per_page
             )
             return self.endpoint
+    
+    
+    def _stringify_ambiguous_field(field_data):
+        """
+        Handle ambiguous Knack fields that may be a string or an array.
+        Return a comma-separated string of field values (for arrays)
+        or a field value string if only one value is present
+        """
+        if type(field_data) is not list:
+            return field_data
+        elif len(field_data) > 1:
+            return ",".join(str(f) for f in field_data)
+        elif len(field_data) == 1:
+            return field_data[0]
+        else:
+            return ""
+
 
     def to_csv(self, filename, delimiter=","):
         """
@@ -508,21 +525,6 @@ def get_app_data(app_id, timeout=10):
     else:
         raise Exception(req.text)
 
-
-def _stringify_ambiguous_field(field_data):
-    """
-    Handle ambiguous Knack fields that may be a string or an array.
-    Return a comma-separated string of field values (for arrays)
-    or a field value string if only one value is present
-    """
-    if type(field_data) is not list:
-        return field_data
-    elif len(field_data) > 1:
-        return ",".join(str(f) for f in field_data)
-    elif len(field_data) == 1:
-        return field_data[0]
-    else:
-        return ""
 
 
 def record(
