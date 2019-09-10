@@ -126,30 +126,30 @@ class Knack(object):
                 """
             )
 
-        self.endpoint = self.get_endpoint()
-        self.data_raw = self.get_data(self.endpoint, "records", self.filters)
+        self.endpoint = self._get_endpoint()
+        self.data_raw = self._get_data(self.endpoint, "records", self.filters)
 
         if not self.data_raw:
             logging.warning("No data found at {}".format(self.endpoint))
 
         if self.view and self.scene and self.ref_obj and self.api_key:
-            self.get_fields(self.ref_obj)
-            self.process_fields()  #  assign self.fields and self.fieldnames
-            self.make_field_map()
+            self._get_fields(self.ref_obj)
+            self._process_fields()  #  assign self.fields and self.fieldnames
+            self._make_field_map()
 
         elif self.view and self.scene and not self.api_key:
-            self.extract_fields()  #  assign self.fieldnames
+            self._extract_fields()  #  assign self.fieldnames
             self.data = self.data_raw
 
         elif self.obj:
-            self.get_fields([self.obj])
-            self.process_fields()  #  assign self.fields and self.fieldnames
-            self.make_field_map()
+            self._get_fields([self.obj])
+            self._process_fields()  #  assign self.fields and self.fieldnames
+            self._make_field_map()
 
         if self.data_raw and self.fields:
-            self.data = self.parse_data()
+            self.data = self._parse_data()
 
-    def get_data(self, endpoint, record_type, filters=None):
+    def _get_data(self, endpoint, record_type, filters=None):
         """
         Get data from Knack view or object.
 
@@ -235,7 +235,7 @@ class Knack(object):
 
         return data
 
-    def get_fields(self, objects):
+    def _get_fields(self, objects):
         """
         Get field data from Knack objects
         
@@ -252,14 +252,14 @@ class Knack(object):
                 obj, self.rows_per_page
             )
 
-            field_data = self.get_data(fields_endpoint, "fields")
+            field_data = self._get_data(fields_endpoint, "fields")
 
             fields = fields + field_data
 
         self.fields = fields
         return self.fields
 
-    def extract_fields(self):
+    def _extract_fields(self):
         """
         Extract field names from list of knack records.
         Useful if field metadata is unavilable.
@@ -268,7 +268,7 @@ class Knack(object):
         self.fieldnames = list(set(keys))
         return self.fieldnames
 
-    def process_fields(self):
+    def _process_fields(self):
 
         if self.include_ids:
             #  create an 'id' field
@@ -282,14 +282,14 @@ class Knack(object):
 
         return self.fields
 
-    def make_field_map(self):
+    def _make_field_map(self):
         """
         return a dict of format field_label : field_name
         """
         self.field_map = {self.fields[field]["label"]: field for field in self.fields}
         return self.field_map
 
-    def parse_data(self):
+    def _parse_data(self):
         """
         Replace Knack field names with field labels and extract
         subfields.
@@ -393,7 +393,9 @@ class Knack(object):
                             d = int(record[field]["unix_timestamp"])
 
                             if self.tzinfo:
-                                # Knack timetstamps are "local" timestamps. I.e., millesconds elapsed since epoch **in local time**. So we convert them to actual unlocalized timestamps
+                                # Knack timetstamps are "local" timestamps.
+                                # I.e., millesconds elapsed since epoch **in local time**.
+                                # So we convert them to actual unlocalized timestamps
                                 tz = pytz.timezone(tzinfo)
                                 d = datetime.fromtimestamp(d / 1000).replace(tzinfo=tz)
                                 d = int(d.timestamp() * 1000)
@@ -445,7 +447,7 @@ class Knack(object):
 
         return self.data
 
-    def get_endpoint(self):
+    def _get_endpoint(self):
         """
         Get endpoint for object or view-based request
 
