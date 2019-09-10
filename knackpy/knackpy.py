@@ -396,7 +396,7 @@ class Knack(object):
                                 # Knack timetstamps are "local" timestamps.
                                 # I.e., millesconds elapsed since epoch **in local time**.
                                 # So we convert them to actual unlocalized timestamps
-                                tz = pytz.timezone(tzinfo)
+                                tz = pytz.timezone(self.tzinfo)
                                 d = datetime.fromtimestamp(d / 1000).replace(tzinfo=tz)
                                 d = int(d.timestamp() * 1000)
 
@@ -446,6 +446,26 @@ class Knack(object):
         self.fieldnames = list(set(fieldnames))
 
         return self.data
+
+
+    def _convert_timestamps(self, records):
+        pdb.set_trace()
+        return records
+        # for record in records:
+        #     for field 
+        #     field_type = self.fields[field]["type"]
+
+    def _timestamp_to_datestring(self, timestamp):
+        # convert millseconds timestamp to datestring
+        dt = datetime.utcfromtimestamp(timestamp / 1000).replace(tzinfo=pytz.utc)
+
+        if self.tzinfo:
+            # convert to local datestring if tzinfo available
+            return dt.astimezone(tz).isoformat()
+
+        else:
+            return dt.isoformat()
+
 
     def _get_endpoint(self):
         """
@@ -497,6 +517,8 @@ class Knack(object):
         _______
         None
         """
+        self.data = _convert_timestamps(self.data)
+        pdb.set_trace()
         with open(filename, "w", newline="\n") as fout:
             self.fieldnames.sort()
 
