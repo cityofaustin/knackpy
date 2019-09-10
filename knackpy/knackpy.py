@@ -397,8 +397,15 @@ class Knack(object):
                                 # I.e., millesconds elapsed since epoch **in local time**.
                                 # So we convert them to actual unlocalized timestamps
                                 tz = pytz.timezone(self.tzinfo)
-                                d = datetime.fromtimestamp(d / 1000).replace(tzinfo=tz)
-                                d = int(d.timestamp() * 1000)
+
+                                # create a naive datetime object from the timestamp
+                                dt_utc = datetime.utcfromtimestamp(d / 1000)
+
+                                # localize the datetime object
+                                dt_local = tz.localize(dt_utc)
+
+                                # convert to unix timestamp + mills
+                                d = int(dt_local.timestamp() * 1000)
 
                         else:
                             d = ""
@@ -449,7 +456,6 @@ class Knack(object):
 
 
     def _convert_timestamps(self, records):
-        pdb.set_trace()
         return records
         # for record in records:
         #     for field 
