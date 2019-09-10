@@ -455,7 +455,6 @@ class Knack(object):
 
         return self.data
 
-
     def _get_endpoint(self):
         """
         Get endpoint for object or view-based request
@@ -491,9 +490,9 @@ class Knack(object):
             return ""
 
     def _convert_timestamps(self):
-        
+
         converted_records = deepcopy(self.data)
-        
+
         if self.tzinfo:
             tz = pytz.timezone(self.tzinfo)
             localize = True
@@ -512,13 +511,14 @@ class Knack(object):
 
                     if localize:
                         # set timezone and print in local datestring
-                        record[field] = dt_utc.replace(tzinfo=pytz.utc).astimezone(tz).isoformat()
+                        record[field] = (
+                            dt_utc.replace(tzinfo=pytz.utc).astimezone(tz).isoformat()
+                        )
                     else:
                         # or just stringify the UTC, if no tzinfo
                         record[field] = dt_utc.replace(tzinfo=pytz.utc).isoformat()
 
         return converted_records
-
 
     def to_csv(self, filename, delimiter=","):
         """
@@ -641,4 +641,3 @@ def _record_request(data, endpoint, headers, method, timeout=10, max_attempts=5)
         return res.json()
     else:
         raise Exception(res.text)
-
