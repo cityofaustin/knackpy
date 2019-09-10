@@ -1,3 +1,4 @@
+from copy import deepcopy
 import csv
 from datetime import datetime
 import json
@@ -455,24 +456,6 @@ class Knack(object):
         return self.data
 
 
-    def _convert_timestamps(self, records):
-        return records
-        # for record in records:
-        #     for field 
-        #     field_type = self.fields[field]["type"]
-
-    def _timestamp_to_datestring(self, timestamp):
-        # convert millseconds timestamp to datestring
-        dt = datetime.utcfromtimestamp(timestamp / 1000).replace(tzinfo=pytz.utc)
-
-        if self.tzinfo:
-            # convert to local datestring if tzinfo available
-            return dt.astimezone(tz).isoformat()
-
-        else:
-            return dt.isoformat()
-
-
     def _get_endpoint(self):
         """
         Get endpoint for object or view-based request
@@ -507,6 +490,36 @@ class Knack(object):
         else:
             return ""
 
+    def _convert_timestamps(self):
+        
+        converted_records = deepcopy(self.data)
+        
+        if self.tzinfo:
+            tz = pytz.timezone(self.tzinfo)
+            localize = True
+
+        for record in converted_records:
+
+            for field in record.keys():
+                field_id = self.field_map[field]
+                field_type = self.fields[field_id]["type"]
+                if field_type in ["date", "date_time"]:
+
+                    d = record[field]
+                    d = 1568103300000
+                    # create a naive datetime object from the timestamp
+                    dt_utc = datetime.utcfromtimestamp(d / 1000)
+
+                    if localize:
+                        # set timezone and print in local datestring
+                        record[field] = dt_utc.replace(tzinfo=pytz.utc).astimezone(tz).isoformat()
+                    else:
+                        # or just stringify the UTC, if no tzinfo
+                        record[field] = dt_utc.replace(tzinfo=pytz.utc).isoformat()
+
+        return converted_records
+
+
     def to_csv(self, filename, delimiter=","):
         """
         Write data from Knack instance to csv
@@ -522,9 +535,9 @@ class Knack(object):
         Returns
         _______
         None
-        """
-        self.data = _convert_timestamps(self.data)
-        pdb.set_trace()
+    """
+        csv_data = self._convert_timestamps()
+
         with open(filename, "w", newline="\n") as fout:
             self.fieldnames.sort()
 
@@ -532,7 +545,7 @@ class Knack(object):
                 fout, fieldnames=self.fieldnames, delimiter=delimiter
             )
             writer.writeheader()
-            for row in self.data:
+            for row in csv_data:
                 writer.writerow(row)
 
         return None
@@ -628,3 +641,4 @@ def _record_request(data, endpoint, headers, method, timeout=10, max_attempts=5)
         return res.json()
     else:
         raise Exception(res.text)
+
