@@ -1,8 +1,10 @@
 import csv
+from datetime import datetime
 import json
 import logging
 import pdb
-import arrow
+
+import pytz
 import requests
 
 
@@ -408,10 +410,10 @@ class Knack(object):
                             d = int( record[field]['unix_timestamp'] )
 
                             if self.tzinfo:
-                                d = arrow.get(0).shift(seconds=d/1000).replace(tzinfo=self.tzinfo)
-
-                                #  convert back to mills
-                                d = d.timestamp * 1000
+                                # Knack timetstamps are "local" timestamps. I.e., millesconds elapsed since epoch **in local time**. So we convert them to actual unlocalized timestamps
+                                tz = pytz.timezone(tzinfo)
+                                d = datetime.fromtimestamp(d/1000).replace(tzinfo=tz)
+                                d = int(d.timestamp() * 1000)
                                 
                         else:
                             d = ''
