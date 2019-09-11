@@ -429,7 +429,7 @@ class Knack(object):
                         else:
                             #  connection is empty
                             new_record[field_label] = ""
-                    
+
                     elif field_type == "file":
                         fieldnames.append(field_label)
                         new_record[field_label] = record[field].get("url")
@@ -526,12 +526,11 @@ class Knack(object):
 
         return converted_records
 
-
     def _assemble_downloads(self, path, download_fields, label_fields):
-        '''
+        """
         Assemble paths and filenames of files to be downloaded.
         Returns list of dicts where each entry is {"url" : "abc", "filename" : "xyz"}
-        '''
+        """
         downloads = []
 
         for record in self.data:
@@ -544,22 +543,23 @@ class Knack(object):
                     download["filename"] = os.path.basename(download["url"])
 
                     if label_fields:
-                        
+
                         # ensure that field labels are prepended in sequence provided
                         label_fields.reverse()
 
                         for field in label_fields:
-                            download["filename"] = f"{record[field]}_{download['filename']}"
+                            download[
+                                "filename"
+                            ] = f"{record[field]}_{download['filename']}"
 
-                        download["filename"] =  os.path.join(path, download["filename"])
+                        download["filename"] = os.path.join(path, download["filename"])
 
                     downloads.append(download)
 
         return downloads
 
-
     def _download_files(self):
-        #TODO: handle download errors
+        # TODO: handle download errors
         for file in self.downloads:
             print(f"Downloading {file['url']}")
 
@@ -574,11 +574,15 @@ class Knack(object):
                 fout.write(r.content)
 
         return len(self.downloads)
-    
 
-
-    def download(self, destination="_downloads", download_fields=None, label_fields=None, overwrite=True):
-        '''
+    def download(
+        self,
+        destination="_downloads",
+        download_fields=None,
+        label_fields=None,
+        overwrite=True,
+    ):
+        """
         Download files from Knack records. Requires that the Knack instance has been
         supplied scene and view keys.
 
@@ -600,9 +604,11 @@ class Knack(object):
         Integer count of files downloaded.
 
         # TODO: how to handle many fieldnames in field?
-        '''
+        """
         if not self.scene and self.view:
-            raise Exception("Scene and view keys are required to download files. This Knack instance must have been created with an object ID rather than scene + view ids.")
+            raise Exception(
+                "Scene and view keys are required to download files. This Knack instance must have been created with an object ID rather than scene + view ids."
+            )
 
         if not isinstance(download_fields, list) and download_fields:
             raise Exception("download_fields paramenter must be a list.")
@@ -615,16 +621,22 @@ class Knack(object):
             os.makedirs(destination)
 
         if not download_fields:
-            download_fields = [self.fields[field]["label"] for field in self.fields.keys() if self.fields[field]["type"]=="file"]
+            download_fields = [
+                self.fields[field]["label"]
+                for field in self.fields.keys()
+                if self.fields[field]["type"] == "file"
+            ]
 
         self.overwrite_files = overwrite
 
-        self.downloads = self._assemble_downloads(destination, download_fields, label_fields)
+        self.downloads = self._assemble_downloads(
+            destination, download_fields, label_fields
+        )
 
         download_count = self._download_files()
         print(f"{download_count} files downloaded.")
-        
-        #TODO: test exceptions
+
+        # TODO: test exceptions
 
     def to_csv(self, filename, delimiter=","):
         """
