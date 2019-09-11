@@ -621,6 +621,7 @@ class Knack(object):
             os.makedirs(destination)
 
         if not download_fields:
+            # identify fields of type "file" if none are provided
             download_fields = [
                 self.fields[field]["label"]
                 for field in self.fields.keys()
@@ -636,7 +637,7 @@ class Knack(object):
         download_count = self._download_files()
         print(f"{download_count} files downloaded.")
 
-        # TODO: test exceptions
+        return download_count
 
     def to_csv(self, filename, delimiter=","):
         """
