@@ -3,7 +3,9 @@ import csv
 from datetime import datetime
 import json
 import logging
+import os
 import pdb
+from urllib.parse import urlparse
 
 import pytz
 import requests
@@ -523,6 +525,74 @@ class Knack(object):
                         record[field] = dt_utc.replace(tzinfo=pytz.utc).isoformat()
 
         return converted_records
+
+
+    def _assemble_downloads(self, download_fields, label_fields):
+        downloads = []
+
+        for record in self.data:
+            for field in download_fields:
+                download = {}
+
+            for field in record.keys():
+                if field in download_fields:
+                    download["url"] = record[field]
+                    download["filename"] = os.path.basename(download["url"])
+
+                    if label_fields:
+                        
+                        # ensure that field labels are prepended in sequence provided
+                        label_fields.reverse()
+
+                        for field in label_fields:
+                            download["filename"] = f"{record[field]}_{download['filename']}"
+
+                    downloads.append(download)
+        pdb.set_trace()
+        return downloads
+
+    def download(self, path, download_fields=None, label_fields=None):
+        '''
+        Download files from Knack records. Requires that the Knack instance has been
+        supplied scene and view keys.
+
+        Parameters
+        ----------
+        path : string (required)
+            relative path to the directory to which files will be written
+        download_fields : list (optional | default : None)
+            The specific field names (by label, not knack ID) in which contain
+            file references. If none are provided, all fields of type=="file" will
+            be retrieved.
+        label_fields : list (optional | default: None)
+            Any field names (by label, not knack ID) specificed here will be prepended
+            to the attachment filename, separated by an underscore (_).
+
+        Returns
+        _______
+        Integer count of files downloaded.
+
+        # TODO: how to handle many fieldnames in field?
+        '''
+        if not self.scene and self.view:
+            raise Exception("Scene and view keys are required to download files. This Knack instance must have been created with an object ID rather than scene + view ids.")
+
+        if not isinstance(download_fields, list) and download_fields:
+            raise Exception("download_fields paramenter must be a list.")
+
+        if not isinstance(label_fields, list) and label_fields:
+            raise Exception("label_fields paramenter must be a list.")
+
+        if not download_fields:
+            download_fields = [self.fields[field]["label"] for field in self.fields.keys() if self.fields[field]["type"]=="file"]
+
+        downloads = self._assemble_downloads(download_fields, label_fields)
+
+
+        pdb.set_trace()
+
+        
+        #TODO: test exceptions
 
     def to_csv(self, filename, delimiter=","):
         """
