@@ -106,12 +106,11 @@ Field metadata is available when working with objects or when reference objects 
 You can download files for the records you retrieve from a view. Files are overwritten by default:
 
 ```python
-# writes all new files to _downloads. 
->>> kn.download(overwrite=False) 
+ >>> kn.download(overwrite=False) # Writes all new files to `_downloads` directory
 
 >>> kn.downloads(
-  destination="my_downloads", # Overwrites existing files in this directory
-  label_fields=["Attachment ID"], # prepends the "Attachment ID" value to the filename
+  destination="my_downloads", # Overwrites existing files in `my_downloads` directory
+  label_fields=["Attachment ID"], # Prepends the "Attachment ID" value to the filename
   download_fields=["Photo", "Document"] # downloads files from these specific fields only
 )
 ```
