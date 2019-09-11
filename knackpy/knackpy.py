@@ -527,7 +527,11 @@ class Knack(object):
         return converted_records
 
 
-    def _assemble_downloads(self, download_fields, label_fields):
+    def _assemble_downloads(self, path, download_fields, label_fields):
+        '''
+        Assemble paths and filenames of files to be downloaded.
+        Returns list of dicts where each entry is {"url" : "abc", "filename" : "xyz"}
+        '''
         downloads = []
 
         for record in self.data:
@@ -547,27 +551,50 @@ class Knack(object):
                         for field in label_fields:
                             download["filename"] = f"{record[field]}_{download['filename']}"
 
+                        download["filename"] =  os.path.join(path, download["filename"])
+
                     downloads.append(download)
-        pdb.set_trace()
+
         return downloads
 
-    def download(self, path, download_fields=None, label_fields=None):
+
+    def _download_files(self):
+        #TODO: handle download errors
+        for file in self.downloads:
+            print(f"Downloading {file['url']}")
+
+            if not self.overwrite_files:
+                if os.path.exists(file["filename"]):
+                    print(f"{file['filename']} already exist. No data written.")
+                continue
+
+            r = requests.get(file["url"], allow_redirects=True)
+
+            with open(file["filename"], "wb") as fout:
+                fout.write(r.content)
+
+        return len(self.downloads)
+    
+
+
+    def download(self, destination="_downloads", download_fields=None, label_fields=None, overwrite=True):
         '''
         Download files from Knack records. Requires that the Knack instance has been
         supplied scene and view keys.
 
         Parameters
         ----------
-        path : string (required)
+        destination : string (optional | default: _downloads)
             relative path to the directory to which files will be written
-        download_fields : list (optional | default : None)
+        download_fields : list (optional | default : knackpy_downloads)
             The specific field names (by label, not knack ID) in which contain
             file references. If none are provided, all fields of type=="file" will
             be retrieved.
         label_fields : list (optional | default: None)
             Any field names (by label, not knack ID) specificed here will be prepended
             to the attachment filename, separated by an underscore (_).
-
+        overwrite : bool (optional | default: True)
+            Indicates if existing files will be overwritten.
         Returns
         _______
         Integer count of files downloaded.
@@ -583,14 +610,19 @@ class Knack(object):
         if not isinstance(label_fields, list) and label_fields:
             raise Exception("label_fields paramenter must be a list.")
 
+        # create output directory if it doesn't exist
+        if not os.path.exists(destination):
+            os.makedirs(destination)
+
         if not download_fields:
             download_fields = [self.fields[field]["label"] for field in self.fields.keys() if self.fields[field]["type"]=="file"]
 
-        downloads = self._assemble_downloads(download_fields, label_fields)
+        self.overwrite_files = overwrite
 
+        self.downloads = self._assemble_downloads(destination, download_fields, label_fields)
 
-        pdb.set_trace()
-
+        download_count = self._download_files()
+        print(f"{download_count} files downloaded.")
         
         #TODO: test exceptions
 
