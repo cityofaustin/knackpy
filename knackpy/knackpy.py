@@ -427,6 +427,10 @@ class Knack(object):
                         else:
                             #  connection is empty
                             new_record[field_label] = ""
+                    
+                    elif field_type == "file":
+                        fieldnames.append(field_label)
+                        new_record[field_label] = record[field].get("url")
 
                     else:
                         fieldnames.append(field_label)
