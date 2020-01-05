@@ -506,17 +506,17 @@ class Knack(object):
         for record in converted_records:
             for field in record.keys():
                 field_id = self.field_map.get(field)
-                
+
                 if not field_id:
                     # generated "subfields" will not have a field map, and they
                     # will not be date/time. so don't handle them.
                     continue
 
                 field_type = self.fields[field_id]["type"]
-                
+
                 if field_type in ["date", "date_time"]:
                     d = record[field]
-                    
+
                     if isinstance(d, str):
                         # this is a null value that has been string-converted
                         continue
@@ -673,7 +673,7 @@ class Knack(object):
                 fout, fieldnames=self.fieldnames, delimiter=delimiter
             )
             writer.writeheader()
-            
+
             for row in csv_data:
                 writer.writerow(row)
 
