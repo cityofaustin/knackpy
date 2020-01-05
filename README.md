@@ -36,8 +36,7 @@ pip install knackpy
 - [Localization and Timezone Settings](#localization-and-timezone-settings)
 - [Connection Fields](#connection-fields)
 - [Timeouts and Retrying](#timeouts-and-retrying)
-- [Include Ids, ID Key]
-
+- [Knack Record ID's](#knack-record-ids)
 
 ### View-Based Requests
 
@@ -296,6 +295,10 @@ Use `raw_connections=True` to retain the entire connection array from Knack:
   }
 ],
 ```
+
+### Knack Record ID's
+
+By default, the Knack record ID is included within each record under the `id` key. This can create problems if you have a field named `id` in our object. You can exclude the record IDs entirely with `include_ids=False` or set your own ID key with `id_key="your_field_id"`. 
 
 ## License
 
