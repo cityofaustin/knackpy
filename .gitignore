@@ -1,6 +1,6 @@
 knackpy.egg-info
 notes.md
-test_secrets.py
+secrets.py
 build/
 dist/
 __pycache__
