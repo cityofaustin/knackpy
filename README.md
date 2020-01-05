@@ -282,6 +282,21 @@ By default, knackpy will attempt to send an HTTP request to the Knack API 5 time
     )
 ```
 
+### Connection Fields
+
+By default connection fields are (if one connection) returned as the field's display name, or (if many connetions) an array of the connection fields' display names.
+
+Use `raw_connections=True` to retain the entire connection array from Knack:
+
+```python
+[
+  {
+    "id": "5a7a027b82fecf67ab01f263", # Record ID of connected record
+    "identifier": "Pizza Hut" # This the value of the connection's display name field
+  }
+],
+```
+
 ## License
 
 As a work of the City of Austin, this project is in the public domain within the United States.
