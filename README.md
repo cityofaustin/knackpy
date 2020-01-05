@@ -9,7 +9,21 @@ Knackpy requires Python v3.6+.
 ```
 pip install knackpy
 ```
-## Features
+
+## Quick Start
+
+```python
+>>> kn = Knack(
+      obj='object_1',
+      app_id='abc123',
+      api_key='topsecretapikey'
+    )
+   
+>>> kn.data
+[{'store_id': 30424, 'inspection_date': 1479448800000, 'id': '58598262bcb3437b51194040'},...]
+```
+
+## Documentation
 
 - [Object](#object-based-requests) and [view-based](#view-based-requests) requests
 - [Filters](#filters)
@@ -17,8 +31,12 @@ pip install knackpy
 - [Create, update, and delete records](#create-update-or-delete-records)
 - [CSV output](#csv-output)
 - [File downloads](#file-downloads)
+- [Page and Row Limitng](#page-and-row-limiting)
+- [Localization and Timezone Settings](#localization-and-timezone-settings)
+- [Retry]
+- [Raw Connections]
+- [Include Ids, ID Key]
 
-## Quick Start
 
 ### View-Based Requests
 
@@ -202,6 +220,23 @@ Get an app's configuration data (objects, scenes, etc.)
 >>> my_app['name']
 
 "John's Amazing App"
+```
+
+### Page and Row Limiting
+
+Use `rows_per_page` (default=`1000`) and/or `page_limit` (default=`1000`) to limit results. 
+
+Note that maximum rows-per-page allowed by the Knack api is 1000.
+
+```python
+>>> kn = Knack(
+      obj='object_1',
+      app_id='abc123',
+      api_key='topsecretapikey',
+      rows_per_page=1, # 
+      page_limit=1
+    )
+
 ```
 
 ## License
