@@ -17,7 +17,7 @@ setup(
     description='A Python API wrapper for interacting with Knack applications.',
     long_description=long_description,
     install_requires=[
-      'arrow',
+      'pytz',
       'requests'
     ],
     keywords='knack api api-client integration python',
