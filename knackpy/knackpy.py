@@ -511,7 +511,7 @@ class Knack(object):
                 if field_type in ["date", "date_time"]:
 
                     d = record[field]
-                    d = 1568103300000
+                    
                     # create a naive datetime object from the timestamp
                     dt_utc = datetime.utcfromtimestamp(d / 1000)
 
