@@ -16,6 +16,7 @@ setup(
     ],
     description='A Python API wrapper for interacting with Knack applications.',
     long_description=long_description,
+    long_description_content_type="text/markdown",
     install_requires=[
       'pytz',
       'requests'
