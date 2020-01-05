@@ -34,8 +34,8 @@ pip install knackpy
 - [File downloads](#file-downloads)
 - [Page and Row Limitng](#page-and-row-limiting)
 - [Localization and Timezone Settings](#localization-and-timezone-settings)
-- [Retry]
-- [Raw Connections]
+- [Connection Fields](#connection-fields)
+- [Timeouts and Retrying](#timeouts-and-retrying)
 - [Include Ids, ID Key]
 
 
@@ -263,6 +263,21 @@ Use the `tzinfo` parameter to specify your applications timezone setting. This v
       obj='object_1',
       app_id='abc123',
       api_key='topsecretapikey',
+      tzinfo="US/Central" # Be careful, this is the default value!
+    )
+```
+
+### Timeouts and Retrying
+
+By default, knackpy will attempt to send an HTTP request to the Knack API 5 times until a status code of `200` is returned. You can adjust the number of request attempts (`max_attempts`, default=`5`) and the timeout (`timeout`, default=`10`):
+
+```python
+>>> kn = Knack(
+      obj='object_1',
+      app_id='abc123',
+      api_key='topsecretapikey',
+      max_attempts=4,
+      timeout=20,
       tzinfo="US/Central" # Be careful, this is the default value!
     )
 ```
