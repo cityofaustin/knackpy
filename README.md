@@ -283,7 +283,7 @@ By default, knackpy will attempt to send an HTTP request to the Knack API 5 time
 
 ### Connection Fields
 
-By default connection fields are (if one connection) returned as the field's display name, or (if many connetions) an array of the connection fields' display names.
+By default, connection fields are (if one connection) returned as the field's display name, or (if many connetions) an array of the connection fields' display names.
 
 Use `raw_connections=True` to retain the entire connection array from Knack:
 
