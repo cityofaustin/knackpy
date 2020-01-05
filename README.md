@@ -16,7 +16,8 @@ pip install knackpy
 >>> kn = Knack(
       obj='object_1',
       app_id='abc123',
-      api_key='topsecretapikey'
+      api_key='topsecretapikey',
+      tzinfo="US/Central" # Be careful, this is the default value!
     )
    
 >>> kn.data
@@ -146,11 +147,13 @@ You can download files for the records you retrieve from a view. Files are overw
 
 ### CSV Output
 
+You can write Knack data to a `CSV` file. Note that timestamps are converted to ISO 8601 format when written to CSV.
+
 ```python
 >>> kn.to_csv('data.csv')
 "store_id","inspection_date","store_status"
-"30424","11-18-2016","OPEN"
-"30200","10-01-2013","CLOSED"
+"30424","2020-01-05T15:05:00-05:00","OPEN"
+"30200","2020-01-05T15:05:00-05:00","CLOSED"
 ...
 ```
 
@@ -226,7 +229,7 @@ Get an app's configuration data (objects, scenes, etc.)
 
 Use `rows_per_page` (default=`1000`) and/or `page_limit` (default=`1000`) to limit results. 
 
-Note that maximum rows-per-page allowed by the Knack api is 1000.
+Note that maximum rows-per-page allowed by the Knack API is 1000.
 
 ```python
 >>> kn = Knack(
@@ -237,6 +240,31 @@ Note that maximum rows-per-page allowed by the Knack api is 1000.
       page_limit=1
     )
 
+```
+
+### Localization and Timezone Settings
+
+*Note that knackpy's default timezone value is `US/Central`.*
+
+#### A Note about Knack Timestamps
+
+You may be wondering why timezone settings are concern, given that Knackpy, like the Knack API, returns timestamp values as Unix timestamps in millesconds (thus, there is no timezone encoding at all). However, the Knack API confusingly returns *millisecond timestamps in your localized  timezone*!
+
+For example, if you inspect a timezone value in Knack, e.g., `1578254700000`, this value represents  Sunday, January 5, 2020 8:05:00 PM *local time*.
+
+To address this, knackpy handles the conversion of Knack timestamps into *real* unix timestamps which are time-zone naive. However, the original "local timestamps" are preserved in the `Knack.data_raw` object. If you're working with that data, you'll need to convert the tiemstamps yourself. See the `Knack._convert_timestamps` method in the source code for help.
+
+#### Setting your timezone
+
+Use the `tzinfo` parameter to specify your applications timezone setting. This value should be formatted as a timezone string compliant to the [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+ 
+```python
+>>> kn = Knack(
+      obj='object_1',
+      app_id='abc123',
+      api_key='topsecretapikey',
+      tzinfo="US/Central" # Be careful, this is the default value!
+    )
 ```
 
 ## License
