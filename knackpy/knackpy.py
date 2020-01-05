@@ -336,6 +336,7 @@ class Knack(object):
                             "longitude",
                             "formatted_value",
                             "street",
+                            "street2",
                             "city",
                             "state",
                             "country",
