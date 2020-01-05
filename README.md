@@ -10,6 +10,7 @@ Knackpy requires Python v3.6+.
 pip install knackpy
 ```
 ## Features
+
 - [Object](#object-based-requests) and [view-based](#view-based-requests) requests
 - [Filters](#filters)
 - [Parsing of fieldnames and field labels](#field-data)
