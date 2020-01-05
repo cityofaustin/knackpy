@@ -19,10 +19,9 @@ class Knack(object):
         filters=None,
         include_ids=True,
         id_key="id",
-        localize=True,
         max_attempts=5,
         obj=None,
-        page_limit=10,
+        page_limit=1000,
         raw_connections=False,
         rows_per_page=1000,
         ref_obj=None,
@@ -128,6 +127,9 @@ class Knack(object):
                 but not both.
                 """
             )
+
+        if self.rows_per_page > 1000:
+            print("Warning: maximum rows per page is 1000. Only 1000 rows per page will be returned.")
 
         self.endpoint = self._get_endpoint()
         self.data_raw = self._get_data(self.endpoint, "records", self.filters)
@@ -336,6 +338,7 @@ class Knack(object):
                             "longitude",
                             "formatted_value",
                             "street",
+                            "street2",
                             "city",
                             "state",
                             "country",
@@ -430,9 +433,13 @@ class Knack(object):
                             #  connection is empty
                             new_record[field_label] = ""
 
-                    elif field_type == "file":
+                    elif field_type == "file" or field_type == "image":
                         fieldnames.append(field_label)
-                        new_record[field_label] = record[field].get("url")
+                        
+                        if record[field]:
+                            new_record[field_label] = record[field].get("url")
+                        else:
+                            new_record[field_label] =  ""
 
                     else:
                         fieldnames.append(field_label)
@@ -546,43 +553,47 @@ class Knack(object):
             for field in download_fields:
                 download = {}
 
-            for field in record.keys():
-                if field in download_fields:
-                    download["url"] = record[field]
-                    download["filename"] = os.path.basename(download["url"])
+                download["url"] = record.get(field)
 
-                    if label_fields:
+                if not download["url"]:
+                    continue
+                
+                filename = os.path.basename(download["url"])
 
-                        # ensure that field labels are prepended in sequence provided
-                        label_fields.reverse()
+                if label_fields:
+                    """
+                    We reverse traverse to ensure that field labels are prepended in
+                    sequence provided.
+                    """
+                    for field in reversed(label_fields):
+                        filename = f"{record.get(field)}_{filename}"
 
-                        for field in label_fields:
-                            download[
-                                "filename"
-                            ] = f"{record[field]}_{download['filename']}"
+                download["filename"] = os.path.join(path, filename)
 
-                        download["filename"] = os.path.join(path, download["filename"])
-
-                    downloads.append(download)
+                downloads.append(download)
 
         return downloads
 
     def _download_files(self):
-        # TODO: handle download errors
+        download_count = 0
+
         for file in self.downloads:
-            print(f"Downloading {file['url']}")
+            print(f"\nDownloading {file['url']}")
 
             if not self.overwrite_files:
                 if os.path.exists(file["filename"]):
-                    print(f"{file['filename']} already exist. No data written.")
+                    print(f"\nWARNING: {file['filename']} already exist.")
                 continue
 
             r = requests.get(file["url"], allow_redirects=True)
 
+            r.raise_for_status()
+
             with open(file["filename"], "wb") as fout:
                 fout.write(r.content)
+                download_count += 1
 
-        return len(self.downloads)
+        return download_count
 
     def download(
         self,
@@ -634,7 +645,7 @@ class Knack(object):
             download_fields = [
                 self.fields[field]["label"]
                 for field in self.fields.keys()
-                if self.fields[field]["type"] == "file"
+                if self.fields[field]["type"] == "file" or self.fields[field]["type"] == "image"
             ]
 
         self.overwrite_files = overwrite
@@ -644,7 +655,7 @@ class Knack(object):
         )
 
         download_count = self._download_files()
-        print(f"{download_count} files downloaded.")
+        print(f"\n{download_count} files downloaded.")
 
         return download_count
 
