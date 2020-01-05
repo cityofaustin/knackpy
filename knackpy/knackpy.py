@@ -22,7 +22,7 @@ class Knack(object):
         localize=True,
         max_attempts=5,
         obj=None,
-        page_limit=10,
+        page_limit=1000,
         raw_connections=False,
         rows_per_page=1000,
         ref_obj=None,
