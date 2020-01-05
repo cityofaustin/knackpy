@@ -4,19 +4,18 @@ A Python client for interacting with [Knack](http://knack.com) applications.
 
 ## Installation
 
+Knackpy requires Python v3.6+.
+
 ```
 pip install knackpy
 ```
-
-Knackpy requires [Arrow](http://arrow.readthedocs.io/en/latest/) and [Requests](http://docs.python-requests.org/en/master/). ```pip``` will install both dependencies automatically.
-
 ## Features
-- Supports Python 2 and 3
 - Object and view-based requests
 - Filters
 - Parsing of fieldnames and field labels
 - Create and update records
 - CSV output
+- File downloads
 
 ## Quick Start
 
@@ -102,6 +101,18 @@ Field metadata is available when working with objects or when reference objects 
 
 >>> kn.field_map
 {'store_id' : 'field_1', 'store_status' : 'field_2',...}
+```
+
+You can download files for the records you retrieve from a view. Files are overwritten by default:
+
+```python
+ >>> kn.download(overwrite=False) # Writes all new files to `_downloads` directory
+
+>>> kn.download(
+  destination="my_downloads", # Overwrites existing files in `my_downloads` directory
+  label_fields=["Attachment ID"], # Prepends the "Attachment ID" value to the filename
+  download_fields=["Photo", "Document"] # downloads files from these specific fields only
+)
 ```
 
 Write an instance to csv.
