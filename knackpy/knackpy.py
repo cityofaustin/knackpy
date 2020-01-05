@@ -19,7 +19,6 @@ class Knack(object):
         filters=None,
         include_ids=True,
         id_key="id",
-        localize=True,
         max_attempts=5,
         obj=None,
         page_limit=1000,
@@ -128,6 +127,9 @@ class Knack(object):
                 but not both.
                 """
             )
+
+        if self.rows_per_page > 1000:
+            print("Warning: maximum rows per page is 1000. Only 1000 rows per page will be returned.")
 
         self.endpoint = self._get_endpoint()
         self.data_raw = self._get_data(self.endpoint, "records", self.filters)
@@ -433,7 +435,11 @@ class Knack(object):
 
                     elif field_type == "file" or field_type == "image":
                         fieldnames.append(field_label)
-                        new_record[field_label] = record[field].get("url")
+                        
+                        if record[field]:
+                            new_record[field_label] = record[field].get("url")
+                        else:
+                            new_record[field_label] =  ""
 
                     else:
                         fieldnames.append(field_label)
