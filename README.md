@@ -251,7 +251,7 @@ You may be wondering why timezone settings are concern, given that Knackpy, like
 
 For example, if you inspect a timezone value in Knack, e.g., `1578254700000`, this value represents  Sunday, January 5, 2020 8:05:00 PM *local time*.
 
-To address this, knackpy handles the conversion of Knack timestamps into *real* unix timestamps which are time-zone naive. However, the original "local timestamps" are preserved in the `Knack.data_raw` object. If you're working with that data, you'll need to convert the tiemstamps yourself. See the `Knack._convert_timestamps` method in the source code for help.
+To address this, knackpy handles the conversion of Knack timestamps into *real* millisecond unix timestamps which are timezone naive. However, the original "local timestamps" are preserved in the `Knack.data_raw` object. If you're working with that data, you'll need to convert the tiemstamps yourself. See the `Knack._convert_timestamps` method in the source code for help.
 
 #### Setting your timezone
 
