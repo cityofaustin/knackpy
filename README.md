@@ -120,7 +120,7 @@ You can download files for the records you retrieve from a view. Files are overw
  >>> kn.download(overwrite=False) # Writes all new files to `_downloads` directory
 
 >>> kn.download(
-  destination="my_downloads",
+  destination="my_downloads", # Writes to `my_downloads` directory
   label_fields=["Attachment ID", "Date"], # Prepends the "Attachment ID" and "Date" values to the filename
   download_fields=["Photo", "Document"] # Downloads files from these specific fields only
 )
