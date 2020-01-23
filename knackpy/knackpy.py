@@ -437,7 +437,18 @@ class Knack(object):
                         fieldnames.append(field_label)
                         
                         if record[field]:
-                            new_record[field_label] = record[field].get("url")
+                            """
+                            Image fields come in two flavors: direct upload or reference
+                            URL. When images are uploaded directly to a field, they are
+                            comprised of a dict with "url" key of the image's endpoint.
+                            When the image field is configured with a reference URL,
+                            the field value is simply a string.
+                            """
+                            try:
+                                new_record[field_label] = record[field].get("url")
+
+                            except AttributeError:
+                                new_record[field_label] = record[field]
                         else:
                             new_record[field_label] =  ""
 
