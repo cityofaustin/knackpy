@@ -1,6 +1,12 @@
 # Knackpy 
 
-A Python client for interacting with [Knack](http://knack.com) applications.
+A Python client for interacting with [Knack](http://knack.com) applications. 
+
+## Contributing and Issues
+
+Please @ me (johnclary, repo maintainer) in your issue description.
+
+Contributions are welcome. Know that your contributions are donated to the [public domain](https://github.com/cityofaustin/knackpy/blob/master/LICENSE.md).
 
 ## Installation
 
