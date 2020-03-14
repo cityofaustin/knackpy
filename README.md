@@ -2,7 +2,15 @@
 
 A Python client for interacting with [Knack](http://knack.com) applications. 
 
-## Contributing and Issues
+## Contents
+
+- [Issues and Contributions](#issues-and-contributions)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Documentation](#documentation)
+- [License](https://github.com/cityofaustin/knackpy/blob/master/LICENSE.md)
+
+## Issues and Contributions
 
 Please @ me (johnclary, repo maintainer) in your issue description.
 
