@@ -1,26 +1,40 @@
+from knackpy.exceptions.exceptions import ValidationError
+
 import pdb
 
-data = {
-    "key": "field_9",
-    "label": "Text Formula simple",
-    "required": False,
-    "type_": "concatenation"
-}
 
 class Field:
     """ Knack field wrapper """
     def __repr__(self):
-        label = getattr(self, "label", "(no label)")
-        return f"<Field [{label}]>"
+        name = getattr(self, "name", "(no name)")
+        return f"<Field [{name}]>"
 
-    def __init__(self, key=None, label=None, type_=None, required=False):
-        self.key = key
-        self.label = label
-        self.required = required
-        self.type = type_
+    def __init__(self, **kwargs):
+        # required properties
+        self.id = kwargs.get("id", None)
+        self.key = kwargs.get("key", None)
+        self.name = kwargs.get("name", None)
+        self.type_ = kwargs.get("type", None)
 
+        # optional properties
+        self.conditional = kwargs.get("conditional", None)
+        self.default = kwargs.get("default", None)
+        self.format = kwargs.get("format", None)
+        self.immutable = kwargs.get("immutable", None)
+        self.object_key = kwargs.get("object_key", None)
+        self.relationship = kwargs.get("relationship", None)
+        self.required = kwargs.get("required", None)
+        self.rules = kwargs.get("rules", None)
+        self.unique = kwargs.get("unique", None)
+        self.user = kwargs.get("user", None)
+        self.validation = kwargs.get("validation", None)
+        
+        self._validate()
+
+    def _validate(self):
+        REQUIRED_PROPS = ["id", "key", "name", "type_"]
+        errors = [f"\'{key}\'" for key in REQUIRED_PROPS if not getattr(self, key)]
+        
+        if errors:
+            raise ValidationError(f"Field missing required properties: {{ {', '.join(errors)} }}")
         pass
-
-bob = Field(**data)
-
-pdb.set_trace()

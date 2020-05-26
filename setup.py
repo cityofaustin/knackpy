@@ -28,5 +28,5 @@ setup(
     test_suite='nose.collector',
     tests_require=['nose'],
     url='http://github.com/cityofaustin/knackpy',
-    version='0.1.1',
+    version='1.0.0',
 )
