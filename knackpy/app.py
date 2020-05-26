@@ -1,4 +1,3 @@
-from knackpy.config.constants import BASE_URL
 from knackpy._request import _request
 
 import pdb 
