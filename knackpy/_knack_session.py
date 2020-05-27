@@ -40,7 +40,8 @@ class KnackSession:
         return res
 
     def _continue(self, total_records, current_records, record_limit):
-        if not total_records:
+
+        if total_records == None:
             return True
 
         elif current_records < record_limit and total_records > current_records:
@@ -48,7 +49,7 @@ class KnackSession:
 
         return False
 
-    def _get_paginated_records(self, route, max_attempts=5, record_limit=1e14):
+    def _get_paginated_data(self, route, max_attempts=5, record_limit=1e14):
         # if you have more than 100 billion records, i'm sorry!
         rows_per_page = (
             MAX_ROWS_PER_PAGE if record_limit >= MAX_ROWS_PER_PAGE else record_limit
