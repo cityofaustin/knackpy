@@ -28,9 +28,9 @@ class KnackSession:
         subdomain = "loader" if "applications" in route else "api"
         return f"https://{subdomain}.knack.com/v1{route}" 
 
-    def request(self, method, route):
+    def request(self, method, route, **kwargs):
         url = self._url(route)
-        req = requests.Request(method, url, headers=self.headers)
+        req = requests.Request(method, url, headers=self.headers. **kwargs)
         prepped = req.prepare()        
         res = self.session.send(prepped, timeout=self.timeout)
         res.raise_for_status()
@@ -56,7 +56,7 @@ class KnackSession:
                 
                 try:
                     logging.debug(f"Getting data from page {page} of {total_pages} from {route}")
-                    res = self.request("GET", route)
+                    res = self.request("GET", route, params=params)
                     break
 
                 except requests.exceptions.Timeout as e:
