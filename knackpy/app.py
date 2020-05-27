@@ -2,7 +2,7 @@ import logging
 from pprint import pprint as print
 import warnings
 
-from knackpy._request import KnackSession
+from knackpy._knack_session import KnackSession
 from knackpy.utils._humanize_bytes import _humanize_bytes
 from knackpy.exceptions.exceptions import ValidationError
 
