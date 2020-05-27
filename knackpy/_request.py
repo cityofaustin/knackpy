@@ -30,7 +30,7 @@ class KnackSession:
 
     def request(self, method, route, **kwargs):
         url = self._url(route)
-        req = requests.Request(method, url, headers=self.headers. **kwargs)
+        req = requests.Request(method, url, headers=self.headers, **kwargs)
         prepped = req.prepare()        
         res = self.session.send(prepped, timeout=self.timeout)
         res.raise_for_status()
