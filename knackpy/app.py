@@ -6,7 +6,6 @@ from knackpy._request import KnackSession
 from knackpy.utils._humanize_bytes import _humanize_bytes
 from knackpy.exceptions.exceptions import ValidationError
 
-
 import pdb 
 
 class App:
@@ -26,11 +25,6 @@ class App:
         self.api_key = api_key
         self.timeout = timeout
         self.session = KnackSession(self.app_id, self.api_key, timeout=timeout)
-        """
-        Responses are accumualted at `self.responses` during the life of the instance. You might
-        want to inspect these for some reason. E.g., you're developing a new version of Knackpy ;)
-        """
-        self.responses = []
         self.metadata = self._get_metadata()
         self.view_lookup = self._generate_view_lookup()
         self.info = self._parse_app_info()
@@ -52,7 +46,6 @@ class App:
     def _get_metadata(self, route=f"/applications"):
         route = f"{route}/{self.app_id}"
         res = self.session.request("get", route)
-        self.responses.append(res)
         return res.json()["application"]
     
     def _generate_view_lookup(self):
@@ -79,22 +72,13 @@ class App:
     def get_data(self, *keys, **kwargs):
         """
         *keys: each arg must be an object or view key string that exists in the app
-        **kwargs: supported kwargs are rows_per_page, page_limit, and max_attempts. others
-            are ignored.
+        **kwargs: supported kwargs are record_limit and max_attempts. others are ignored.
         """
         todos = [self._validate_key(key) for key in keys]
-        data = {}
+        self.data_raw = {}
 
         for key_dict in todos:
-            key = key_dict["key"]
-            data[key] = []
             route = self._route(key_dict)
-            responses = self.session._paginated(route, **kwargs)
-            
-            for res in responses:
-                data[key] += res.json()["records"]
+            self.data_raw[key_dict["key"]] = self.session._get_paginated_records(route, **kwargs)
 
-        self.data_raw = data
-        return None
-        
-        
+        return None        

@@ -4,6 +4,7 @@ import requests
 
 from knackpy.exceptions.exceptions import ValidationError
 
+MAX_ROWS_PER_PAGE = 1000 # max supported by Knack API
 
 class KnackSession:
     """ A `Requests` wrapper with Knack helpers """
@@ -36,51 +37,43 @@ class KnackSession:
         res.raise_for_status()
         return res
 
-    def _paginated(self, route, max_attempts=5, page_limit=10, rows_per_page=1000):
-        try:
-            max_attempts, page_limit, rows_per_page = int(max_attempts), int(page_limit), int(rows_per_page)
-        
-        except ValueError as e:
-            raise ValueError("Invalid parameter value(s) supplied to `max_attempts`, `page_limit` or `rows_per_page`")
+    def _continue(self, total_records, current_records, record_limit):
+        if not total_records:
+            return True
 
-        responses = []
-        total_pages = None
+        elif current_records < record_limit and total_records > current_records:
+            return True
+
+        return False
+
+    def _get_paginated_records(self, route, max_attempts=5, record_limit=1e14):
+        # if you have more than 100 billion records, i'm sorry!
+        rows_per_page = MAX_ROWS_PER_PAGE if record_limit >= MAX_ROWS_PER_PAGE else record_limit
+        records = []
+        total_records = None
         page = 1
-        
-        while page:
-            params = {"page": page}
+
+        while self._continue(total_records, len(records), record_limit):
             attempts = 0
+            params = {"page": page, "rows_per_page": rows_per_page}
             
             while attempts < max_attempts:
-                attempts += 1
-                
                 try:
-                    logging.debug(f"Getting data from page {page} of {total_pages} from {route}")
+                    logging.debug(f"Getting {rows_per_page} records from page {page} from {route}")
                     res = self.request("GET", route, params=params)
+                    
+                    total_records = res.json()["total_records"]
                     break
 
                 except requests.exceptions.Timeout as e:
                     if attempts < max_attempts:
+                        attempts += 1
                         continue
                     else:
                         raise e
 
-            responses.append(res)
+            records += res.json()["records"]
 
-            if not total_pages:
-                try:
-                    total_pages = int(res.json()["total_pages"])
+            page += 1
 
-                except KeyError:
-                    total_pages = 1
-
-            if page_limit < total_pages:
-                total_pages = page_limit
-
-            if page >= total_pages:
-                break
-
-            else:
-                page += 1
-
-        return responses
+        return records[0:record_limit] # lazily shaving off any remainder to keep the client happy
