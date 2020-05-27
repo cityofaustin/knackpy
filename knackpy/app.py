@@ -72,22 +72,22 @@ class App:
             f"Unknown Knack key supplied. `{key}` not in {{ {', '.join([key for key in obj_keys + view_keys]) } }}"
         )
 
-    def _route(self, key_dict):
-        if key_dict["type"] == "object":
-            return f"/objects/{key_dict['key']}/records"
+    def _route(self, key=None, type_=None, scene=None):
+        if type_ == "object":
+            return f"/objects/{key}/records"
         else:
-            return f"/pages/{key_dict['scene']}/views/{key_dict['key']}/records"
+            return f"/pages/{scene}/views/{key}/records"
 
     def get_data(self, *keys, **kwargs):
         """
         *keys: each arg must be an object or view key string that exists in the app
-        **kwargs: supported kwargs are record_limit and max_attempts. others are ignored.
+        **kwargs: supported kwargs are record_limit (type: int) and max_attempts (type: int). others are ignored.
         """
         todos = [self._validate_key(key) for key in keys]
         self.data_raw = {}
 
         for key_dict in todos:
-            route = self._route(key_dict)
+            route = self._route(**key_dict)
             self.data_raw[key_dict["key"]] = self.session._get_paginated_records(
                 route, **kwargs
             )
