@@ -2,6 +2,7 @@ import logging
 from pprint import pprint as print
 import warnings
 
+from knackpy._records import Records
 from knackpy._knack_session import KnackSession
 from knackpy.utils._humanize_bytes import _humanize_bytes
 from knackpy.exceptions.exceptions import ValidationError
@@ -71,7 +72,7 @@ class App:
         else:
             return f"/pages/{key_props['scene']}/views/{key_props['key']}/records"
 
-    def _handle_key(self, knack_key):
+    def _generate_key_props(self, knack_key):
         
         try:
             # try to find a matching view key
@@ -118,25 +119,13 @@ class App:
         *keys: each arg must be an object or view key string that exists in the app
         **kwargs: supported kwargs are record_limit (type: int) and max_attempts (type: int). others are ignored.
         """
+        key_props = [self._generate_key_props(key) for key in keys]
+        self.records = Records(key_props)
 
-        self.data = {}
-        for key in keys:
-            key_props = self._handle_key(key)
-            route = self._route(key_props)
-            self.data[key] = self.session._get_paginated_data(
+        for key_prop in key_props:
+            route = self._route(key_prop)
+            self.records.data[key_prop["key"]] = self.session._get_paginated_data(
                 route, **kwargs
             )
 
         return None
-
-    def records(self, key):
-        try:
-            self.data[key]
-        except KeyError:
-            pass
-
-        # try:
-        #     self.data[]
-
-        # for record in self.data[key]:
-
