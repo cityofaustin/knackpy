@@ -11,9 +11,8 @@ import pdb
 
 class App:
     """
-    Knack application wrapper. Stores app meta data, tables, fields, etc.
+    Knack application wrapper. This thing does it all, folks!
     """
-
     def __repr__(self):
         info_str = ", ".join([f"{value} {key}" for key, value in self.info.items()])
         return f"""<App [{self.metadata["name"]}]> ({info_str})"""
