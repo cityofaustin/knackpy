@@ -13,7 +13,7 @@ class KnackSession:
     def __init__(self, app_id, api_key, timeout=None):
         self.app_id = app_id
         self.headers = self._headers(app_id, api_key)
-        self.session = self._session()
+        self.session = requests.Session()
         self.timeout = timeout
 
     def _headers(self, app_id, api_key):
@@ -23,10 +23,6 @@ class KnackSession:
             "X-Knack-REST-API-KEY": api_key if api_key else "knack",
         }
         return headers
-
-    def _session(self):
-        s = requests.Session()
-        return s
 
     def _url(self, route):
         subdomain = "loader" if "applications" in route else "api"
