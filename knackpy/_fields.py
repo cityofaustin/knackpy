@@ -2,17 +2,25 @@ from knackpy.exceptions.exceptions import ValidationError
 
 import pdb
 
-
 class Field:
-    """ Knack field wrapper """
+    """ Knack field  wrapper """
+    def __repr__(self):
+        return f"{self.field_def.name}: {self.value} ({self.field_def.key})"
 
+    def __init__(self, field_def, value, from_raw=False):
+        self.field_def = field_def
+        self.value = value
+        pass
+
+class FieldDef:
+    """ Knack field defintion wrapper """
     def __repr__(self):
         name = getattr(self, "name", "(no name)")
-        return f"<Field [{name}]>"
+        return f"<FieldDef [{name}]>"
 
     def __init__(self, **kwargs):
         # required properties
-        self.id = kwargs.get("id", None)
+        self._id = kwargs.get("_id", None)
         self.key = kwargs.get("key", None)
         self.name = kwargs.get("name", None)
         self.type_ = kwargs.get("type", None)
@@ -33,7 +41,8 @@ class Field:
         self._validate()
 
     def _validate(self):
-        REQUIRED_PROPS = ["id", "key", "name", "type_"]
+        # this should never error, unless Knack changes their API
+        REQUIRED_PROPS = ["_id", "key", "name", "type_"]
         errors = [f"'{key}'" for key in REQUIRED_PROPS if not getattr(self, key)]
 
         if errors:

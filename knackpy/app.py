@@ -2,6 +2,7 @@ import logging
 from pprint import pprint as print
 import warnings
 
+from knackpy._fields import FieldDef
 from knackpy._records import Records
 from knackpy._knack_session import KnackSession
 from knackpy.utils._humanize_bytes import _humanize_bytes
@@ -30,6 +31,7 @@ class App:
         self.timeout = timeout
         self.session = KnackSession(self.app_id, self.api_key, timeout=timeout)
         self.metadata = self._get_metadata()
+        self.field_defs = self._generate_field_lookup()
         self.view_lookup = self._generate_view_lookup()
         self.obj_lookup = self._generate_obj_lookup()
         self.info = self._parse_app_info()
@@ -53,6 +55,18 @@ class App:
         res = self.session.request("get", route)
         return res.json()["application"]
 
+    def _generate_field_lookup(self):
+        lookup = {}
+        fields = [field for obj in self.metadata["objects"] for field in obj["fields"]]
+        for field in fields:
+            lookup[field["key"]] = FieldDef(**field)
+
+        lookup["id"] = self._id_field_def()
+        return lookup
+
+    def _id_field_def(self):
+        return FieldDef(_id="id", key="id", name="id", type="id")
+
     def _generate_view_lookup(self):
         return {
             view["key"]: {"key": view["key"], "scene": scene["key"], "name": view["name"]}
@@ -71,6 +85,7 @@ class App:
 
         else:
             return f"/pages/{key_props['scene']}/views/{key_props['key']}/records"
+
 
     def _generate_key_props(self, knack_key):
         
@@ -120,7 +135,7 @@ class App:
         **kwargs: supported kwargs are record_limit (type: int) and max_attempts (type: int). others are ignored.
         """
         key_props = [self._generate_key_props(key) for key in keys]
-        self.records = Records(key_props)
+        self.records = Records(key_props, self.field_defs)
 
         for key_prop in key_props:
             route = self._route(key_prop)
