@@ -8,7 +8,6 @@ from knackpy.exceptions.exceptions import ValidationError
 class KnackSession:
     """ A `Requests` wrapper with Knack helpers """
     def __repr__(self):
-        info_str = ", ".join([f"{value} {key}" for key, value in self.info.items()])
         return f"""<KnackSession [id={self.app_id}]>"""
 
     def __init__(self, app_id, api_key, timeout=None):
