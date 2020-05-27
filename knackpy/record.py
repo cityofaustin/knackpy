@@ -2,7 +2,6 @@ from knackpy.exceptions.exceptions import ValidationError
 
 import pdb
 
-
 class Record:
     """ Knack field wrapper """
     def __repr__(self):
