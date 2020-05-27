@@ -11,6 +11,7 @@ import requests
 
 from knackpy.exceptions import ValidationError
 
+
 class Knack:
     def __init__(
         self,
@@ -129,7 +130,9 @@ class Knack:
             )
 
         if self.rows_per_page > 1000:
-            print("Warning: maximum rows per page is 1000. Only 1000 rows per page will be returned.")
+            print(
+                "Warning: maximum rows per page is 1000. Only 1000 rows per page will be returned."
+            )
 
         self.endpoint = self._get_endpoint()
         self.data_raw = self._get_data(self.endpoint, "records", self.filters)
@@ -435,7 +438,7 @@ class Knack:
 
                     elif field_type == "file" or field_type == "image":
                         fieldnames.append(field_label)
-                        
+
                         if record[field]:
                             """
                             Image fields come in two flavors: direct upload or reference
@@ -450,7 +453,7 @@ class Knack:
                             except AttributeError:
                                 new_record[field_label] = record[field]
                         else:
-                            new_record[field_label] =  ""
+                            new_record[field_label] = ""
 
                     else:
                         fieldnames.append(field_label)
@@ -568,7 +571,7 @@ class Knack:
 
                 if not download["url"]:
                     continue
-                
+
                 filename = os.path.basename(download["url"])
 
                 if label_fields:
@@ -656,7 +659,8 @@ class Knack:
             download_fields = [
                 self.fields[field]["label"]
                 for field in self.fields.keys()
-                if self.fields[field]["type"] == "file" or self.fields[field]["type"] == "image"
+                if self.fields[field]["type"] == "file"
+                or self.fields[field]["type"] == "image"
             ]
 
         self.overwrite_files = overwrite

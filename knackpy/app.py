@@ -6,12 +6,14 @@ from knackpy._request import KnackSession
 from knackpy.utils._humanize_bytes import _humanize_bytes
 from knackpy.exceptions.exceptions import ValidationError
 
-import pdb 
+import pdb
+
 
 class App:
     """
     Knack application wrapper. Stores app meta data, tables, fields, etc.
     """
+
     def __repr__(self):
         info_str = ", ".join([f"{value} {key}" for key, value in self.info.items()])
         return f"""<App [{self.metadata["name"]}]> ({info_str})"""
@@ -19,7 +21,9 @@ class App:
     def __init__(self, app_id, api_key=None, timeout=30):
 
         if not api_key:
-            warnings.warn("No API key has been supplied. Only public views will be accessible.")
+            warnings.warn(
+                "No API key has been supplied. Only public views will be accessible."
+            )
 
         self.app_id = app_id
         self.api_key = api_key
@@ -35,7 +39,7 @@ class App:
         total_scenes = len(self.metadata.get("scenes"))
         total_records = self.metadata.get("counts").get("total_entries")
         total_size = _humanize_bytes(self.metadata.get("counts").get("asset_size"))
-        
+
         return {
             "objects": total_obj,
             "scenes": total_scenes,
@@ -47,9 +51,13 @@ class App:
         route = f"{route}/{self.app_id}"
         res = self.session.request("get", route)
         return res.json()["application"]
-    
+
     def _generate_view_lookup(self):
-        return { view["key"]: { "scene": scene["key"] } for scene in self.metadata["scenes"] for view in scene["views"]}
+        return {
+            view["key"]: {"scene": scene["key"]}
+            for scene in self.metadata["scenes"]
+            for view in scene["views"]
+        }
 
     def _validate_key(self, key):
         obj_keys = [obj["key"] for obj in self.metadata["objects"]]
@@ -60,8 +68,10 @@ class App:
 
         if key in view_keys:
             return {"key": key, "type": "view", "scene": self.view_lookup[key]["scene"]}
-    
-        raise ValidationError(f"Unknown Knack key supplied. `{key}` not in {{ {', '.join([key for key in obj_keys + view_keys]) } }}")
+
+        raise ValidationError(
+            f"Unknown Knack key supplied. `{key}` not in {{ {', '.join([key for key in obj_keys + view_keys]) } }}"
+        )
 
     def _route(self, key_dict):
         if key_dict["type"] == "object":
@@ -79,6 +89,8 @@ class App:
 
         for key_dict in todos:
             route = self._route(key_dict)
-            self.data_raw[key_dict["key"]] = self.session._get_paginated_records(route, **kwargs)
+            self.data_raw[key_dict["key"]] = self.session._get_paginated_records(
+                route, **kwargs
+            )
 
-        return None        
+        return None

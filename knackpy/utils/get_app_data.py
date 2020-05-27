@@ -1,5 +1,6 @@
 import requests
 
+
 def get_app_data(app_id, timeout=30):
     """
     Get Knack app metadata JSON

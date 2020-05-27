@@ -5,6 +5,7 @@ import pdb
 
 class Field:
     """ Knack field wrapper """
+
     def __repr__(self):
         name = getattr(self, "name", "(no name)")
         return f"<Field [{name}]>"
@@ -28,13 +29,15 @@ class Field:
         self.unique = kwargs.get("unique", None)
         self.user = kwargs.get("user", None)
         self.validation = kwargs.get("validation", None)
-        
+
         self._validate()
 
     def _validate(self):
         REQUIRED_PROPS = ["id", "key", "name", "type_"]
-        errors = [f"\'{key}\'" for key in REQUIRED_PROPS if not getattr(self, key)]
-        
+        errors = [f"'{key}'" for key in REQUIRED_PROPS if not getattr(self, key)]
+
         if errors:
-            raise ValidationError(f"Field missing required properties: {{ {', '.join(errors)} }}")
+            raise ValidationError(
+                f"Field missing required properties: {{ {', '.join(errors)} }}"
+            )
         pass
