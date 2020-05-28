@@ -1,9 +1,8 @@
 import logging
-from pprint import pprint as print
 import warnings
 
-from knackpy._fields import FieldDef
-from knackpy._records import Records
+from knackpy._fields import FieldDef, Field
+from knackpy._records import RecordCollection, Record
 from knackpy._knack_session import KnackSession
 from knackpy.utils._humanize_bytes import _humanize_bytes
 from knackpy.exceptions.exceptions import ValidationError
@@ -62,6 +61,7 @@ class App:
             lookup[field["key"]] = FieldDef(**field)
 
         lookup["id"] = self._id_field_def()
+
         return lookup
 
     def _id_field_def(self):
@@ -135,12 +135,23 @@ class App:
         **kwargs: supported kwargs are record_limit (type: int) and max_attempts (type: int). others are ignored.
         """
         key_props = [self._generate_key_props(key) for key in keys]
-        self.records = Records(key_props, self.field_defs)
+        self.records = RecordCollection()
+        self.records.key_props = key_props
+        self.records.generate_key_lookup(key_props)
 
         for key_prop in key_props:
             route = self._route(key_prop)
-            self.records.data[key_prop["key"]] = self.session._get_paginated_data(
-                route, **kwargs
-            )
+            data = self.session._get_paginated_data(route, **kwargs)
+            self.records[key_prop["key"]] = self._handle_data(data)
 
         return None
+
+
+    def _handle_data(self, data):
+        records =  []
+        for record in data:
+            record = Record(record, self.field_defs)
+            records.append(record)
+
+        return records
+    
