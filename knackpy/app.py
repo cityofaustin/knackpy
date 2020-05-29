@@ -16,8 +16,7 @@ class App:
     """
 
     def __repr__(self):
-        info_str = ", ".join([f"{value} {key}" for key, value in self.info.items()])
-        return f"""<App [{self.metadata["name"]}]> ({info_str})"""
+        return f"""<App [{self.metadata["name"]}]>"""
 
     def __init__(self, app_id, api_key=None, timeout=30):
 
