@@ -7,11 +7,42 @@
 ```python
 >>> import knackpy
 
->>> app = knackpy.App("my_app_id", api_key="my_very_secret_api_key")
-   
->>> app.get_data("my_object_name", record_limit=1)
+>>> app_settings = {
+  "api_key": "my_very_secret_api_key",
+  "timeout": 30,
+  "max_attempts": 5
+}
 
->>> for record in app.records.get("my_object_name", format_keys=True, format_values=True):
+>>> app = knackpy.App("my_app_id", **app_settings)
+
+>>> query_settings = {
+  "filters": [ "my_object_name": {
+      'match': 'and',
+      'rules': [
+        {
+          'field':'field_10',
+          'operator':'is',
+          'value':'No'
+        },
+        {
+          'field':'field_11',
+          'operator':'is',
+          'value':'Yes'
+        }
+      ]
+    }
+  ],
+}
+
+>>> app.get_data("my_object_name", **query_settings)
+
+>>> record_settings = {
+  "format_keys": False,
+  "format_values": False,
+  "localize": True
+}
+
+>>> for record in app.records.get("my_object_name", **record_settings):
         print(record)
 
 # { 'id' : '5d7964422d7159001659b27a', 'my_number_field': 2, 'my_email_field': 'knackpy_user@genius.town' }  
@@ -43,3 +74,4 @@
 ```
 
 * Pythonic use of `exceptions`, `warnings`, and `logging`.
+* Automatic localization (no need to set TZ info)
