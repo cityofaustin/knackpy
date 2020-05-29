@@ -51,7 +51,7 @@
 
 # my_object_name.csv
 # id, my_number_field, my_email_field
-# 5d7964422d7159001659b27a, my_number_field, knackpy_user@genius.town
+# 5d7964422d7159001659b27a, 2, knackpy_user@genius.town
 # [...]
 ```
 
