@@ -95,7 +95,7 @@ class App:
 
         raise ValidationError(f"Unknown Knack key supplied: `{knack_key}`")
 
-    def get_data(self, *keys, **kwargs):
+    def get(self, *keys, **kwargs):
         """
         *keys: each arg must be an object or view key string that exists in the app
         **kwargs: supported kwargs are record_limit (type: int) and max_attempts (type: int). others are ignored.
@@ -107,11 +107,11 @@ class App:
             route = self._route(route_props)
             self.data[user_key] = self.session._get_paginated_data(route, **kwargs)
 
-        self.records = self.generate_records(self.data)
+        self.generate_records()
 
-    def generate_records(self, data):
+    def generate_records(self):
         """
         Note this method is public to support the use case of BYO data.
         """
-        return Records(self.data, self.field_defs)
+        self.records = Records(self.data, self.field_defs)
 
