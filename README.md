@@ -14,7 +14,7 @@
 >>> for record in app.records.get("my_object_name", format_keys=True, format_values=True):
         print(record)
 
-# { 'id' : '5d7964422d7159001659b27a', 'my_number_field': 2, 'my_email_field': 'knackpyuser@genius.town' }  
+# { 'id' : '5d7964422d7159001659b27a', 'my_number_field': 2, 'my_email_field': 'knackpy_user@genius.town' }  
 
 ```
 
@@ -38,6 +38,8 @@
 * `App`s have built-in metadata:
 
 ```python
->>> app.info
+>>> app.info()
 # {'objects': 10, 'scenes': 4, 'records': 6786, 'size': '25.47mb'}
 ```
+
+* Pythonic use of `exceptions`, `warnings`, and `logging`.
