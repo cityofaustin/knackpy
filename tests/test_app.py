@@ -16,14 +16,15 @@ def app_data():
 
 @pytest.fixture
 def app(app_data):
-    return knackpy.App(app_id=app_data["metadata"]["id"], metadata=app_data["metadata"])
+    app = knackpy.App(app_id=app_data["metadata"]["id"], metadata=app_data["metadata"])
+    app.data = {"all_fields_test": app_data["data"]}
+    return app
 
 def test_constructor_success(app_data):
     app = knackpy.App(app_id=app_data["metadata"]["id"], metadata=app_data["metadata"])
     assert app
 
 def test_constructor_generate_records(app, app_data):
-    app.data = {"all_fields_test": app_data["data"]}
     app.generate_records()
     assert(app.records)
 
