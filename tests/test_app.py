@@ -24,10 +24,10 @@ def test_constructor_success(app_data):
     app = knackpy.App(app_id=app_data["metadata"]["id"], metadata=app_data["metadata"])
     assert app
 
-def test_constructor_generate_records(app, app_data):
-    app.generate_records()
-    assert(app.records)
-
 def test_constructor_fail_missing_app_id(app, app_data):
     with pytest.raises(TypeError):
         app = knackpy.App()
+
+def test_constructor_generate_records(app, app_data):
+    app.generate_records()
+    assert(app.records)
