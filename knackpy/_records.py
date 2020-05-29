@@ -3,18 +3,20 @@ class Records:
         self.data = data
         self.field_defs = field_defs
 
-    def get(self, key, _format=False):
-        return self._record_generator(self.data[key], self.field_defs, _format)
+    def get(self, key, format_keys=False, format_values=False):
+        return self._record_generator(
+            self.data[key], self.field_defs, format_keys, format_values
+        )
 
     def keys(self):
         return self.data.keys()
 
-    def _record_generator(self, data, field_defs, _format):
+    def _record_generator(self, data, field_defs, format_keys, format_values):
         for record in data:
-            record = self._handle_record(record, _format)
+            record = self._handle_record(record, format_keys, format_values)
             yield record
 
-    def _handle_record(self, record, _format):
+    def _handle_record(self, record, format_keys, format_values):
         raw_keys = [key for key in record.keys() if "raw" in key]
 
         handled_record = {}
@@ -33,12 +35,12 @@ class Records:
             except KeyError:
                 continue
 
-            if _format:
+            if format_keys:
                 key = field_def.name
 
-            handled_record[key] = self._handle_field(value, field_def, _format)
+            handled_record[key] = self._handle_field(value, field_def, format_values)
 
         return handled_record
 
-    def _handle_field(self, value, field_def, _format):
-        return value if not _format else field_def.formatter(value)
+    def _handle_field(self, value, field_def, format_values):
+        return value if not format_values else field_def.formatter(value)
