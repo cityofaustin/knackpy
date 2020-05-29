@@ -1,8 +1,8 @@
 import logging
 import warnings
 
-from knackpy._fields import FieldDef, Field
-from knackpy._records import RecordCollection, Record
+from knackpy._fields import FieldDef
+from knackpy._records import Records
 from knackpy._knack_session import KnackSession
 from knackpy.utils._humanize_bytes import _humanize_bytes
 from knackpy.exceptions.exceptions import ValidationError
@@ -14,6 +14,7 @@ class App:
     """
     Knack application wrapper. This thing does it all, folks!
     """
+
     def __repr__(self):
         info_str = ", ".join([f"{value} {key}" for key, value in self.info.items()])
         return f"""<App [{self.metadata["name"]}]> ({info_str})"""
@@ -31,8 +32,6 @@ class App:
         self.session = KnackSession(self.app_id, self.api_key, timeout=timeout)
         self.metadata = self._get_metadata()
         self.field_defs = self._generate_field_defs()
-        self.view_lookup = self._generate_view_lookup()
-        self.obj_lookup = self._generate_obj_lookup()
         self.info = self._parse_app_info()
         logging.debug(self)
 
@@ -67,97 +66,48 @@ class App:
     def _id_field_def(self):
         return FieldDef(_id="id", key="id", name="id", type="id")
 
-    def _generate_view_lookup(self):
-        return {
-            view["key"]: {"key": view["key"], "scene": scene["key"], "name": view["name"]}
-            for scene in self.metadata["scenes"]
-            for view in scene["views"]
-        }
-
-    def _generate_obj_lookup(self):
-        return {
-            obj["key"]: {"key": obj["key"], "name": obj["name"] } for obj in self.metadata["objects"]
-        }
-
-    def _route(self, key_props):
-        if "object" in key_props["key"]:
-            return f"/objects/{key_props['key']}/records"
-
+    def _route(self, route_props):
+        if route_props.get("scene"):
+            return f"/pages/{route_props['scene']}/views/{route_props['key']}/records"
         else:
-            return f"/pages/{key_props['scene']}/views/{key_props['key']}/records"
+            return f"/objects/{route_props['key']}/records"
 
+    def _get_route_props(self, user_key):
+        route_props = {"key": None, "scene": None}
 
-    def _generate_key_props(self, knack_key):
-        """
-        Generate a dict of knack keys and names so that we can lookup a knack key by
-        either it's key or it's name.
+        for scene in self.metadata["scenes"]:
+            for view in scene["views"]:
+                if view["key"] == user_key:
+                    route_props["key"] = user_key
+                    route_props["scene"] = scene["key"]
+                    return route_props
 
-        input: knack_key (str): a knack object or view key (object_xx, view_xx) or a knack
-        object or view name ("John's Cool Object", "John's Cool View")
-        """
-        try:
-            # try to find a matching view key
-            return self.view_lookup[knack_key]
+                elif view["name"] == user_key:
+                    route_props["key"] = view["key"]
+                    route_props["scene"] = scene["key"]
+                    return route_props
 
-        except KeyError:
-            pass
+        for obj in self.metadata["objects"]:
+            if obj["key"] == user_key:
+                route_props["key"] = user_key
+                return route_props
 
-        try:
-            # try to find a matching view name
-            for key, value in self.view_lookup.items():
-                if value["name"] == knack_key:
-                    return self.view_lookup[key]
+            elif obj["name"] == user_key:
+                route_props["key"] = obj["key"]
+                return route_props
 
-            raise KeyError
-        
-        except KeyError:
-            pass
-
-        try:
-            # try to find a matching object key
-            return self.obj_lookup[knack_key]
-
-        except KeyError as e:
-            pass
-
-        try:
-            # try to find a matching object name
-            for key, value in self.obj_lookup.items():
-                if value["name"] == knack_key:
-                    return self.obj_lookup[key]
-
-            raise KeyError
-
-        except KeyError:
-            
-            raise ValidationError(
-                f"Unknown Knack key supplied: `{knack_key}`"
-            )
-
+        raise ValidationError(f"Unknown Knack key supplied: `{knack_key}`")
 
     def get_data(self, *keys, **kwargs):
         """
         *keys: each arg must be an object or view key string that exists in the app
         **kwargs: supported kwargs are record_limit (type: int) and max_attempts (type: int). others are ignored.
         """
-        key_props = [self._generate_key_props(key) for key in keys]
-        self.records = RecordCollection()
-        self.records.key_props = key_props
-        self.records.generate_key_lookup(key_props)
+        self.data = {}
 
-        for key_prop in key_props:
-            route = self._route(key_prop)
-            data = self.session._get_paginated_data(route, **kwargs)
-            self.records[key_prop["key"]] = self._handle_data(data)
+        for user_key in keys:
+            route_props = self._get_route_props(user_key)
+            route = self._route(route_props)
+            self.data[user_key] = self.session._get_paginated_data(route, **kwargs)
 
-        return None
-
-
-    def _handle_data(self, data):
-        records =  []
-        for record in data:
-            record = Record(record, self.field_defs)
-            records.append(record)
-
-        return records
-    
+        self.records = Records(self.data, self.field_defs)

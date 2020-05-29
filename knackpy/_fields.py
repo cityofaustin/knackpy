@@ -1,19 +1,89 @@
+import logging
 from knackpy.exceptions.exceptions import ValidationError
 
 import pdb
 
-class Field:
-    """ Knack field  wrapper """
-    def __repr__(self):
-        return f"{self.field_def.name}: {self.value} ({self.field_def.key})"
 
-    def __init__(self, field_def, value, from_raw=False):
-        self.field_def = field_def
-        self.value = value
-        pass
+class Formatter:
+    def __init__(self, type_):
+        try:
+            self.formatter = getattr(self, type_)
+
+        except AttributeError:
+            self.formatter = self.default
+
+    def default(self, value):
+        """ Handles types:
+        - auto_increment
+        - average
+        - boolean
+        - concatenation
+        - connection
+        - count
+        - currency
+        - file
+        - id  x
+        - multiple_choice  x
+        - name  x
+        - number 
+        - password
+        - rating
+        - rich_text
+        - short_text  x
+        - signature
+        - sum
+        - timer  x
+        - user_roles
+        """
+        return None if value == "" else value
+
+    def email(self, value):
+        try:
+            return value.get("email")
+
+        except AttributeError:
+            return None
+
+    def link(self, value):
+        try:
+            return value.get("url")
+
+        except AttributeError:
+            return None
+
+    def phone(self, value):
+        try:
+            return value.get("full")
+        except AttributeError:
+            return None
+
+    def image(self, value):
+        # somtimes a dict, sometimes a str
+        try:
+            return value["url"]
+        except TypeError:
+            return value
+        except AttributeError:
+            return None
+
+    def date_time(self, value):
+        try:
+            return value.get("iso_timestamp")
+        except AttributeError:
+            return None
+
+    def connection(self, value):
+        try:
+            vals = [val["identifier"] for val in value]
+            return vals if vals else None
+
+        except AttributeError:
+            return None
+
 
 class FieldDef:
     """ Knack field defintion wrapper """
+
     def __repr__(self):
         name = getattr(self, "name", "(no name)")
         return f"<FieldDef [{name}]>"
@@ -39,13 +109,14 @@ class FieldDef:
         self.validation = kwargs.get("validation", None)
 
         self._validate()
+        self.formatter = Formatter(self.type_).formatter
 
     def _validate(self):
-        # this should never error, unless Knack changes their API
         REQUIRED_PROPS = ["_id", "key", "name", "type_"]
         errors = [f"'{key}'" for key in REQUIRED_PROPS if not getattr(self, key)]
 
         if errors:
+            # this should never happen unless Knack changes their API
             raise ValidationError(
                 f"Field missing required properties: {{ {', '.join(errors)} }}"
             )
