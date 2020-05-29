@@ -37,8 +37,8 @@
 >>> app.get_data("my_object_name", **query_settings)
 
 >>> record_settings = {
-  "format_keys": False,
-  "format_values": False,
+  "format_keys": True,
+  "format_values": True,
   "localize": True
 }
 
@@ -47,6 +47,12 @@
 
 # { 'id' : '5d7964422d7159001659b27a', 'my_number_field': 2, 'my_email_field': 'knackpy_user@genius.town' }  
 
+>>> app.records.to_csv("my_object_name", **record_settings)
+
+# my_object_name.csv
+# id, my_number_field, my_email_field
+# 5d7964422d7159001659b27a, my_number_field, knackpy_user@genius.town
+# [...]
 ```
 
 ## What's New in v1.0
