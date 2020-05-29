@@ -4,7 +4,7 @@ import warnings
 from knackpy._fields import FieldDef
 from knackpy._records import Records
 from knackpy._knack_session import KnackSession
-from knackpy.utils._humanize_bytes import _humanize_bytes
+from knackpy.utils.utils import _humanize_bytes
 from knackpy.exceptions.exceptions import ValidationError
 
 import pdb
@@ -14,11 +14,10 @@ class App:
     """
     Knack application wrapper. This thing does it all, folks!
     """
-
     def __repr__(self):
         return f"""<App [{self.metadata["name"]}]>"""
 
-    def __init__(self, app_id, api_key=None, timeout=30):
+    def __init__(self, app_id, metadata=None, api_key=None, timeout=30):
 
         if not api_key:
             warnings.warn(
@@ -29,7 +28,7 @@ class App:
         self.api_key = api_key
         self.timeout = timeout
         self.session = KnackSession(self.app_id, self.api_key, timeout=timeout)
-        self.metadata = self._get_metadata()
+        self.metadata = self._get_metadata() if not metadata else metadata
         self.field_defs = self._generate_field_defs()
         logging.debug(self)
 
@@ -108,4 +107,11 @@ class App:
             route = self._route(route_props)
             self.data[user_key] = self.session._get_paginated_data(route, **kwargs)
 
-        self.records = Records(self.data, self.field_defs)
+        self.records = self.generate_records(self.data)
+
+    def generate_records(self, data):
+        """
+        Note this method is public to support the use case of BYO data.
+        """
+        return Records(self.data, self.field_defs)
+
