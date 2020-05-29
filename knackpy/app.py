@@ -30,7 +30,7 @@ class App:
         self.timeout = timeout
         self.session = KnackSession(self.app_id, self.api_key, timeout=timeout)
         self.metadata = self._get_metadata()
-        self.field_defs = self._generate_field_lookup()
+        self.field_defs = self._generate_field_defs()
         self.view_lookup = self._generate_view_lookup()
         self.obj_lookup = self._generate_obj_lookup()
         self.info = self._parse_app_info()
@@ -54,7 +54,7 @@ class App:
         res = self.session.request("get", route)
         return res.json()["application"]
 
-    def _generate_field_lookup(self):
+    def _generate_field_defs(self):
         lookup = {}
         fields = [field for obj in self.metadata["objects"] for field in obj["fields"]]
         for field in fields:
@@ -88,7 +88,13 @@ class App:
 
 
     def _generate_key_props(self, knack_key):
-        
+        """
+        Generate a dict of knack keys and names so that we can lookup a knack key by
+        either it's key or it's name.
+
+        input: knack_key (str): a knack object or view key (object_xx, view_xx) or a knack
+        object or view name ("John's Cool Object", "John's Cool View")
+        """
         try:
             # try to find a matching view key
             return self.view_lookup[knack_key]
