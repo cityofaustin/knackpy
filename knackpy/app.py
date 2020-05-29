@@ -31,10 +31,9 @@ class App:
         self.session = KnackSession(self.app_id, self.api_key, timeout=timeout)
         self.metadata = self._get_metadata()
         self.field_defs = self._generate_field_defs()
-        self.info = self._parse_app_info()
         logging.debug(self)
 
-    def _parse_app_info(self):
+    def info(self):
         total_obj = len(self.metadata.get("objects"))
         total_scenes = len(self.metadata.get("scenes"))
         total_records = self.metadata.get("counts").get("total_entries")
