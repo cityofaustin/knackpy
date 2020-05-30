@@ -20,7 +20,7 @@ class App:
     def __repr__(self):
         return f"""<App [{self.metadata["name"]}]>"""
 
-    def __init__(self, app_id, metadata=None, api_key=None, timeout=30, tz_info=None):
+    def __init__(self, app_id, metadata=None, api_key=None, timeout=30, tzinfo=None):
 
         if not api_key:
             warnings.warn(
@@ -33,7 +33,7 @@ class App:
         
         self.session = KnackSession(self.app_id, self.api_key, timeout=timeout)
         self.metadata = self._get_metadata() if not metadata else metadata
-        self.timezone = self._set_timezone(tz_info)
+        self.timezone = self._set_timezone(tzinfo)
         self.field_defs = self._generate_field_defs()
         logging.debug(self)
 
@@ -55,7 +55,7 @@ class App:
         res = self.session.request("get", route)
         return res.json()["application"]
 
-    def _set_timezone(self, tz_info):
+    def _set_timezone(self, tzinfo):
         """
         Knack stores timezone information in the app metadata, but it does not use IANA
         timezone database names. Instead it uses common descriptive names E.g., Knack uses
@@ -76,12 +76,12 @@ class App:
         See also, note in knackpy._fields.real_unix_timestamp_mills() about why we
         need valid timezone info to handle Knack records.
         """
-        if tz_info:
-             return pytz.timezone(TZ_NAMES[tz_info])
+        if tzinfo:
+             return pytz.timezone(tzinfo)
         try:
             tz_name = self.metadata["settings"]["timezone"]
-            tz_info = [v for tz in TZ_NAMES for k, v in tz.items() if tz_name.upper() == k.upper()]
-            return pytz.timezone(tz_info[0])
+            tzinfo = [v for tz in TZ_NAMES for k, v in tz.items() if tz_name.upper() == k.upper()]
+            return pytz.timezone(tzinfo[0])
         
         except (pytz.exceptions.UnknownTimeZoneError, IndexError) as e:
             pass
