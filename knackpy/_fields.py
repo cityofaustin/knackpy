@@ -131,9 +131,10 @@ class FieldDef:
             )
         pass
 
-    def correct_knack_timestamp(self, knack_date_time, timezone):
+    @staticmethod
+    def correct_knack_timestamp(knack_date_time_dict, timezone):
         """
-        Receive a knack_date_time dict (type: dict) and and pytz timezone and
+        Receive a knack_date_time_dict (type: dict) and and pytz timezone and
         return same dict with a (naive) unix milliseconds timestamp value as
         `unix_timestamp`.
 
@@ -146,10 +147,10 @@ class FieldDef:
         represents Sunday, January 5, 2020 8:05:00 PM **local time**.
         """
         try:
-            mills_timestamp = knack_date_time.get("unix_timestamp")
+            mills_timestamp = knack_date_time_dict.get("unix_timestamp")
         except AttributeError:
-            # knack_date_time is not a dict, almost definitely an empty string (which Knack uses instead of `null`)
-            return knack_date_time
+            # knack_date_time_dict is not a dict, almost definitely an empty string (which Knack uses instead of `null`)
+            return knack_date_time_dict
 
         # create a timezone naive datetime object from the timestamp
         dt_naive = datetime.fromtimestamp(mills_timestamp / 1000)
@@ -158,6 +159,6 @@ class FieldDef:
         dt_local = timezone.localize(dt_naive)
 
         # convert to unix timestamp + mills
-        knack_date_time["unix_timestamp"] = int(dt_local.timestamp() * 1000)
+        knack_date_time_dict["unix_timestamp"] = int(dt_local.timestamp() * 1000)
         
-        return knack_date_time
+        return knack_date_time_dict
