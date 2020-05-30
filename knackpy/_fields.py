@@ -7,7 +7,6 @@ import pytz
 from knackpy.exceptions.exceptions import ValidationError
 
 
-
 class Formatter:
     def __init__(self, type_):
         try:

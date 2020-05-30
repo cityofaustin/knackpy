@@ -56,6 +56,27 @@ class App:
         return res.json()["application"]
 
     def _set_timezone(self, tz_info):
+        """
+        Knack stores timezone information in the app metadata, but it does not use IANA
+        timezone database names. Instead it uses the descriptive names that are common,
+        and apparently are standardized somewhere. E.g., Knack uses "Eastern Time
+        (US & Canada)" instead of "US/Eastern".
+
+        I'm sure these descriptive names are standardized somewhere, and I did not bother
+        to munge the IANA timezone DB to figure it out, so I created the `TZ_NAMES` index
+        in `knackpy.utils.timezones` by copying a table from the internets.
+        
+        As such, we can't be certain it contain all of the timezone names that knack uses in
+        its metadata. So, this method will attempt to lookup the Knack metadata timezone
+        in the TZ_NAMES index, and raise an error of it fails.
+
+        Alternatively, the client can override the Knack timezone description by including
+        an IANA-compliant timezone name (e.g., "US/Central")by passing the `tzinfo` kwarg
+        when constructing the `App` innstance.
+
+        See also, note in knackpy._fields.real_unix_timestamp_mills() about why we
+        need valid timezone info to handle Knack records.
+        """
         if tz_info:
              return pytz.timezone(TZ_NAMES[tz_info])
         try:
