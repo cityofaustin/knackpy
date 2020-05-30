@@ -149,16 +149,23 @@ class FieldDef:
         try:
             mills_timestamp = knack_date_time_dict.get("unix_timestamp")
         except AttributeError:
-            # knack_date_time_dict is not a dict, almost definitely an empty string (which Knack uses instead of `null`)
+            # knack_date_time_dict is not a dict, so it's almost definitely an empty
+            # string (which Knack uses instead of `null`)
             return knack_date_time_dict
 
-        # create a timezone naive datetime object from the timestamp
-        dt_naive = datetime.fromtimestamp(mills_timestamp / 1000)
-
-        # replace the UTC tz info with our tz
+        timestamp = mills_timestamp / 1000
+        # Don't use datetime.utcfromtimestamp()! this will assume the input timestamp is in local (system) time
+        # If you try to pass our timezone to the tz parameter here, it will have no affect. Ask Guido why??
+        dt_utc = datetime.fromtimestamp(timestamp, tz=pytz.UTC)
+        # All we've done so far is create a datetime object from our timestamp
+        # now we have to remove the timezone info that we supplied
+        dt_naive = dt_utc.replace(tzinfo=None)
+        # Now we localize (i.e., translate) the datetime object to our local time
+        # you cannot use datetime.replace() here, because it does not account for
+        # daylight savings time. I know, this is completely insane. 
         dt_local = timezone.localize(dt_naive)
-
-        # convert to unix timestamp + mills
-        knack_date_time_dict["unix_timestamp"] = int(dt_local.timestamp() * 1000)
-
+        # Now we can convert our datetime object back to a timestamp
+        unix_timestamp = dt_local.timestamp()
+        # And add milliseconds
+        knack_date_time_dict["unix_timestamp"] = int(unix_timestamp * 1000)
         return knack_date_time_dict
