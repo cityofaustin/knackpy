@@ -10,6 +10,7 @@ def _humanize_bytes(bytes_):
     s = round(bytes_ / p, 2)
     return f"{s}{size_name[i]}"
 
+
 def _valid_name(key):
     RESERVED_NAMES = ["id"]
     if key in RESERVED_NAMES:

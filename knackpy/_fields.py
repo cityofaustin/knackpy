@@ -76,12 +76,12 @@ class Formatter:
             return None
 
         # create naive datetime data instance
-        dt = datetime.fromtimestamp(mills_timestamp/1000)
+        dt = datetime.fromtimestamp(mills_timestamp / 1000)
         # make it timezone-aware
         dt = dt.replace(tzinfo=timezone.utc)
         # return ISO-formatted str
         return dt.isoformat()
-            
+
     def connection(self, value):
         try:
             vals = [val["identifier"] for val in value]
@@ -154,11 +154,11 @@ class FieldDef:
 
         # create a timezone naive datetime object from the timestamp
         dt_naive = datetime.fromtimestamp(mills_timestamp / 1000)
-        
+
         # replace the UTC tz info with our tz
         dt_local = timezone.localize(dt_naive)
 
         # convert to unix timestamp + mills
         knack_date_time_dict["unix_timestamp"] = int(dt_local.timestamp() * 1000)
-        
+
         return knack_date_time_dict

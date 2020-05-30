@@ -17,6 +17,7 @@ class App:
     """
     Knack application wrapper. This thing does it all, folks!
     """
+
     def __repr__(self):
         return f"""<App [{self.metadata["name"]}]>"""
 
@@ -30,7 +31,7 @@ class App:
         self.app_id = app_id
         self.api_key = api_key
         self.timeout = timeout
-        
+
         self.session = KnackSession(self.app_id, self.api_key, timeout=timeout)
         self.metadata = self._get_metadata() if not metadata else metadata
         self.timezone = self._set_timezone(tzinfo)
@@ -77,20 +78,27 @@ class App:
         need valid timezone info to handle Knack records.
         """
         if tzinfo:
-             return pytz.timezone(tzinfo)
+            return pytz.timezone(tzinfo)
         try:
             tz_name = self.metadata["settings"]["timezone"]
-            tzinfo = [v for tz in TZ_NAMES for k, v in tz.items() if tz_name.upper() == k.upper()]
+            tzinfo = [
+                v
+                for tz in TZ_NAMES
+                for k, v in tz.items()
+                if tz_name.upper() == k.upper()
+            ]
             return pytz.timezone(tzinfo[0])
-        
+
         except (pytz.exceptions.UnknownTimeZoneError, IndexError) as e:
             pass
-        
-        raise ValidationError("""
+
+        raise ValidationError(
+            """
                 Unknown timezone supplied. `tzinfo` should formatted as a timezone string
                 compliant to the IANA timezone database.
                 See: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-            """)
+            """
+        )
 
     def _generate_field_defs(self):
         lookup = {}
@@ -147,7 +155,7 @@ class App:
 
         for user_key in keys:
             route_props = self._get_route_props(user_key)
-            
+
             try:
                 kwargs["filters"] = kwargs["filters"].get(route_props["key"])
             except AttributeError:
@@ -163,4 +171,3 @@ class App:
         Note this method is public to support the use case of BYO data.
         """
         self.records = Records(self.data, self.field_defs, self.timezone)
-

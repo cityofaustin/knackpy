@@ -15,20 +15,27 @@ def app_data():
 
     return {"data": data, "metadata": metadata}
 
+
 @pytest.fixture
 def app(app_data):
     app = knackpy.App(app_id=app_data["metadata"]["id"], metadata=app_data["metadata"])
     app.data = {"all_fields_test": app_data["data"]}
     return app
 
+
 def test_constructor_success(app_data):
     app = knackpy.App(app_id=app_data["metadata"]["id"], metadata=app_data["metadata"])
     assert app
+
 
 def test_constructor_fail_missing_app_id(app, app_data):
     with pytest.raises(TypeError):
         knackpy.App()
 
+
 def test_tzinfo(app_data):
-    app = knackpy.App(app_id=app_data["metadata"]["id"], metadata=app_data["metadata"], tzinfo="US/Eastern")
-    assert app
+    assert knackpy.App(
+        app_id=app_data["metadata"]["id"],
+        metadata=app_data["metadata"],
+        tzinfo="US/Eastern",
+    )

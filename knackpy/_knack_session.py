@@ -52,7 +52,9 @@ class KnackSession:
 
         return False
 
-    def _get_paginated_data(self, route, max_attempts=5, record_limit=None, filters=None):
+    def _get_paginated_data(
+        self, route, max_attempts=5, record_limit=None, filters=None
+    ):
         # if you have more than 100 billion records, i'm sorry!
         record_limit = record_limit if record_limit else math.inf
 
@@ -68,7 +70,7 @@ class KnackSession:
         while self._continue(total_records, len(records), record_limit):
             attempts = 0
             params = {"page": page, "rows_per_page": rows_per_page, "filters": filters}
-            
+
             while True:
                 print("**********TRYING")
                 try:
@@ -92,5 +94,5 @@ class KnackSession:
 
             page += 1
 
-          # lazily shaving off any remainder to keep the client happy
+        # lazily shaving off any remainder to keep the client happy
         return records[0:record_limit] if record_limit < math.inf else records
