@@ -131,7 +131,7 @@ class FieldDef:
             )
         pass
 
-    def real_unix_timestamp_mills(self, knack_date_time, timezone):
+    def correct_knack_timestamp(self, knack_date_time, timezone):
         """
         Receive a knack_date_time dict (type: dict) and and pytz timezone and
         return same dict with a (naive) unix milliseconds timestamp value as

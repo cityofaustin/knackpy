@@ -47,7 +47,7 @@ class Records:
 
     def _handle_field(self, value, field_def, format_values):
         if field_def.type_ == "date_time":
-            value = field_def.real_unix_timestamp_mills(value, self.timezone)
+            value = field_def.correct_knack_timestamp(value, self.timezone)
 
         return value if not format_values else field_def.formatter(value)
 
