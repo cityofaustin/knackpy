@@ -56,6 +56,9 @@ def test_constructor_fail_missing_required(field_def_data):
         assert knackpy._fields.FieldDef(**bad_data)
 
 def test_correct_knack_timestamp(record_data):
-    knack_date_time_dict = record_data["date_time"]
+    # input:  1568218440000 ( Sep 11, 2019 16:14pm UTC / 11:14 US/Central)
+    # output: 1568236440000 ( Sep 11, 2019  21:14pm UTC / 16:14pm US/Central)
+    knack_date_time_dict = record_data["date_time"]    
     timezone = pytz.timezone("US/Central")
-    assert knackpy._fields.FieldDef.correct_knack_timestamp(knack_date_time_dict, timezone)
+    knack_date_time_dict_corrected = knackpy._fields.FieldDef.correct_knack_timestamp(knack_date_time_dict, timezone)
+    assert knack_date_time_dict_corrected["unix_timestamp"] ==  1568236440000
