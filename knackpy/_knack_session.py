@@ -1,4 +1,7 @@
+import json
 import logging
+import math
+import warnings
 
 import requests
 
@@ -49,20 +52,25 @@ class KnackSession:
 
         return False
 
-    def _get_paginated_data(self, route, max_attempts=5, record_limit=1e14):
+    def _get_paginated_data(self, route, max_attempts=5, record_limit=None, filters=None):
         # if you have more than 100 billion records, i'm sorry!
+        record_limit = record_limit if record_limit else math.inf
+
         rows_per_page = (
             MAX_ROWS_PER_PAGE if record_limit >= MAX_ROWS_PER_PAGE else record_limit
         )
+
+        filters = json.dumps(filters) if filters else None
         records = []
         total_records = None
         page = 1
 
         while self._continue(total_records, len(records), record_limit):
             attempts = 0
-            params = {"page": page, "rows_per_page": rows_per_page}
-
-            while attempts < max_attempts:
+            params = {"page": page, "rows_per_page": rows_per_page, "filters": filters}
+            
+            while True:
+                print("**********TRYING")
                 try:
                     logging.debug(
                         f"Getting {rows_per_page} records from page {page} from {route}"
@@ -73,6 +81,7 @@ class KnackSession:
                     break
 
                 except requests.exceptions.Timeout as e:
+                    warnings.warn(f"Request timeout. Trying again...")
                     if attempts < max_attempts:
                         attempts += 1
                         continue
@@ -83,6 +92,5 @@ class KnackSession:
 
             page += 1
 
-        return records[
-            0:record_limit
-        ]  # lazily shaving off any remainder to keep the client happy
+          # lazily shaving off any remainder to keep the client happy
+        return records[0:record_limit] if record_limit < math.inf else records

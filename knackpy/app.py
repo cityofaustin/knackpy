@@ -98,12 +98,19 @@ class App:
     def get(self, *keys, **kwargs):
         """
         *keys: each arg must be an object or view key string that exists in the app
-        **kwargs: supported kwargs are record_limit (type: int) and max_attempts (type: int). others are ignored.
+        **kwargs: supported kwargs are record_limit (type: int), max_attempts (type: int),
+        and filters (type: dict). others are ignored.
         """
         self.data = {}
 
         for user_key in keys:
             route_props = self._get_route_props(user_key)
+            
+            try:
+                kwargs["filters"] = kwargs["filters"].get(route_props["key"])
+            except AttributeError:
+                pass
+
             route = self._route(route_props)
             self.data[user_key] = self.session._get_paginated_data(route, **kwargs)
 
