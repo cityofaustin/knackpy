@@ -5,9 +5,10 @@ from knackpy.utils.utils import _valid_name
 
 
 class Records:
-    def __init__(self, data, field_defs):
+    def __init__(self, data, field_defs, timezone):
         self.data = data
         self.field_defs = field_defs
+        self.timezone = timezone
 
     def get(self, key, format_keys=False, format_values=False):
         return self._record_generator(
@@ -45,6 +46,9 @@ class Records:
         return handled_record
 
     def _handle_field(self, value, field_def, format_values):
+        if field_def.type_ == "date_time":
+            value = field_def.real_unix_timestamp_mills(value, self.timezone)
+
         return value if not format_values else field_def.formatter(value)
 
     def _handle_key(self, field_def, format_keys):

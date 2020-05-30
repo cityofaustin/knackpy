@@ -1,7 +1,11 @@
+from datetime import datetime, timezone
 import logging
+import pdb
+
+import pytz
+
 from knackpy.exceptions.exceptions import ValidationError
 
-import pdb
 
 
 class Formatter:
@@ -68,10 +72,17 @@ class Formatter:
 
     def date_time(self, value):
         try:
-            return value.get("iso_timestamp")
+            mills_timestamp = value.get("unix_timestamp")
         except AttributeError:
             return None
 
+        # create naive datetime data instance
+        dt = datetime.fromtimestamp(mills_timestamp/1000)
+        # make it timezone-aware
+        dt = dt.replace(tzinfo=timezone.utc)
+        # return ISO-formatted str
+        return dt.isoformat()
+            
     def connection(self, value):
         try:
             vals = [val["identifier"] for val in value]
@@ -114,10 +125,40 @@ class FieldDef:
     def _validate(self):
         REQUIRED_PROPS = ["_id", "key", "name", "type_"]
         errors = [f"'{key}'" for key in REQUIRED_PROPS if not getattr(self, key)]
-
         if errors:
             # this should never happen unless Knack changes their API
             raise ValidationError(
                 f"Field missing required properties: {{ {', '.join(errors)} }}"
             )
         pass
+
+    def real_unix_timestamp_mills(self, knack_date_time, timezone):
+        """
+        Receive a knack_date_time dict (type: dict) and and pytz timezone and
+        return same dict with a (naive) unix milliseconds timestamp value as
+        `unix_timestamp`.
+
+        You may be wondering why timezone settings are concern, given that Knackpy, like the
+        Knack API, returns timestamp values as Unix timestamps in millesconds (thus, there is
+        no timezone encoding at all). However, the Knack API confusingly returns millisecond
+        timestamps in your localized timezone!
+
+        For example, if you inspect a timezone value in Knack, e.g., 1578254700000, this value
+        represents Sunday, January 5, 2020 8:05:00 PM **local time**.
+        """
+        try:
+            mills_timestamp = knack_date_time.get("unix_timestamp")
+        except AttributeError:
+            # knack_date_time is not a dict, almost definitely an empty string (which Knack uses instead of `null`)
+            return knack_date_time
+
+        # create a timezone naive datetime object from the timestamp
+        dt_naive = datetime.fromtimestamp(mills_timestamp / 1000)
+        
+        # replace the UTC tz info with our tz
+        dt_local = timezone.localize(dt_naive)
+
+        # convert to unix timestamp + mills
+        knack_date_time["unix_timestamp"] = int(dt_local.timestamp() * 1000)
+        
+        return knack_date_time
