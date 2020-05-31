@@ -1,7 +1,7 @@
 import csv
 import warnings
 
-from knackpy.utils.utils import _valid_name
+from knackpy.utils.utils import _valid_name, correct_knack_timestamp
 
 
 class Records:
@@ -48,14 +48,15 @@ class Records:
     def _handle_field(self, value, field_def, format_values):
         
         if value == "":
-            # Knack JSON supplies strings instead of `null`. Unacceptable.
+            # Knack JSON supplies strings instead of `null`. Replace these with NoneTypes
             return None
 
         kwargs = {}
 
         if field_def.type_ == "date_time":
+            # correct any and all timestamps see note in `correct_knack_timestamp`
             timestamp = value.get("unix_timestamp")
-            value["unix_timestamp"] = field_def.correct_knack_timestamp(timestamp, self.tz)
+            value["unix_timestamp"] = correct_knack_timestamp(timestamp, self.tz)
             kwargs["tz"] = self.tz
 
         return value if not format_values else field_def.formatter(value, **kwargs)

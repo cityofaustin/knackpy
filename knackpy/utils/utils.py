@@ -1,7 +1,38 @@
+from datetime import datetime, timezone
 import math
 
-# courtesy of https://stackoverflow.com/questions/5194057/better-way-to-convert-file-sizes-in-python
+def correct_knack_timestamp(mills_timestamp, tz):
+    """
+    Receive a knack mills timestamp (type: int) and and pytz timezone and
+    return a (naive) unix milliseconds timestamp int.
+
+    You may be wondering why timezone settings are concern, given that Knackpy, like the
+    Knack API, returns timestamp values as Unix timestamps in millesconds (thus, there is
+    no timezone encoding at all). However, the Knack API confusingly returns millisecond
+    timestamps in your localized timezone!
+
+    For example, if you inspect a timezone value in Knack, e.g., 1578254700000, this value
+    represents Sunday, January 5, 2020 8:05:00 PM **local time**.
+    """
+    timestamp = mills_timestamp / 1000
+    # Don't use datetime.utcfromtimestamp()! this will assume the input timestamp is in local (system) time
+    # If you try to pass our timezone to the tz parameter here, it will have no affect. Ask Guido why??
+    dt_utc = datetime.fromtimestamp(timestamp, tz=timezone.utc)
+    # All we've done so far is create a datetime object from our timestamp
+    # now we have to remove the timezone info that we supplied
+    dt_naive = dt_utc.replace(tzinfo=None)
+    # Now we localize (i.e., translate) the datetime object to our local time
+    # you cannot use datetime.replace() here, because it does not account for
+    # daylight savings time. I know, this is completely insane. 
+    dt_local = tz.localize(dt_naive)
+    # Now we can convert our datetime object back to a timestamp
+    unix_timestamp = dt_local.timestamp()
+    # And add milliseconds
+    return int(unix_timestamp * 1000)
+
+
 def _humanize_bytes(bytes_):
+    # courtesy of https://stackoverflow.com/questions/5194057/better-way-to-convert-file-sizes-in-python
     if bytes_ == 0:
         return "0B"
     size_name = ("b", "kb", "mb", "gb", "tb", "pb", "eb", "zb", "yb")
