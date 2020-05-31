@@ -56,9 +56,15 @@ def test_constructor_fail_missing_required(field_def_data):
         assert knackpy._fields.FieldDef(**bad_data)
 
 def test_correct_knack_timestamp(record_data):
-    # input:  1568218440000 ( Sep 11, 2019 16:14pm UTC / 11:14 US/Central)
-    # output: 1568236440000 ( Sep 11, 2019  21:14pm UTC / 16:14pm US/Central)
-    knack_date_time_dict = record_data["date_time"]    
+    local_timestamp = 1568218440000 #  Sep 11, 2019 16:14pm UTC / 11:14 US/Central)
+    tz = pytz.timezone("US/Central")
+    unix_timestamp = knackpy._fields.FieldDef.correct_knack_timestamp(local_timestamp, tz)
+    assert unix_timestamp ==  1568236440000
+
+def test_format_date_time(record_data):
+    """ note that this timestamp is not corrected, we're just assuming it's a valid unix timestamp"""
+    # input:  1568218440000 Sep 11, 2019 16:14pm UTC
+    knack_date_time_dict = record_data["date_time"]
     timezone = pytz.timezone("US/Central")
-    knack_date_time_dict_corrected = knackpy._fields.FieldDef.correct_knack_timestamp(knack_date_time_dict, timezone)
-    assert knack_date_time_dict_corrected["unix_timestamp"] ==  1568236440000
+    date_iso_formatted = knackpy._fields.Formatter.date_time(knack_date_time_dict, timezone)
+    assert date_iso_formatted == "2019-09-11T11:14:00-05:00"
