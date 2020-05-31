@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 import pdb
 
+
 def default(value):
     """ Handles types:
     - address x
@@ -27,14 +28,18 @@ def default(value):
     """
     return value
 
+
 def email(value):
     return value.get("email")
+
 
 def link(value):
     return value.get("url")
 
+
 def phone(value):
     return value.get("full")
+
 
 def image(value):
     # somtimes a dict, sometimes a str
@@ -42,6 +47,7 @@ def image(value):
         return value["url"]
     except TypeError:
         return value
+
 
 def date_time(value, tz):
     mills_timestamp = value.get("unix_timestamp")

@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 import math
 
+
 def correct_knack_timestamp(mills_timestamp, tz):
     """
     Receive a knack mills timestamp (type: int) and and pytz timezone and
@@ -23,7 +24,7 @@ def correct_knack_timestamp(mills_timestamp, tz):
     dt_naive = dt_utc.replace(tzinfo=None)
     # Now we localize (i.e., translate) the datetime object to our local time
     # you cannot use datetime.replace() here, because it does not account for
-    # daylight savings time. I know, this is completely insane. 
+    # daylight savings time. I know, this is completely insane.
     dt_local = tz.localize(dt_naive)
     # Now we can convert our datetime object back to a timestamp
     unix_timestamp = dt_local.timestamp()

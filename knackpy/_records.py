@@ -9,18 +9,25 @@ class RecordCollection:
     A wrapper for record "containers" (objects or views) that provides
     a client interface for `get`-ing records by container name or key.
     """
+
     def __init__(self, data, container_index, field_defs, tz):
         self.container_index = container_index
-        self.index = { container_key: Records(container_key, data[container_key], field_defs, tz) for container_key in data.keys() }
+        self.index = {
+            container_key: Records(container_key, data[container_key], field_defs, tz)
+            for container_key in data.keys()
+        }
 
     def get(self, client_key, format_keys=False, format_values=False):
         # enables client to fetch by Knack key or name
         key = self.container_index[client_key]["key"]
         # todo: raise validation error on unknown key.
-        return self.index.get(key).get(format_keys=format_keys, format_values=format_values)
+        return self.index.get(key).get(
+            format_keys=format_keys, format_values=format_values
+        )
 
     def keys(self):
         return self.index.keys()
+
 
 class Records:
     """
@@ -35,13 +42,20 @@ class Records:
     is returned, which processes each record as it is iterated upon, yielding the record
     according to the client-specified key and value formatting.
     """
+
     def __init__(self, container_key, data, field_defs, tz):
         self.data = data
-        self.field_defs = self._filter_field_defs_by_container_key(field_defs, container_key)
+        self.field_defs = self._filter_field_defs_by_container_key(
+            field_defs, container_key
+        )
         self.tz = tz
 
     def _filter_field_defs_by_container_key(self, field_defs, container_key):
-        return [field_def for field_ley, field_def in field_defs.items() if container_key == field_def.object or container_key in field_def.views]
+        return [
+            field_def
+            for field_ley, field_def in field_defs.items()
+            if container_key == field_def.object or container_key in field_def.views
+        ]
 
     def get(self, format_keys=False, format_values=False):
         """
@@ -67,15 +81,19 @@ class Records:
             key = field_def.key
             value = self._handle_value(record[key], field_def)
             formatted_key = self._handle_key(field_def)
-            record_entry = {formatted_key: value} if not self.format_values else self._formatted_record_entry(formatted_key, value)
+            record_entry = (
+                {formatted_key: value}
+                if not self.format_values
+                else self._formatted_record_entry(formatted_key, value)
+            )
             handled_record.update(record_entry)
 
         return handled_record
 
     def _formatted_record_entry(self, key, value):
         try:
-            return { f"{key}_{k}": v for k, v in value.items() }
-        
+            return {f"{key}_{k}": v for k, v in value.items()}
+
         except AttributeError:
             return {key: value}
 
@@ -107,11 +125,10 @@ class Records:
 
         return value if not self.format_values else field_def.formatter(value, **kwargs)
 
-
     def _set_formatter_kwargs(self, field_def):
         kwargs = {}
 
-        if field_def.type_ == "date_time":            
+        if field_def.type_ == "date_time":
             kwargs["tz"] = self.tz
 
         return kwargs
@@ -119,7 +136,9 @@ class Records:
     def _correct_knack_timestamp(self, value, tz):
         # see note in knackpy.utils.utils.correct_knack_timestamp
         try:
-            value["unix_timestamp"] = utils.correct_knack_timestamp(value["unix_timestamp"], tz)
+            value["unix_timestamp"] = utils.correct_knack_timestamp(
+                value["unix_timestamp"], tz
+            )
         except (KeyError, TypeError):
             pass
         return value
@@ -128,7 +147,12 @@ class Records:
         return field_def.key if not self.format_keys else field_def.name
 
     def to_csv(
-        self, *obj_or_view_keys, path="", delimiter=",", format_keys=False, format_values=False
+        self,
+        *obj_or_view_keys,
+        path="",
+        delimiter=",",
+        format_keys=False,
+        format_values=False,
     ):
         obj_or_view_keys = obj_or_view_keys if obj_or_view_keys else list(self.keys())
 

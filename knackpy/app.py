@@ -44,7 +44,9 @@ class App:
         total_obj = len(self.metadata.get("objects"))
         total_scenes = len(self.metadata.get("scenes"))
         total_records = self.metadata.get("counts").get("total_entries")
-        total_size = utils._humanize_bytes(self.metadata.get("counts").get("asset_size"))
+        total_size = utils._humanize_bytes(
+            self.metadata.get("counts").get("asset_size")
+        )
 
         return {
             "objects": total_obj,
@@ -108,16 +110,16 @@ class App:
             for view in scene["views"]:
                 if view["type"] == "table":
                     field_keys = [column["field"]["key"] for column in view["columns"]]
-                    
+
                     for key in field_keys:
                         self.field_defs[key].views.append(view["key"])
 
                 else:
-                    print("IGNORING", view["type"]) 
+                    print("IGNORING", view["type"])
 
     def _generate_field_defs(self):
         lookup = {}
-        
+
         for obj in self.metadata["objects"]:
             for field in obj["fields"]:
                 # drop reserved word `type` from field def
@@ -160,12 +162,12 @@ class App:
                 entry = {"key": view["key"], "scene": scene["key"]}
                 container_index[view["key"]] = entry
                 container_index[view["name"]] = entry
-        
+
         for obj in self.metadata["objects"]:
             entry = {"key": obj["key"], "scene": None}
             container_index[obj["key"]] = entry
             container_index[obj["name"]] = entry
-        
+
         return container_index
 
     def _get_route_props(self, client_key):
@@ -185,14 +187,16 @@ class App:
 
         for client_key in keys:
             container = self.container_index[key]
-            
+
             try:
                 kwargs["filters"] = kwargs["filters"].get(container["key"])
             except AttributeError:
                 pass
 
             route = self._route(container)
-            self.data[container["key"]] = self.session._get_paginated_data(route, **kwargs)
+            self.data[container["key"]] = self.session._get_paginated_data(
+                route, **kwargs
+            )
 
         self.generate_records()
 
@@ -200,4 +204,6 @@ class App:
         """
         Note this method is public to support the use case of BYO data.
         """
-        self.records = RecordCollection(self.data, self.container_index, self.field_defs, self.tz)
+        self.records = RecordCollection(
+            self.data, self.container_index, self.field_defs, self.tz
+        )
