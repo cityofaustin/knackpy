@@ -5,10 +5,10 @@ from knackpy.utils.utils import _valid_name
 
 
 class Records:
-    def __init__(self, data, field_defs, timezone):
+    def __init__(self, data, field_defs, tz):
         self.data = data
         self.field_defs = field_defs
-        self.timezone = timezone
+        self.tz = tz
 
     def get(self, key, format_keys=False, format_values=False):
         return self._record_generator(
@@ -46,10 +46,19 @@ class Records:
         return handled_record
 
     def _handle_field(self, value, field_def, format_values):
-        if field_def.type_ == "date_time":
-            value = field_def.correct_knack_timestamp(value, self.timezone)
+        
+        if value == "":
+            # Knack JSON supplies strings instead of `null`. Unacceptable.
+            return None
 
-        return value if not format_values else field_def.formatter(value)
+        kwargs = {}
+
+        if field_def.type_ == "date_time":
+            timestamp = value.get("unix_timestamp")
+            value["unix_timestamp"] = field_def.correct_knack_timestamp(timestamp, self.tz)
+            kwargs["tz"] = self.tz
+
+        return value if not format_values else field_def.formatter(value, **kwargs)
 
     def _handle_key(self, field_def, format_keys):
         if field_def.key == "id" or not format_keys:
