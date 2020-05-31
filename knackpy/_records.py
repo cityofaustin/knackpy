@@ -5,6 +5,10 @@ from knackpy.utils import utils
 
 
 class RecordCollection:
+    """
+    A wrapper for record "containers" (objects or views) that provides
+    a client interface for `get`-ing records by container name or key.
+    """
     def __init__(self, data, container_index, field_defs, tz):
         self.container_index = container_index
         self.index = { container_key: Records(container_key, data[container_key], field_defs, tz) for container_key in data.keys() }
@@ -12,12 +16,25 @@ class RecordCollection:
     def get(self, client_key, format_keys=False, format_values=False):
         # enables client to fetch by Knack key or name
         key = self.container_index[client_key]["key"]
+        # todo: raise validation error on unknown key.
         return self.index.get(key).get(format_keys=format_keys, format_values=format_values)
 
     def keys(self):
         return self.index.keys()
 
 class Records:
+    """
+    A wrapper for Knack record data. At initialization, the class is readied
+    to handle calls from `get` method.
+
+    The knackpy `App` API is designed such that it's expected that a `Record` 
+    instance is proxied via `get` request to a `RecordCollection`, but you can
+    work with this class directly if you'd like to utilize record handlers/formatters.
+
+    When a container key or name is provided through `get`, a generator (`_record_generator()`)
+    is returned, which processes each record as it is iterated upon, yielding the record
+    according to the client-specified key and value formatting.
+    """
     def __init__(self, container_key, data, field_defs, tz):
         self.data = data
         self.field_defs = self._filter_field_defs_by_container_key(field_defs, container_key)
@@ -56,7 +73,6 @@ class Records:
         return handled_record
 
     def _formatted_record_entry(self, key, value):
-        
         try:
             return { f"{key}_{k}": v for k, v in value.items() }
         
@@ -101,6 +117,7 @@ class Records:
         return kwargs
 
     def _correct_knack_timestamp(self, value, tz):
+        # see note in knackpy.utils.utils.correct_knack_timestamp
         try:
             value["unix_timestamp"] = utils.correct_knack_timestamp(value["unix_timestamp"], tz)
         except (KeyError, TypeError):
