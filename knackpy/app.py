@@ -4,9 +4,9 @@ import warnings
 import pytz
 
 from knackpy._fields import FieldDef
-from knackpy._records import Records
+from knackpy._records import RecordCollection
 from knackpy._knack_session import KnackSession
-from knackpy.utils.utils import _humanize_bytes
+from knackpy.utils import utils
 from knackpy.utils.timezones import TZ_NAMES
 from knackpy.exceptions.exceptions import ValidationError
 
@@ -36,13 +36,15 @@ class App:
         self.metadata = self._get_metadata() if not metadata else metadata
         self.tz = self._set_timezone(tzinfo)
         self.field_defs = self._generate_field_defs()
+        self._set_field_def_views()
+        self.container_index = self._generate_container_index()
         logging.debug(self)
 
     def info(self):
         total_obj = len(self.metadata.get("objects"))
         total_scenes = len(self.metadata.get("scenes"))
         total_records = self.metadata.get("counts").get("total_entries")
-        total_size = _humanize_bytes(self.metadata.get("counts").get("asset_size"))
+        total_size = utils._humanize_bytes(self.metadata.get("counts").get("asset_size"))
 
         return {
             "objects": total_obj,
@@ -100,65 +102,97 @@ class App:
             """
         )
 
-    def _generate_field_defs(self):
-        lookup = {}
-        fields = [field for obj in self.metadata["objects"] for field in obj["fields"]]
-        for field in fields:
-            lookup[field["key"]] = FieldDef(**field)
-
-        lookup["id"] = FieldDef(_id="id", key="id", name="id", type="id")
-        return lookup
-
-    def _route(self, route_props):
-        if route_props.get("scene"):
-            return f"/pages/{route_props['scene']}/views/{route_props['key']}/records"
-        else:
-            return f"/objects/{route_props['key']}/records"
-
-    def _get_route_props(self, user_key):
-        route_props = {"key": None, "scene": None}
+    def _set_field_def_views(self):
 
         for scene in self.metadata["scenes"]:
             for view in scene["views"]:
-                if view["key"] == user_key:
-                    route_props["key"] = user_key
-                    route_props["scene"] = scene["key"]
-                    return route_props
+                if view["type"] == "table":
+                    field_keys = [column["field"]["key"] for column in view["columns"]]
+                    
+                    for key in field_keys:
+                        self.field_defs[key].views.append(view["key"])
 
-                elif view["name"] == user_key:
-                    route_props["key"] = view["key"]
-                    route_props["scene"] = scene["key"]
-                    return route_props
+                else:
+                    print("IGNORING", view["type"]) 
 
+    def _generate_field_defs(self):
+        lookup = {}
+        
         for obj in self.metadata["objects"]:
-            if obj["key"] == user_key:
-                route_props["key"] = user_key
-                return route_props
+            for field in obj["fields"]:
+                # drop reserved word `type` from field def
+                field["type_"] = field.pop("type")
+                field["name"] = utils._valid_name(field["name"])
+                field["object"] = obj["key"]
+                lookup[field["key"]] = FieldDef(**field)
 
-            elif obj["name"] == user_key:
-                route_props["key"] = obj["key"]
-                return route_props
+        return lookup
 
-        raise ValidationError(f"Unknown Knack key supplied: `{knack_key}`")
+    def _route(self, container):
+        if container.get("scene"):
+            return f"/pages/{container['scene']}/views/{container['key']}/records"
+        else:
+            return f"/objects/{container['key']}/records"
 
-    def get(self, *keys, **kwargs):
+    def _generate_container_index(self):
         """
-        *keys: each arg must be an object or view key string that exists in the app
+        Returns a dict of knack object keys, object names, view keys, and view names,
+        that serves as lookup for finding Knack app record containers (objects or views)
+        by name or key.
+
+        Note that namespace conflicts are highlighly likely, especially with views.
+        If an app has multiple views with the same name, the index will only have
+        one reference to either (which ever name was processed last, below).
+
+        If an app has object names that conflict with view names, the object names
+        will take prioirty, and the lookup with have no entry for the view of this
+        name.
+
+        As such, the best practice is to use keys (object_xx or view_xx) as much 
+        as possible, especially when fetching data from views.
+        """
+        container_index = {}
+
+        entry = {"key": None, "scene": None}
+
+        for scene in self.metadata["scenes"]:
+            for view in scene["views"]:
+                entry = {"key": view["key"], "scene": scene["key"]}
+                container_index[view["key"]] = entry
+                container_index[view["name"]] = entry
+        
+        for obj in self.metadata["objects"]:
+            entry = {"key": obj["key"], "scene": None}
+            container_index[obj["key"]] = entry
+            container_index[obj["name"]] = entry
+        
+        return container_index
+
+    def _get_route_props(self, client_key):
+        try:
+            return self.client_index[key]
+        except KeyError:
+            raise ValidationError(f"Unknown Knack key supplied: `{knack_key}`")
+
+    def get(self, *client_keys, **kwargs):
+        """
+        *client_keys: each arg must be an object or view key or name string that  exists
+            in the app
         **kwargs: supported kwargs are record_limit (type: int), max_attempts (type: int),
-        and filters (type: dict). others are ignored.
+            and filters (type: dict). others are ignored.
         """
         self.data = {}
 
-        for user_key in keys:
-            route_props = self._get_route_props(user_key)
-
+        for client_key in keys:
+            container = self.container_index[key]
+            
             try:
-                kwargs["filters"] = kwargs["filters"].get(route_props["key"])
+                kwargs["filters"] = kwargs["filters"].get(container["key"])
             except AttributeError:
                 pass
 
-            route = self._route(route_props)
-            self.data[user_key] = self.session._get_paginated_data(route, **kwargs)
+            route = self._route(container)
+            self.data[container["key"]] = self.session._get_paginated_data(route, **kwargs)
 
         self.generate_records()
 
@@ -166,4 +200,4 @@ class App:
         """
         Note this method is public to support the use case of BYO data.
         """
-        self.records = Records(self.data, self.field_defs, self.tz)
+        self.records = RecordCollection(self.data, self.container_index, self.field_defs, self.tz)

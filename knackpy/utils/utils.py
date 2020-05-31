@@ -43,6 +43,7 @@ def _humanize_bytes(bytes_):
 
 
 def _valid_name(key):
+    # TODO: subfield conflicts?
     RESERVED_NAMES = ["id"]
     if key in RESERVED_NAMES:
         return f"_{key}"

@@ -3,6 +3,7 @@ import pdb
 
 def default(value):
     """ Handles types:
+    - address x
     - auto_increment
     - average
     - boolean

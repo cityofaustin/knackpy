@@ -1,5 +1,5 @@
 from knackpy.exceptions.exceptions import ValidationError
-from knackpy.utils import formatters
+from knackpy.utils import formatters, utils
 
 class FieldDef:
     """ Knack field defintion wrapper """
@@ -8,14 +8,14 @@ class FieldDef:
         return f"<FieldDef [{name}]>"
 
     def __init__(self, **kwargs):
-        # required properties
-        for prop in ["_id","key","name","type"]:
+
+        for attr in ["_id","key","name","type_", "object"]: # required definition attrs
             try:
-                setattr(self, prop.replace("type", "type_"), kwargs[prop])
-
+                setattr(self, attr, kwargs[attr])
             except KeyError:
-                raise ValidationError(f"FieldDef missing required property: '{prop}'")
+                raise ValidationError(f"FieldDef missing required FieldDef attribute: '{attr}'")
 
+        self.views = []
 
         try:
             self.formatter = getattr(formatters, self.type_)
