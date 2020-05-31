@@ -72,7 +72,6 @@ class KnackSession:
             params = {"page": page, "rows_per_page": rows_per_page, "filters": filters}
 
             while True:
-                print("**********TRYING")
                 try:
                     logging.debug(
                         f"Getting {rows_per_page} records from page {page} from {route}"
