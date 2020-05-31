@@ -21,6 +21,7 @@ class Records:
     def _record_generator(self, data, field_defs, format_keys, format_values):
         for record in data:
             record = self._handle_record(record, format_keys, format_values)
+            print(VALS)
             yield record
 
     def _handle_record(self, record, format_keys, format_values):
@@ -41,12 +42,11 @@ class Records:
 
             key = self._handle_key(field_def, format_keys)
 
-            handled_record[key] = self._handle_field(value, field_def, format_values)
+            handled_record[key] = self._handle_value(value, field_def, format_values)
 
         return handled_record
 
-    def _handle_field(self, value, field_def, format_values):
-        
+    def _handle_value(self, value, field_def, format_values):
         if value == "":
             # Knack JSON supplies strings instead of `null`. Replace these with NoneTypes
             return None
