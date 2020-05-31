@@ -34,7 +34,7 @@ class App:
 
         self.session = KnackSession(self.app_id, self.api_key, timeout=timeout)
         self.metadata = self._get_metadata() if not metadata else metadata
-        self.timezone = self._set_timezone(tzinfo)
+        self.tz = self._set_timezone(tzinfo)
         self.field_defs = self._generate_field_defs()
         logging.debug(self)
 
@@ -106,12 +106,8 @@ class App:
         for field in fields:
             lookup[field["key"]] = FieldDef(**field)
 
-        lookup["id"] = self._id_field_def()
-
+        lookup["id"] = FieldDef(_id="id", key="id", name="id", type="id")
         return lookup
-
-    def _id_field_def(self):
-        return FieldDef(_id="id", key="id", name="id", type="id")
 
     def _route(self, route_props):
         if route_props.get("scene"):
@@ -170,4 +166,4 @@ class App:
         """
         Note this method is public to support the use case of BYO data.
         """
-        self.records = Records(self.data, self.field_defs, self.timezone)
+        self.records = Records(self.data, self.field_defs, self.tz)
