@@ -19,8 +19,8 @@ class RecordCollection:
 
     def get(self, client_key, format_keys=False, format_values=False):
         # enables client to fetch by Knack key or name
-        key = self.container_index[client_key]["key"]
-        # todo: raise validation error on unknown key.
+        key = self.container_index[client_key].key
+
         return self.index.get(key).get(
             format_keys=format_keys, format_values=format_values
         )
@@ -42,8 +42,11 @@ class Records:
     is returned, which processes each record as it is iterated upon, yielding the record
     according to the client-specified key and value formatting.
     """
+    def __repr__(self):
+        return f"<Records [{len(self.field_defs)} fields]>"
 
     def __init__(self, container_key, data, field_defs, tz):
+        self.container_key = container_key
         self.data = data
         self.field_defs = self._filter_field_defs_by_container_key(
             field_defs, container_key

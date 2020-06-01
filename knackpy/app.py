@@ -1,3 +1,4 @@
+import collections
 import logging
 import warnings
 
@@ -39,6 +40,7 @@ class App:
         self._set_field_def_views()
         self.container_index = self._generate_container_index()
         logging.debug(self)
+
 
     def info(self):
         total_obj = len(self.metadata.get("objects"))
@@ -152,21 +154,36 @@ class App:
 
         As such, the best practice is to use keys (object_xx or view_xx) as much 
         as possible, especially when fetching data from views.
+
+        TODO: might be a good use case collections.ChainMap or Python v3.8's
+        dataclasses: "https://docs.python.org/3/library/dataclasses.html"
         """
-        container_index = {}
-
-        entry = {"key": None, "scene": None}
-
+        
+        container_index = {"_conflicts": []}
+        Container = collections.namedtuple("Container",  "key name scene type_")
+        
+        for obj in self.metadata["objects"]:
+            container = Container(key=obj["key"], scene=None, name=obj["name"], type_="object")
+            # add both `name` and `key` identiefiers to index
+            # if name already exists in index, add it to `_conflicts` instead.
+            container_index[container.key] = container
+            
+            if container.name in container_index:
+                container_index.conflicts.append(container)
+            else:
+                container_index[container.name] = container    
+                    
         for scene in self.metadata["scenes"]:
             for view in scene["views"]:
-                entry = {"key": view["key"], "scene": scene["key"]}
-                container_index[view["key"]] = entry
-                container_index[view["name"]] = entry
+                container = Container(key=view["key"], scene=scene["key"], name=view["name"], type_="view")
+                # add both `name` and `key` identiefiers to index
+                # if name already exists in index, add it to `_conflicts` instead.
+                container_index[container.key] = container
 
-        for obj in self.metadata["objects"]:
-            entry = {"key": obj["key"], "scene": None}
-            container_index[obj["key"]] = entry
-            container_index[obj["name"]] = entry
+            if container.name in container_index:
+                container_index.conflicts.append(container)
+            else:
+                container_index[container.name] = container  
 
         return container_index
 
@@ -186,15 +203,15 @@ class App:
         self.data = {}
 
         for client_key in keys:
-            container = self.container_index[key]
+            container = self.container_index[client_key]
 
             try:
-                kwargs["filters"] = kwargs["filters"].get(container["key"])
+                kwargs["filters"] = kwargs["filters"].get(container.key)
             except AttributeError:
                 pass
 
             route = self._route(container)
-            self.data[container["key"]] = self.session._get_paginated_data(
+            self.data[container.key] = self.session._get_paginated_data(
                 route, **kwargs
             )
 
