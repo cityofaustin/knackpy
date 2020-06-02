@@ -16,11 +16,10 @@ class KnackSession:
     def __repr__(self):
         return f"""<KnackSession [id={self.app_id}]>"""
 
-    def __init__(self, app_id, api_key, timeout=None):
-        self.app_id = app_id
-        self.headers = self._headers(app_id, api_key)
+    def __init__(self, app_id, **kwargs):
+        self.headers = self._headers(app_id, kwargs.get("api_key"))
         self.session = requests.Session()
-        self.timeout = timeout
+        self.timeout = kwargs.get("timeout")
 
     def _headers(self, app_id, api_key):
         # see: https://www.knack.com/developer-documentation/#api-limits
@@ -34,11 +33,12 @@ class KnackSession:
         subdomain = "loader" if "applications" in route else "api"
         return f"https://{subdomain}.knack.com/v1{route}"
 
-    def request(self, method, route, **kwargs):
+    def request(self, method, route, timeout=None, params=None):
+        timeout = timeout if timeout else self.timeout
         url = self._url(route)
-        req = requests.Request(method, url, headers=self.headers, **kwargs)
+        req = requests.Request(method, url, headers=self.headers, params=params)
         prepped = req.prepare()
-        res = self.session.send(prepped, timeout=self.timeout)
+        res = self.session.send(prepped, timeout=timeout)
         res.raise_for_status()
         return res
 
@@ -52,17 +52,15 @@ class KnackSession:
 
         return False
 
-    def _get_paginated_data(
-        self, route, max_attempts=5, record_limit=None, filters=None
-    ):
-        # if you have more than 100 billion records, i'm sorry!
+    def _get_paginated_data(self, route, max_attempts=5, record_limit=None, filters=None, **kwargs):
         record_limit = record_limit if record_limit else math.inf
-
+        timeout = kwargs.get("timeout")
+        filters = json.dumps(kwargs["filters"]) if kwargs.get("filters") else None
+        
         rows_per_page = (
             MAX_ROWS_PER_PAGE if record_limit >= MAX_ROWS_PER_PAGE else record_limit
         )
 
-        filters = json.dumps(filters) if filters else None
         records = []
         total_records = None
         page = 1
@@ -76,7 +74,8 @@ class KnackSession:
                     logging.debug(
                         f"Getting {rows_per_page} records from page {page} from {route}"
                     )
-                    res = self.request("GET", route, params=params)
+
+                    res = self.request("GET", route, timeout=timeout, params=params)
 
                     total_records = res.json()["total_records"]
                     break
