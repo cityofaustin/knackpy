@@ -31,9 +31,12 @@ class App:
 
         self.app_id = app_id
         self.api_key = api_key
-        self.timeout = timeout
-
-        self.session = KnackSession(self.app_id, self.api_key, timeout=timeout)
+        """
+        we accept timeout as an init kwarg because the client may want to set timeout for
+        getting metadata, which is a side-effect of initialization. This timeout can be
+        overridden by the `get` method.
+        """
+        self.session = KnackSession(self.app_id, api_key=self.api_key, timeout=timeout)
         self.metadata = self._get_metadata() if not metadata else metadata
         self.tz = self._set_timezone(tzinfo)
         self.field_defs = self._generate_field_defs()
