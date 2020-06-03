@@ -52,11 +52,13 @@ class KnackSession:
 
         return False
 
-    def _get_paginated_data(self, route, max_attempts=5, record_limit=None, filters=None, **kwargs):
+    def _get_paginated_data(
+        self, route, max_attempts=5, record_limit=None, filters=None, **kwargs
+    ):
         record_limit = record_limit if record_limit else math.inf
         timeout = kwargs.get("timeout")
         filters = json.dumps(kwargs["filters"]) if kwargs.get("filters") else None
-        
+
         rows_per_page = (
             MAX_ROWS_PER_PAGE if record_limit >= MAX_ROWS_PER_PAGE else record_limit
         )

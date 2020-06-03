@@ -13,8 +13,9 @@ def valid_name(key):
     else:
         return key
 
+
 def generate_container_index(metadata):
-        """
+    """
         Returns a dict of knack object keys, object names, view keys, and view names,
         that serves as lookup for finding Knack app record containers (objects or views)
         by name or key.
@@ -35,33 +36,36 @@ def generate_container_index(metadata):
         TODO: might be a good use case collections.ChainMap or Python v3.8's
         dataclasses: "https://docs.python.org/3/library/dataclasses.html"
         """
-        container_index = {"_conflicts": []}
-        Container = collections.namedtuple("Container",  "obj view scene name")
-        
-        for obj in metadata["objects"]:
-            container = Container(obj=obj["key"], scene=None, view=None, name=obj["name"])
+    container_index = {"_conflicts": []}
+    Container = collections.namedtuple("Container", "obj view scene name")
+
+    for obj in metadata["objects"]:
+        container = Container(obj=obj["key"], scene=None, view=None, name=obj["name"])
+        # add both `name` and `key` identiefiers to index
+        # if name already exists in index, add it to `_conflicts` instead.
+        container_index[container.obj] = container
+
+        if container.name in container_index:
+            container_index.conflicts.append(container)
+        else:
+            container_index[container.name] = container
+
+    for scene in metadata["scenes"]:
+        for view in scene["views"]:
+            container = Container(
+                obj=None, view=view["key"], scene=scene["key"], name=view["name"]
+            )
             # add both `name` and `key` identiefiers to index
             # if name already exists in index, add it to `_conflicts` instead.
-            container_index[container.obj] = container
-            
-            if container.name in container_index:
-                container_index.conflicts.append(container)
-            else:
-                container_index[container.name] = container    
-                    
-        for scene in metadata["scenes"]:
-            for view in scene["views"]:
-                container = Container(obj=None, view=view["key"], scene=scene["key"], name=view["name"])
-                # add both `name` and `key` identiefiers to index
-                # if name already exists in index, add it to `_conflicts` instead.
-                container_index[container.view] = container
+            container_index[container.view] = container
 
-            if container.name in container_index:
-                container_index.conflicts.append(container)
-            else:
-                container_index[container.name] = container  
+        if container.name in container_index:
+            container_index.conflicts.append(container)
+        else:
+            container_index[container.name] = container
 
-        return container_index
+    return container_index
+
 
 def correct_knack_timestamp(mills_timestamp, timezone):
     """
@@ -91,6 +95,7 @@ def correct_knack_timestamp(mills_timestamp, timezone):
     unix_timestamp = dt_local.timestamp()
     # And add milliseconds
     return int(unix_timestamp * 1000)
+
 
 def _humanize_bytes(bytes_):
     # courtesy of https://stackoverflow.com/questions/5194057/better-way-to-convert-file-sizes-in-python

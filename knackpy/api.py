@@ -13,7 +13,9 @@ def _route(obj=None, scene=None, view=None):
     elif obj:
         return f"/objects/{obj}/records"
 
-    raise ValidationError(f"Insufficient knack keys provided. Knack Requsts requires an obj key or a scene and view key")
+    raise ValidationError(
+        f"Insufficient knack keys provided. Knack Requsts requires an obj key or a scene and view key"
+    )
 
 
 def get(app_id, **kwargs):
@@ -46,8 +48,10 @@ def get(app_id, **kwargs):
 def create():
     pass
 
+
 def update():
     pass
 
+
 def delete():
-    pass    
+    pass

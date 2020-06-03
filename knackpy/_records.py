@@ -3,6 +3,7 @@ import warnings
 
 from knackpy.utils import utils
 
+
 class Records:
     """
     A wrapper for Knack record data. At initialization, the class is readied to yield
@@ -12,10 +13,19 @@ class Records:
     generator handles the raw Knack record by updating any empty string values to NoneTypes,
     corrects Knack's "local" timestamps, and applies the client-specified formatting.
     """
+
     def __repr__(self):
         return f"<Records [{len(self.field_defs)} fields]>"
 
-    def __init__(self, container_key, data, field_defs, timezone, format_values=False, format_keys=False):
+    def __init__(
+        self,
+        container_key,
+        data,
+        field_defs,
+        timezone,
+        format_values=False,
+        format_keys=False,
+    ):
         self.container_key = container_key
         self.data = data
         self.timezone = timezone
@@ -29,7 +39,8 @@ class Records:
         return [
             field_def
             for field_ley, field_def in field_defs.items()
-            if self.container_key == field_def.object or self.container_key in field_def.views
+            if self.container_key == field_def.object
+            or self.container_key in field_def.views
         ]
 
     def records(self):
@@ -41,18 +52,20 @@ class Records:
         record = self._replace_empty_strings(record)
 
         record = self._correct_knack_timestamp(record, self.timezone)
-        
+
         if not (self.format_keys or self.format_values):
             return record
 
         elif self.format_keys and not self.format_values:
             record = self._proxy_raw_keys(record)
-            return {field_def.name: record[field_def.key] for field_def in self.field_defs}
+            return {
+                field_def.name: record[field_def.key] for field_def in self.field_defs
+            }
 
         formatted_record = {}
 
         for field_def in self.field_defs:
-                 
+
             value = self._handle_value(record, field_def)
 
             key = field_def.name
@@ -101,14 +114,16 @@ class Records:
             return {key: value}
 
         except TypeError:
-            import pdb; pdb.set_trace()
+            import pdb
+
+            pdb.set_trace()
 
     def _replace_empty_strings(self, record):
         return {key: None if val == "" else val for key, val in record.items()}
 
     def _format_value(self, value, field_def):
         kwargs = self._set_formatter_kwargs(field_def)
-        
+
         try:
             return field_def.formatter(value, **kwargs)
         except AttributeError:
@@ -127,7 +142,9 @@ class Records:
         # see note in knackpy.utils.utils.correct_knack_timestamp
         for key, val in record.items():
             try:
-                val["unix_timestamp"] = utils.correct_knack_timestamp(val["unix_timestamp"], timezone)
+                val["unix_timestamp"] = utils.correct_knack_timestamp(
+                    val["unix_timestamp"], timezone
+                )
                 record[key] = val
             except (KeyError, TypeError):
                 pass
