@@ -4,6 +4,7 @@ import warnings
 
 import pytz
 
+from knackpy import api
 from knackpy import _records
 from knackpy import _fields
 from knackpy._knack_session import KnackSession
@@ -67,6 +68,7 @@ class App:
 
     @staticmethod
     def set_timezone(tzinfo):
+        # TODO: move to utils
         """
         Knack stores timezone information in the app metadata, but it does not use IANA
         timezone database names. Instead it uses common names e.g.,
@@ -119,41 +121,39 @@ class App:
             """
         )
 
-
-    def _route(self, container):
-        if container.scene:
-            return f"/pages/{container.scene}/views/{container.key}/records"
-        else:
-            return f"/objects/{container.key}/records"
-
-    def get(self, *client_keys, **kwargs):
+    def get(self, client_key, format_keys=False, format_values=False, **kwargs):
         """
         *client_keys: each arg must be an object or view key or name string that  exists
             in the app
         **kwargs: supported kwargs are record_limit (type: int), max_attempts (type: int),
             and filters (type: dict). others are ignored.
+
+        Returns:
+            - `Records` generator
         """
+        # note that formatting state is reset on each `get()` call
+        self.format_keys = format_keys
+        self.format_values = format_values
+
+        container = self.container_index[client_key]
+
+        container_key = container.obj or container.view
+
+        route = api._route(obj=container.obj, scene=container.scene, view=container.view)
+        
         self.data = {}
 
-        for client_key in client_keys:
-            container = self.container_index[client_key]
+        self.data[container_key] = self.session._get_paginated_data(route, **kwargs)
 
-            try:
-                kwargs["filters"] = kwargs["filters"].get(container.key)
-            except AttributeError:
-                pass
+        return self._generate_records(container_key)
 
-            route = self._route(container)
-            self.data[container.key] = self.session._get_paginated_data(
-                route, **kwargs
-            )
-
-        self.generate_records()
-
-    def generate_records(self):
+    def _generate_records(self, container_key):
+        return _records.Records(container_key, self.data[container_key], self.field_defs, self.timezone, format_values=self.format_values, format_keys=self.format_keys).records()
+    
+    def records(self, client_key):
         """
-        Note this method is public to support the use case of BYO data.
+        Returns already-gotten data as a `Records` generator. Use this method to re-iterate
+        on records returned from `get()`.
         """
-        self.records = _records.RecordCollection(
-            self.data, self.container_index, self.field_defs, self.timezone
-        )
+        container = self.container_index[client_key]
+        return self._generate_records(container)
