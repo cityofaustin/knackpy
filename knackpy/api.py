@@ -7,20 +7,18 @@ from knackpy.exceptions.exceptions import ValidationError
 import pdb
 
 
-def _route(**kwargs):
-        try:
-            return f"/pages/{kwargs['scene']}/views/{kwargs['view']}/records"
-        except KeyError:
-           pass
-        try:
-            return f"/objects/{kwargs['obj']}/records"
-        except KeyError:
-            raise ValidationError(f"Insufficient knack keys provided. `get()` requires an obj key or a scene and view key")
+def _route(obj=None, scene=None, view=None):
+    if scene and view:
+        return f"/pages/{scene}/views/{view}/records"
+    elif obj:
+        return f"/objects/{obj}/records"
+
+    raise ValidationError(f"Insufficient knack keys provided. Knack Requsts requires an obj key or a scene and view key")
 
 
 def get(app_id, **kwargs):
     """
-    Get records from a knack object or view.
+    Get records from a knack object or view. This is the raw stuff with incorrect timestamps!
 
     required kwargs:
         obj (str): the knack object key, e.g. `object_1`

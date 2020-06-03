@@ -2,7 +2,7 @@ BASE_URL = "https://api.knack.com/v1/"
 BASE_URL_METADATA = "https://loader.knack.com/v1"
 
 FIELD_SETTINGS = {
-    "address" : {
+    "address": {
         "subfields": [
             "city",
             "state",
@@ -12,13 +12,8 @@ FIELD_SETTINGS = {
             "country",
             "latitude",
             "longitude",
-        ],
+        ]
     },
-    "file": {
-        "subfields": ["filename", "url"],
-    },
-    "timer": {
-        "use_knack_format": True
-    }
+    "file": {"subfields": ["filename", "url"]},
+    "timer": {"use_knack_format": True},
 }
-       
