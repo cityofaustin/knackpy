@@ -1,8 +1,6 @@
 import logging
 import warnings
 
-from knackpy import app
-from knackpy import _records
 from knackpy import _knack_session
 from knackpy.exceptions.exceptions import ValidationError
 
