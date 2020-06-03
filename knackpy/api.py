@@ -1,7 +1,9 @@
 import logging
 import warnings
 
-from knackpy._knack_session import KnackSession
+from knackpy import app
+from knackpy import _records
+from knackpy import _knack_session
 from knackpy.exceptions.exceptions import ValidationError
 
 import pdb
@@ -18,7 +20,7 @@ def _route(**kwargs):
             raise ValidationError(f"Insufficient knack keys provided. `get()` requires an obj key or a scene and view key")
 
 
-def get(app_id, format_values=False, format_keys=False, **kwargs):
+def get(app_id, **kwargs):
     """
     Get records from a knack object or view.
 
@@ -36,13 +38,12 @@ def get(app_id, format_values=False, format_keys=False, **kwargs):
         - timeout (int)
         - format_keys
         - format_values
-
     """
     obj = kwargs.pop("obj", None)
     scene = kwargs.pop("scene", None)
     view = kwargs.pop("view", None)
     route = _route(obj=obj, scene=scene, view=view)
-    session = KnackSession(app_id, **kwargs)
+    session = _knack_session.KnackSession(app_id, **kwargs)
     return session._get_paginated_data(route, **kwargs)
 
 
