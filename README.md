@@ -34,11 +34,11 @@ Knackpy is designed to handle lots of records, so `App.get()` returns a generato
 >>> app = knackpy.App(app_id,  api_key="myverysecretapikey")
 
 # you can fetch by object name, object key, view name, or view key
->>> records = app.get("my_object_name") 
+>>> records = app.get("my_exciting_object") 
 >>> records_formatted = [record.format() for record in records]
 
 # re-intialize the records generator
->>> records = app.records.get("object_3")
+>>> records = app.records("my_exciting_object")
 
 # these records are raw, but the timestamps have been corrected
 >>> records_raw = [record.raw for record in records]
