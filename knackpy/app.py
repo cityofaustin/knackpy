@@ -43,6 +43,7 @@ class App:
         self.timezone = self.set_timezone(self.tzinfo)
         self.field_defs = _fields.generate_field_defs(self.metadata)
         self.container_index = utils.generate_container_index(self.metadata)
+        self.data = {}
         logging.debug(self)
 
 
@@ -63,6 +64,7 @@ class App:
 
     def _get_metadata(self, route=f"/applications"):
         route = f"{route}/{self.app_id}"
+        # todo: use API instead?
         res = self.session.request("get", route)
         return res.json()["application"]
 
@@ -121,7 +123,7 @@ class App:
             """
         )
 
-    def get(self, client_key, format_keys=False, format_values=False, **kwargs):
+    def get(self, client_key, **kwargs):
         """
         *client_keys: each arg must be an object or view key or name string that  exists
             in the app
@@ -131,24 +133,18 @@ class App:
         Returns:
             - `Records` generator
         """
-        # note that formatting state is reset on each `get()` call
-        self.format_keys = format_keys
-        self.format_values = format_values
-
         container = self.container_index[client_key]
 
         container_key = container.obj or container.view
 
         route = api._route(obj=container.obj, scene=container.scene, view=container.view)
-        
-        self.data = {}
 
-        self.data[container_key] = self.session._get_paginated_data(route, **kwargs)
+        self.data[client_key] = self.session._get_paginated_data(route, **kwargs)
 
-        return self._generate_records(container_key)
+        return self._generate_records(container_key, self.data[client_key])
 
-    def _generate_records(self, container_key):
-        return _records.Records(container_key, self.data[container_key], self.field_defs, self.timezone, format_values=self.format_values, format_keys=self.format_keys).records()
+    def _generate_records(self, container_key, data):
+        return _records.Records(container_key, data, self.field_defs, self.timezone).records()
     
     def records(self, client_key):
         """
@@ -156,4 +152,5 @@ class App:
         on records returned from `get()`.
         """
         container = self.container_index[client_key]
-        return self._generate_records(container)
+        container_key = container.obj or container.view
+        return self._generate_records(container_key, self.data[client_key])
