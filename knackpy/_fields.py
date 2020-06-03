@@ -1,4 +1,3 @@
-
 from knackpy.config import constants
 from knackpy.exceptions.exceptions import ValidationError
 from knackpy.utils import formatters, utils
@@ -29,8 +28,9 @@ def generate_field_defs(metadata):
             field["name"] = utils.valid_name(field["name"])
             field["object"] = obj["key"]
             field_defs[field["key"]] = FieldDef(**field)
-        
+
     return _set_field_def_views(field_defs, metadata)
+
 
 class FieldDef:
     """ Knack field defintion wrapper """
@@ -55,8 +55,13 @@ class FieldDef:
                     f"FieldDef missing required FieldDef attribute: '{attr}'"
                 )
 
-        self.subfields = constants.FIELD_TYPE_SUBFIELDS.get(self.type_)
         self.views = []
+
+        settings = constants.FIELD_SETTINGS.get(self.type_)
+
+        self.subfields = settings.get("subfields") if settings else None
+
+        self.use_knack_format = settings.get("use_knack_format") if settings else False
 
         try:
             self.formatter = getattr(formatters, self.type_)
