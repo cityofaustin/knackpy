@@ -27,6 +27,17 @@ def generate_field_defs(metadata):
             field["type_"] = field.pop("type")
             field["name"] = utils.valid_name(field["name"])
             field["object"] = obj["key"]
+
+            try:
+                if field["key"] == obj["identifier"]:
+                    field["identifier"] = True
+                else:
+                    field["identifier"] = False
+
+            except KeyError:
+                # built-in "Accounts" does not have an identifier
+                 field["identifier"] = False
+                 
             field_defs[field["key"]] = FieldDef(**field)
 
     return _set_field_def_views(field_defs, metadata)
@@ -54,6 +65,8 @@ class FieldDef:
                 raise ValidationError(
                     f"FieldDef missing required FieldDef attribute: '{attr}'"
                 )
+
+        self.identifier = kwargs["identifier"] if kwargs.get("identifier") else False
 
         self.views = []
 
