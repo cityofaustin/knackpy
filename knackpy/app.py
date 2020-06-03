@@ -4,11 +4,11 @@ import warnings
 
 import pytz
 
-from knackpy._fields import FieldDef
-from knackpy._records import RecordCollection
+from knackpy import _records
+from knackpy import _fields
 from knackpy._knack_session import KnackSession
 from knackpy.utils import utils
-from knackpy.utils.timezones import TZ_NAMES
+from knackpy.utils.timezones import TIMEZONES
 from knackpy.exceptions.exceptions import ValidationError
 
 import pdb
@@ -38,10 +38,10 @@ class App:
         """
         self.session = KnackSession(self.app_id, api_key=self.api_key, timeout=timeout)
         self.metadata = self._get_metadata() if not metadata else metadata
-        self.tz = self._set_timezone(tzinfo)
-        self.field_defs = self._generate_field_defs()
-        self._set_field_def_views()
-        self.container_index = self._generate_container_index()
+        self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
+        self.timezone = self.set_timezone(self.tzinfo)
+        self.field_defs = _fields.generate_field_defs(self.metadata)
+        self.container_index = utils.generate_container_index(self.metadata)
         logging.debug(self)
 
 
@@ -65,39 +65,49 @@ class App:
         res = self.session.request("get", route)
         return res.json()["application"]
 
-    def _set_timezone(self, tzinfo):
+    @staticmethod
+    def set_timezone(tzinfo):
         """
         Knack stores timezone information in the app metadata, but it does not use IANA
-        timezone database names. Instead it uses common descriptive names E.g., Knack uses
+        timezone database names. Instead it uses common names e.g.,
         "Eastern Time (US & Canada)" instead of "US/Eastern".
 
-        I'm sure these descriptive names are standardized somewhere, and I did not bother
-        to munge the IANA timezone DB to figure it out, so I created the `TZ_NAMES` index
-        in `knackpy.utils.timezones` by copying a table from the internets.
+        I'm sure these common names are standardized somewhere, and I did not bother to
+        munge the IANA timezone DB to figure it out, so I created the `TIMZONES` index in
+        `knackpy.utils.timezones` by copying a table from the internets.
         
         As such, we can't be certain our index contains all of the timezone names that knack
         uses in its metadata. So, this method will attempt to lookup the Knack metadata
-        timezone in our TZ_NAMES index, and raise an error of it fails.
+        timezone in our TIMEZONES index, and raise an error of it fails.
 
-        Alternatively, the client can override the Knack timezone description by including
+        Alternatively, the client can override the Knack timezone common name by including
         an IANA-compliant timezone name (e.g., "US/Central")by passing the `tzinfo` kwarg
-        when constructing the `App` innstance.
+        when constructing the `App` innstance, or directly to this method.
 
         See also, note in knackpy._fields.real_unix_timestamp_mills() about why we
         need valid timezone info to handle Knack records.
-        """
-        if tzinfo:
-            return pytz.timezone(tzinfo)
-        try:
-            tz_name = self.metadata["settings"]["timezone"]
-            tzinfo = [
-                v
-                for tz in TZ_NAMES
-                for k, v in tz.items()
-                if tz_name.upper() == k.upper()
-            ]
-            return pytz.timezone(tzinfo[0])
 
+        Inputs:
+        - tzinfo (str): either an IANA-compliant timezone name, or the common timezone name
+        available in metadata.settings.timezone
+
+        Returns (hopefully):
+            - a `pytz.timezone` instance
+        """
+        try:
+            # first let pytz try to handle the tzinfo
+            tz = pytz.timezone(tzinfo)
+        except:
+            pass
+
+        try:
+            # perhaps the tzinfo matches a known timezone common name
+            matches = [tz["iana_name"] for tz in TIMEZONES if tz["common_name"].lower() == tzinfo.lower()]
+            return pytz.timezone(matches[0])
+
+        except IndexError:
+            pass
+           
         except (pytz.exceptions.UnknownTimeZoneError, IndexError) as e:
             pass
 
@@ -109,92 +119,12 @@ class App:
             """
         )
 
-    def _set_field_def_views(self):
-
-        for scene in self.metadata["scenes"]:
-            for view in scene["views"]:
-                if view["type"] == "table":
-                    field_keys = [column["field"]["key"] for column in view["columns"]]
-
-                    for key in field_keys:
-                        self.field_defs[key].views.append(view["key"])
-
-                else:
-                    print("IGNORING", view["type"])
-
-    def _generate_field_defs(self):
-        lookup = {}
-
-        for obj in self.metadata["objects"]:
-            for field in obj["fields"]:
-                # drop reserved word `type` from field def
-                field["type_"] = field.pop("type")
-                field["name"] = utils._valid_name(field["name"])
-                field["object"] = obj["key"]
-                lookup[field["key"]] = FieldDef(**field)
-
-        return lookup
 
     def _route(self, container):
-        if container.get("scene"):
-            return f"/pages/{container['scene']}/views/{container['key']}/records"
+        if container.scene:
+            return f"/pages/{container.scene}/views/{container.key}/records"
         else:
-            return f"/objects/{container['key']}/records"
-
-    def _generate_container_index(self):
-        """
-        Returns a dict of knack object keys, object names, view keys, and view names,
-        that serves as lookup for finding Knack app record containers (objects or views)
-        by name or key.
-
-        Note that namespace conflicts are highlighly likely, especially with views.
-        If an app has multiple views with the same name, the index will only have
-        one reference to either (which ever name was processed last, below).
-
-        If an app has object names that conflict with view names, the object names
-        will take prioirty, and the lookup with have no entry for the view of this
-        name.
-
-        As such, the best practice is to use keys (object_xx or view_xx) as much 
-        as possible, especially when fetching data from views.
-
-        TODO: might be a good use case collections.ChainMap or Python v3.8's
-        dataclasses: "https://docs.python.org/3/library/dataclasses.html"
-        """
-        
-        container_index = {"_conflicts": []}
-        Container = collections.namedtuple("Container",  "key name scene type_")
-        
-        for obj in self.metadata["objects"]:
-            container = Container(key=obj["key"], scene=None, name=obj["name"], type_="object")
-            # add both `name` and `key` identiefiers to index
-            # if name already exists in index, add it to `_conflicts` instead.
-            container_index[container.key] = container
-            
-            if container.name in container_index:
-                container_index.conflicts.append(container)
-            else:
-                container_index[container.name] = container    
-                    
-        for scene in self.metadata["scenes"]:
-            for view in scene["views"]:
-                container = Container(key=view["key"], scene=scene["key"], name=view["name"], type_="view")
-                # add both `name` and `key` identiefiers to index
-                # if name already exists in index, add it to `_conflicts` instead.
-                container_index[container.key] = container
-
-            if container.name in container_index:
-                container_index.conflicts.append(container)
-            else:
-                container_index[container.name] = container  
-
-        return container_index
-
-    def _get_route_props(self, client_key):
-        try:
-            return self.client_index[key]
-        except KeyError:
-            raise ValidationError(f"Unknown Knack key supplied: `{knack_key}`")
+            return f"/objects/{container.key}/records"
 
     def get(self, *client_keys, **kwargs):
         """
@@ -205,7 +135,7 @@ class App:
         """
         self.data = {}
 
-        for client_key in keys:
+        for client_key in client_keys:
             container = self.container_index[client_key]
 
             try:
@@ -224,6 +154,6 @@ class App:
         """
         Note this method is public to support the use case of BYO data.
         """
-        self.records = RecordCollection(
-            self.data, self.container_index, self.field_defs, self.tz
+        self.records = _records.RecordCollection(
+            self.data, self.container_index, self.field_defs, self.timezone
         )

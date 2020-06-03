@@ -21,7 +21,6 @@ def default(value):
     - rating
     - rich_text
     - short_text  x
-    - signature
     - sum
     - timer  x
     - user_roles
@@ -29,6 +28,9 @@ def default(value):
     return value
 
 
+def signature(value):
+    return value.get("base30")
+    
 def email(value):
     return value.get("email")
 

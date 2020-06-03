@@ -8,17 +8,22 @@ class RecordCollection:
     """
     A wrapper for record "containers" (objects or views) that provides
     a client interface for `get`-ing records by container name or key.
-    """
 
-    def __init__(self, data, container_index, field_defs, tz):
+    Inputs:
+        - data (dict)
+        - metadata (dict)
+        - timezone (pytz timezone instance)
+        - container_index (dict)
+    """
+    def __init__(self, data, container_index, field_defs, timezone):
         self.container_index = container_index
+
         self.index = {
-            container_key: Records(container_key, data[container_key], field_defs, tz)
+            container_key: Records(container_key, data[container_key], field_defs, timezone)
             for container_key in data.keys()
         }
 
     def get(self, client_key, format_keys=False, format_values=False):
-        # enables client to fetch by Knack key or name
         key = self.container_index[client_key].key
 
         return self.index.get(key).get(
@@ -32,7 +37,7 @@ class RecordCollection:
 class Records:
     """
     A wrapper for Knack record data. At initialization, the class is readied
-    to handle calls from `get` method.
+    to handle calls from the `get` method.
 
     The knackpy `App` API is designed such that it's expected that a `Record` 
     instance is proxied via `get` request to a `RecordCollection`, but you can
@@ -45,13 +50,13 @@ class Records:
     def __repr__(self):
         return f"<Records [{len(self.field_defs)} fields]>"
 
-    def __init__(self, container_key, data, field_defs, tz):
+    def __init__(self, container_key, data, field_defs, timezone):
         self.container_key = container_key
         self.data = data
         self.field_defs = self._filter_field_defs_by_container_key(
             field_defs, container_key
         )
-        self.tz = tz
+        self.timezone = timezone
 
     def _filter_field_defs_by_container_key(self, field_defs, container_key):
         return [
@@ -82,23 +87,28 @@ class Records:
 
         for field_def in self.field_defs:
             key = field_def.key
-            value = self._handle_value(record[key], field_def)
-            formatted_key = self._handle_key(field_def)
-            record_entry = (
-                {formatted_key: value}
-                if not self.format_values
-                else self._formatted_record_entry(formatted_key, value)
-            )
-            handled_record.update(record_entry)
+            
+            value = self._handle_value(record.get(key), field_def)
+            
+            formatted_key = field_def.key if not self.format_keys else field_def.name
+            
+            if self.format_values:
+                key_val  = self._formatted_key_val(formatted_key, value, field_def.subfields)
+            
+            else:
+                key_val = {formatted_key: value}
+                
+            handled_record.update(key_val)
 
         return handled_record
 
-    def _formatted_record_entry(self, key, value):
+    def _formatted_key_val(self, formatted_key, value, subfields):
+        print("yeaaah so you need to just use the not-raw values when not formatting values....dude!")
         try:
-            return {f"{key}_{k}": v for k, v in value.items()}
+            return {f"{formatted_key}_{subfield}": value.get(subfield) for subfield in subfields}
 
-        except AttributeError:
-            return {key: value}
+        except (TypeError, AttributeError):
+            return {formatted_key: value}
 
     def _make_raw(self, record):
         """
@@ -109,7 +119,6 @@ class Records:
         These are messy, and do not contain import attributes such as the unix timestamp,
         etc. So we want to ignore not raw-keys.
         """
-
         # identify "redundant" not-raw keys that have a raw key in the record
         for key in [key for key in record.keys() if f"_raw" in key]:
             # replace the not-raw key values with their raw values and drop raw_key
@@ -119,35 +128,31 @@ class Records:
         return record
 
     def _handle_value(self, value, field_def):
-        if value == "":
+        if value == "" or value == None:
             # Knack JSON supplies strings instead of `null`. Replace these with NoneTypes
             return None
 
-        value = self._correct_knack_timestamp(value, self.tz)
+        value = self._correct_knack_timestamp(value, self.timezone)
         kwargs = self._set_formatter_kwargs(field_def)
-
         return value if not self.format_values else field_def.formatter(value, **kwargs)
 
     def _set_formatter_kwargs(self, field_def):
         kwargs = {}
 
         if field_def.type_ == "date_time":
-            kwargs["tz"] = self.tz
+            kwargs["timezone"] = self.timezone
 
         return kwargs
 
-    def _correct_knack_timestamp(self, value, tz):
+    def _correct_knack_timestamp(self, value, timezone):
         # see note in knackpy.utils.utils.correct_knack_timestamp
         try:
             value["unix_timestamp"] = utils.correct_knack_timestamp(
-                value["unix_timestamp"], tz
+                value["unix_timestamp"], timezone
             )
         except (KeyError, TypeError):
             pass
         return value
-
-    def _handle_key(self, field_def):
-        return field_def.key if not self.format_keys else field_def.name
 
     def to_csv(
         self,

@@ -17,7 +17,8 @@ def _route(**kwargs):
         except KeyError:
             raise ValidationError(f"Insufficient knack keys provided. `get()` requires an obj key or a scene and view key")
 
-def get(app_id, **kwargs):
+
+def get(app_id, format_values=False, format_keys=False, **kwargs):
     """
     Get records from a knack object or view.
 
@@ -33,7 +34,9 @@ def get(app_id, **kwargs):
         - record_limit (int)
         - filters (dict)
         - timeout (int)
-        - metadata (dict)
+        - format_keys
+        - format_values
+
     """
     obj = kwargs.pop("obj", None)
     scene = kwargs.pop("scene", None)
