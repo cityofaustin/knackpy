@@ -4,69 +4,29 @@ import warnings
 from knackpy.utils import utils
 
 
-class Records:
-    """
-    A wrapper for Knack record data. At initialization, the class is readied to yield
-    records from Records.records().
-
-    When Records.records() is called, a generator is returned. With each `yield` the
-    generator handles the raw Knack record by updating any empty string values to NoneTypes,
-    corrects Knack's "local" timestamps, and applies the client-specified formatting.
-    """
-
+class Record:
     def __repr__(self):
-        return f"<Records [{len(self.field_defs)} fields]>"
+        return f"<Record \'{self.data[self.identifier]} \'[{len(self.field_defs)} fields]"
 
-    def __init__(
-        self,
-        container_key,
-        data,
-        field_defs,
-        timezone,
-        format_values=False,
-        format_keys=False,
-    ):
-        self.container_key = container_key
+    def __init__(self, data, field_defs, identifier, timezone):
         self.data = data
+        self.field_defs = field_defs
+        self.identifier = identifier
         self.timezone = timezone
-        self.format_keys = format_keys
-        self.format_values = format_values
+        self.raw = self._handle_record()
 
-        self.field_defs = self._filter_field_defs_by_container_key(field_defs)
-        return None
-
-    def _filter_field_defs_by_container_key(self, field_defs):
-        return [
-            field_def
-            for field_ley, field_def in field_defs.items()
-            if self.container_key == field_def.object
-            or self.container_key in field_def.views
-        ]
-
-    def records(self):
-        for record in self.data:
-            record = self.handle_record(record)
-            yield record
-
-    def handle_record(self, record):
-        record = self._replace_empty_strings(record)
-
-        record = self._correct_knack_timestamp(record, self.timezone)
-
-        if not (self.format_keys or self.format_values):
+    def _handle_record(self):
+            record = self._replace_empty_strings(self.data)
+            record = self._correct_knack_timestamp(record, self.timezone)
             return record
 
-        elif self.format_keys and not self.format_values:
-            record = self._proxy_raw_keys(record)
-            return {
-                field_def.name: record[field_def.key] for field_def in self.field_defs
-            }
+    def format(self):
 
-        formatted_record = {}
+        formatted_record = {"id": self.raw["id"]}
 
         for field_def in self.field_defs:
 
-            value = self._handle_value(record, field_def)
+            value = self._handle_value(self.raw, field_def)
 
             key = field_def.name
 
@@ -78,11 +38,6 @@ class Records:
             formatted_record.update(subfield_dict)
 
         return formatted_record
-
-    def _proxy_raw_keys(self, record):
-        for key in [key for key in record.keys() if f"_raw" in key]:
-            record[key.replace("_raw", "")] = record[key]
-        return record
 
     def _handle_value(self, record, field_def):
         """
@@ -126,6 +81,7 @@ class Records:
             return value
 
     def _set_formatter_kwargs(self, field_def):
+        # TODO: these should probably be field_def properties set from config
         kwargs = {}
 
         if field_def.type_ == "date_time":
@@ -146,6 +102,47 @@ class Records:
 
         return record
 
+
+class Records:
+    """
+    A wrapper for Knack record data. At initialization, the class is readied to yield
+    records from Records.records().
+
+    When Records.records() is called, a generator is returned. With each `yield` the
+    generator handles the raw Knack record by updating any empty string values to NoneTypes,
+    corrects Knack's "local" timestamps, and applies the client-specified formatting.
+    """
+
+    def __repr__(self):
+        return f"<Records [{len(self.data)} records]>"
+
+    def __init__(
+        self,
+        container_key,
+        data,
+        field_defs,
+        timezone,
+    ):
+        self.container_key = container_key
+        self.data = data
+        self.timezone = timezone
+        self.field_defs = self._filter_field_defs_by_container_key(field_defs)
+        self.identifier = [field_def.key for field_def in self.field_defs if field_def.identifier][0]
+        return None
+
+    def _filter_field_defs_by_container_key(self, field_defs):
+        return [
+            field_def
+            for field_ley, field_def in field_defs.items()
+            if self.container_key == field_def.object
+            or self.container_key in field_def.views
+        ]
+
+    def records(self):
+        for record in self.data:
+            yield Record(record, self.field_defs, self.identifier, self.timezone)
+
+    
     def to_csv(
         self,
         *obj_or_view_keys,
