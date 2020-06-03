@@ -19,12 +19,14 @@ def generate_container_index(metadata):
         that serves as lookup for finding Knack app record containers (objects or views)
         by name or key.
 
-        Note that namespace conflicts are highlighly likely, especially with views.
+        Note that namespace conflicts are highlighly likely, especially with views,
+        whose default name in Knack is their parent object!
+
         If an app has multiple views with the same name, the index will only have
-        one reference to either (which ever name was processed last, below).
+        one reference to either (which ever name was processed last).
 
         If an app has object names that conflict with view names, the object names
-        will take prioirty, and the lookup with have no entry for the view of this
+        will take prioirty, and the lookup will have no entry for the view of this
         name.
 
         As such, the best practice is to use keys (object_xx or view_xx) as much 
@@ -34,13 +36,13 @@ def generate_container_index(metadata):
         dataclasses: "https://docs.python.org/3/library/dataclasses.html"
         """
         container_index = {"_conflicts": []}
-        Container = collections.namedtuple("Container",  "key name scene type_")
+        Container = collections.namedtuple("Container",  "obj view scene name")
         
         for obj in metadata["objects"]:
-            container = Container(key=obj["key"], scene=None, name=obj["name"], type_="object")
+            container = Container(obj=obj["key"], scene=None, view=None, name=obj["name"])
             # add both `name` and `key` identiefiers to index
             # if name already exists in index, add it to `_conflicts` instead.
-            container_index[container.key] = container
+            container_index[container.obj] = container
             
             if container.name in container_index:
                 container_index.conflicts.append(container)
@@ -49,10 +51,10 @@ def generate_container_index(metadata):
                     
         for scene in metadata["scenes"]:
             for view in scene["views"]:
-                container = Container(key=view["key"], scene=scene["key"], name=view["name"], type_="view")
+                container = Container(obj=None, view=view["key"], scene=scene["key"], name=view["name"])
                 # add both `name` and `key` identiefiers to index
                 # if name already exists in index, add it to `_conflicts` instead.
-                container_index[container.key] = container
+                container_index[container.view] = container
 
             if container.name in container_index:
                 container_index.conflicts.append(container)
