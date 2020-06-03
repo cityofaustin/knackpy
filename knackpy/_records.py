@@ -113,11 +113,6 @@ class Records:
         except AttributeError:
             return {key: value}
 
-        except TypeError:
-            import pdb
-
-            pdb.set_trace()
-
     def _replace_empty_strings(self, record):
         return {key: None if val == "" else val for key, val in record.items()}
 
