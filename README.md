@@ -4,74 +4,51 @@
 
 ## Quick Start
 
+You can use `knackpy.get()` to fetch "raw" data from your Knack app. Be aware that raw Knack timestamps [are problematic](). 
+
 ```python
->>> import knackpy
+# This is equivalent to exporting records in JSON format from the Knack Builder
+import json
+import knackpy
 
->>> app_settings = {
-  "api_key": "my_very_secret_api_key",
-  "timeout": 30,
-  "max_attempts": 5
-}
+data = knackpy.get("my_app_id", api_key="myverysecretapikey", obj="object_3")
 
->>> app = knackpy.App("my_app_id", **app_settings)
+with open("object_3.json", "w") as fout:
+  fout.write(json.dumps(data))
+```
 
->>> query_settings = {
-  "filters": [ "my_object_name": {
-      'match': 'and',
-      'rules': [
-        {
-          'field':'field_10',
-          'operator':'is',
-          'value':'No'
-        },
-        {
-          'field':'field_11',
-          'operator':'is',
-          'value':'Yes'
-        }
-      ]
-    }
-  ],
-}
+More likely, you'll want to use `knackpy.App` correct and format your data.
 
->>> app.get_data("my_object_name", **query_settings)
+```python
+import knackpy
 
->>> record_settings = {
-  "format_keys": True,
-  "format_values": True,
-  "localize": True
-}
+app = knackpy.App(app_id,  api_key="myverysecretapikey")
+records = app.get("object_3")
+records_formatted = [record.format() for record in records]
+```
 
->>> for record in app.records.get("my_object_name", **record_settings):
-        print(record)
+Knackpy is designed to handle lots of records, so `App.get()` returns a generator function. You'll need to re-intialize the generator with `App.records.get()` every time you iterate on all your records.
 
-# { 'id' : '5d7964422d7159001659b27a', 'my_number_field': 2, 'my_email_field': 'knackpy_user@genius.town' }  
+```python
+import knackpy
+app = knackpy.App(app_id,  api_key="myverysecretapikey")
 
->>> app.records.to_csv("my_object_name", **record_settings)
+# you can fetch by object name, object key, view name, or view key
+records = app.get("my_object_name") 
+records_formatted = [record.format() for record in records]
 
-# my_object_name.csv
-# id, my_number_field, my_email_field
-# 5d7964422d7159001659b27a, 2, knackpy_user@genius.town
-# [...]
+# re-intialize the records generator
+records = app.records.get("object_3")
+
+# these records are raw, but the timestamps have been corrected
+records_raw = [record.raw for record in records]
 ```
 
 ## What's New in v1.0
 
 * The `Knack` class is now `App`, and it's API is more intuitive.
-
-* Fetch records from multiple objects and/or views from one `App` instance.
-
-```python
->>> app.get_data("my_object_name", "my_view_name", record_limit=1)
->>> app.records.keys()
-# dict_keys(['my_object_name', 'my_view_name'])
-
-```
-
 * Fetch records using object/view names
-* No more need to supply scene keys
 * No more rows-per-page or page count limiting; just set a `record_limit`.
-* Selectively humanize your record keys, values, or both. 
 * `App`s have built-in metadata:
 
 ```python
