@@ -6,26 +6,38 @@ from knackpy.utils import utils
 
 class Record:
     """
-    A wrapper class for Knack a record dicts. The knackpy is designed to interface with
-    record data using `Records` class wrapper, but you can construct them ad-hoc if you want.
+    A wrapper class for Knack a record dicts. The knackpy API is designed to interface
+    with record data using the `Records` class wrapper, but you can construct them ad-hoc
+    if you want.
 
-    On init, any empty string values in the record are replaced with NoneTypes, timestamps are
-    corrected, the modifed record data is assigned to the Record.raw property.
+    On init, any empty string values in the record are replaced with NoneTypes, timestamps
+    are corrected, the modifed record data is assigned to the Record.raw property.
 
     If for some reason you want to access the raw, uncorrected record data, you find it at 
     `Record.data`. 
 
-    Once a Record has been constructed, the `.format()` can be used to retreive a humanized version
-    of the data.
+    Once a Record has been constructed, the `.format()` can be used to retreive a humanized
+    version of the data.
 
     Inputs:
     - data (dict): a knack record dict serialized from JSON from the Knack API
+    
     - field_defs (list): a list of knackpy FieldDef's. this list must contain a FieldDef
         for every field present in the data dict. See the `_fields.py` for helper methods, 
         as well as the `App`'s usage of these.
-    - identifer (str): the Knack field key that should be treated as the "display field" for the record.
-        See: https://support.knack.com/hc/en-us/articles/226588888-Working-With-Objects#edit-objects
-    - timezone (pytz timezone class): A pytz timezone class that will be used to correct and localize timestamps
+    
+    - identifer (str): the Knack field key that should be treated as the "display field"
+        for the record. (Display Field in the Knack builder is stored as the `identifer`
+        property of objects in Knack metadata). As you can see in the `Records` class init,
+        you can fetch this value from Knack metdata. This value is only used in the
+        instance's __repr__.
+        
+        See also "Dispaly Field" setting in the Knack builder:
+        https://support.knack.com/hc/en-us/articles/226588888-Working-With-Objects#edit-objects
+        
+    
+    - timezone (pytz timezone class): A pytz timezone class that will be used to correct
+        and localize timestamps
     """
     def __repr__(self):
         return f"<Record \'{self.data[self.identifier]} \'[{len(self.field_defs)} fields]"
