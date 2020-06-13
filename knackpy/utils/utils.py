@@ -55,10 +55,10 @@ def generate_container_index(metadata):
             # if name already exists in index, add it to `_conflicts` instead.
             container_index[container.view] = container
 
-        if container.name in container_index:
-            container_index["_conflicts"].append(container)
-        else:
-            container_index[container.name] = container
+            if container.name in container_index:
+                container_index["_conflicts"].append(container)
+            else:
+                container_index[container.name] = container
 
     return container_index
 
@@ -79,7 +79,7 @@ def correct_knack_timestamp(mills_timestamp, timezone):
     timestamp = mills_timestamp / 1000
     # Don't use datetime.utcfromtimestamp()! this will assume the input timestamp is in local (system) time
     # If you try to pass our timezone to the tz parameter here, it will have no affect. Ask Guido why??
-    dt_utc = datetime.datetime.fromtimestamp(timestamp, timezone=datetime.timezone.utc)
+    dt_utc = datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)
     # All we've done so far is create a datetime object from our timestamp
     # now we have to remove the timezone info that we supplied
     dt_naive = dt_utc.replace(tzinfo=None)
