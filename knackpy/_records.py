@@ -66,7 +66,7 @@ class Record:
 
         formatted_record = {"id": self.raw["id"]}
 
-        for field_def in self.field_defs:
+        for key, field_def in self.field_defs.items():
 
             value = self._handle_value(self.raw, field_def)
 
