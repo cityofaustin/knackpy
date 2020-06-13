@@ -2,6 +2,7 @@ import json
 import pytest
 import knackpy
 
+from knackpy.exceptions.exceptions import ValidationError
 
 @pytest.fixture
 def metadata():
@@ -33,6 +34,7 @@ def test_tzinfo_common_name(app):
 
 
 def test_bad_tzinfo(app):
-    assert knackpy.App.get_timezone("US/Central")
+    with pytest.raises(ValidationError):
+        assert knackpy.App.get_timezone("Pizza the Hut")
 
 
