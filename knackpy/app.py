@@ -41,7 +41,8 @@ class App:
         self.metadata = self._get_metadata() if not metadata else metadata
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
         self.timezone = self.get_timezone(self.tzinfo)
-        self.field_defs = _fields.generate_field_defs(self.metadata)
+        field_defs = _fields.generate_field_defs(self.metadata)
+        self.field_defs = _fields.set_field_def_views(field_defs, self.metadata)
         self.container_index = utils.generate_container_index(self.metadata)
         self.data = {}
         logging.debug(self)
