@@ -40,12 +40,11 @@ class App:
         self.session = KnackSession(self.app_id, api_key=self.api_key, timeout=timeout)
         self.metadata = self._get_metadata() if not metadata else metadata
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
-        self.timezone = self.set_timezone(self.tzinfo)
+        self.timezone = self.get_timezone(self.tzinfo)
         self.field_defs = _fields.generate_field_defs(self.metadata)
         self.container_index = utils.generate_container_index(self.metadata)
         self.data = {}
         logging.debug(self)
-
 
     def info(self):
         total_obj = len(self.metadata.get("objects"))
@@ -69,7 +68,7 @@ class App:
         return res.json()["application"]
 
     @staticmethod
-    def set_timezone(tzinfo):
+    def get_timezone(tzinfo):
         # TODO: move to utils
         """
         Knack stores timezone information in the app metadata, but it does not use IANA
@@ -98,20 +97,23 @@ class App:
         Returns (hopefully):
             - a `pytz.timezone` instance
         """
+
         try:
-            # first let pytz try to handle the tzinfo
-            tz = pytz.timezone(tzinfo)
+            # let pytz try to handle the tzinfo
+            return pytz.timezone(tzinfo)
+
         except:
             pass
 
         try:
             # perhaps the tzinfo matches a known timezone common name
-            matches = [tz["iana_name"] for tz in TIMEZONES if tz["common_name"].lower() == tzinfo.lower()]
+            matches = [
+                tz["iana_name"]
+                for tz in TIMEZONES
+                if tz["common_name"].lower() == tzinfo.lower()
+            ]
             return pytz.timezone(matches[0])
 
-        except IndexError:
-            pass
-           
         except (pytz.exceptions.UnknownTimeZoneError, IndexError) as e:
             pass
 
@@ -137,15 +139,19 @@ class App:
 
         container_key = container.obj or container.view
 
-        route = api._route(obj=container.obj, scene=container.scene, view=container.view)
+        route = api._route(
+            obj=container.obj, scene=container.scene, view=container.view
+        )
 
         self.data[client_key] = self.session._get_paginated_data(route, **kwargs)
 
         return self._generate_records(container_key, self.data[client_key])
 
     def _generate_records(self, container_key, data):
-        return _records.Records(container_key, data, self.field_defs, self.timezone).records()
-    
+        return _records.Records(
+            container_key, data, self.field_defs, self.timezone
+        ).records()
+
     def records(self, client_key):
         """
         Returns already-gotten data as a `Records` generator. Use this method to re-iterate
