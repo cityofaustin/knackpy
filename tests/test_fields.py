@@ -24,23 +24,6 @@ def field_def_data():
 
 
 @pytest.fixture
-def record_data():
-    return {
-        "date_time": {
-            "am_pm": "PM",
-            "date": "09/11/2019",
-            "date_formatted": "09/11/2019",
-            "hours": "04",
-            "iso_timestamp": "2019-09-11T16:14:00.000Z",
-            "minutes": "14",
-            "time": 974,
-            "timestamp": "09/11/2019 04:14 pm",
-            "unix_timestamp": 1568218440000,
-        }
-    }
-
-
-@pytest.fixture
 def field_defs(metadata):
     return knackpy._fields.generate_field_defs(metadata)
 
