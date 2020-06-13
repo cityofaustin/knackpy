@@ -19,7 +19,6 @@ class App:
     """
     Knack application wrapper. This thing does it all, folks!
     """
-
     def __repr__(self):
         return f"""<App [{self.metadata["name"]}]>"""
 
