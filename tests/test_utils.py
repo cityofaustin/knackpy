@@ -48,3 +48,10 @@ def test_correct_knack_timestamp():
     unix_timestamp = knackpy.utils.utils.correct_knack_timestamp(local_timestamp, tz)
     assert unix_timestamp == 1568236440000  # Sep 11, 2019 16:14pm US/Central
 
+
+def test_valid_name():
+    assert knackpy.utils.utils.valid_name("id") == "_id"
+
+
+def test_humanize_bytes():
+    assert knackpy.utils.utils._humanize_bytes(10000) == "9.77kb"
