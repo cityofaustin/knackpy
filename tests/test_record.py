@@ -28,18 +28,9 @@ def records(app):
         "object_3", app.data[KEY], app.field_defs, app.timezone
     )
 
-
-def test_constructor_success(app):
-    assert knackpy._records.Records(
-        "object_3", app.data[KEY], app.field_defs, app.timezone
-    )
+def test_basic_constructor(app, records):
+    assert len([record for record in records.records()]) == len(app.data[KEY])
 
 
-def test_constructor_fail(app):
-    with pytest.raises(TypeError):
-        knackpy._records.Records()
-
-
-def test_get(records):
-    recs = records.records()
-    assert isinstance(recs, types.GeneratorType)
+def test_format_record(app, records):
+    assert len([record.format() for record in records.records()]) == len(app.data[KEY])
