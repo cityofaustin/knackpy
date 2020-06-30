@@ -46,7 +46,6 @@ class App:
         self.data = {}
         logging.debug(self)
 
-
     def info(self):
         total_obj = len(self.metadata.get("objects"))
         total_scenes = len(self.metadata.get("scenes"))
@@ -100,18 +99,19 @@ class App:
         """
         try:
             # first let pytz try to handle the tzinfo
-            tz = pytz.timezone(tzinfo)
+            return pytz.timezone(tzinfo)
         except:
             pass
 
         try:
             # perhaps the tzinfo matches a known timezone common name
-            matches = [tz["iana_name"] for tz in TIMEZONES if tz["common_name"].lower() == tzinfo.lower()]
+            matches = [
+                tz["iana_name"]
+                for tz in TIMEZONES
+                if tz["common_name"].lower() == tzinfo.lower()
+            ]
             return pytz.timezone(matches[0])
 
-        except IndexError:
-            pass
-           
         except (pytz.exceptions.UnknownTimeZoneError, IndexError) as e:
             pass
 
@@ -137,14 +137,18 @@ class App:
 
         container_key = container.obj or container.view
 
-        route = api._route(obj=container.obj, scene=container.scene, view=container.view)
+        route = api._route(
+            obj=container.obj, scene=container.scene, view=container.view
+        )
 
         self.data[client_key] = self.session._get_paginated_data(route, **kwargs)
 
         return self._generate_records(container_key, self.data[client_key])
 
     def _generate_records(self, container_key, data):
-        return _records.Records(container_key, data, self.field_defs, self.timezone).records()
+        return _records.Records(
+            container_key, data, self.field_defs, self.timezone
+        ).records()
 
     def records(self, client_key):
         """
