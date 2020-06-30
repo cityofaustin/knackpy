@@ -11,7 +11,8 @@ def field_def_data():
         "_id": "abc123",
         "key": "field_99",
         "name": "Fake Field",
-        "type": ("short_text"),
+        "type_": ("short_text"),
+        "object": "object_0"
     }
 
 @pytest.fixture
@@ -43,17 +44,6 @@ def test_constructor_fail_missing_required(field_def_data):
     with pytest.raises(knackpy.exceptions.exceptions.ValidationError):
         assert knackpy._fields.FieldDef(**bad_data)
 
-    bad_data = drop_key_from_dict(field_def_data, "key")
-    with pytest.raises(knackpy.exceptions.exceptions.ValidationError):
-        assert knackpy._fields.FieldDef(**bad_data)
-    
-    bad_data = drop_key_from_dict(field_def_data, "type")
-    with pytest.raises(knackpy.exceptions.exceptions.ValidationError):
-        assert knackpy._fields.FieldDef(**bad_data)
-
-    bad_data = drop_key_from_dict(field_def_data, "name")
-    with pytest.raises(knackpy.exceptions.exceptions.ValidationError):
-        assert knackpy._fields.FieldDef(**bad_data)
 
 def test_correct_knack_timestamp(record_data):
     local_timestamp = 1568218440000 #  Sep 11, 2019 16:14pm UTC
