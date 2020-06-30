@@ -145,7 +145,7 @@ class App:
 
     def _generate_records(self, container_key, data):
         return _records.Records(container_key, data, self.field_defs, self.timezone).records()
-    
+
     def records(self, client_key):
         """
         Returns already-gotten data as a `Records` generator. Use this method to re-iterate
