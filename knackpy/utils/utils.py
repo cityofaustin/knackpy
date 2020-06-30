@@ -46,7 +46,7 @@ def generate_container_index(metadata):
         container_index[container.obj] = container
 
         if container.name in container_index:
-            container_index.conflicts.append(container)
+            container_index["_conflicts"].append(container)
         else:
             container_index[container.name] = container
 
@@ -60,7 +60,7 @@ def generate_container_index(metadata):
             container_index[container.view] = container
 
         if container.name in container_index:
-            container_index.conflicts.append(container)
+            container_index["_conflicts"].append(container)
         else:
             container_index[container.name] = container
 
