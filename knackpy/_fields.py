@@ -23,7 +23,7 @@ def generate_field_defs(metadata):
 
     for obj in metadata["objects"]:
         for field in obj["fields"]:
-            # drop reserved word `type` from field def
+            # drop reserved word `type` from knack field def
             field["type_"] = field.pop("type")
             field["name"] = utils.valid_name(field["name"])
             field["object"] = obj["key"]
