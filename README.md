@@ -1,3 +1,6 @@
+
+# ** *Version 1.0 is in progress, [here](https://github.com/cityofaustin/knackpy/tree/v1.0.0). All methods documented in the README are ready for a test drive* **
+
 # Knackpy 
 
 A Python client for interacting with [Knack](http://knack.com) applications. 
