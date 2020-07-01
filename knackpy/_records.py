@@ -127,7 +127,12 @@ class Records:
         self.data = data
         self.timezone = timezone
         self.field_defs = self._filter_field_defs_by_container_key(field_defs)
-        self.identifier = [field_def.key for field_def in self.field_defs if field_def.identifier][0]
+        try:
+            self.identifier = [field_def.key for field_def in self.field_defs if field_def.identifier][0]
+        except IndexError:
+            # it seems that the object will not have an identifer in the metadata if it has not been manually set by the user
+            # knack presumably just uses the first field that was created with the object. we'll use the id
+            self.identifier = "id"
         return None
 
     def _filter_field_defs_by_container_key(self, field_defs):
