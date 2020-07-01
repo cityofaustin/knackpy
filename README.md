@@ -67,7 +67,7 @@ References to all available data endpoints are stored at `App.containers`. This 
  'view_1',
  'My Boring View']
 
->>> app.containers("object_1")
+>>> app.containers["object_1"]
 Container(obj='object_1', view=None, scene=None, name='My Boring Object')
 ```
 
@@ -75,12 +75,9 @@ You can cut down on API calls by side-loading your own Knack metadata and/or rec
 
 ```python
 >>> import json
-
 # you can find your app's metadata at: https://{subdomain}.knack.com/v1/applications"
-
 >> my_metadata = json.loads("my_metadata.json")
 >> app = knackpy.App(app_id,  metadata=my_metadata)
-
 # note that the top-level keys of side-loaded records must be container names that exist in your app's metadata
 >> data = { "my_object_name": json.loads("my_data.json") }
 >> app.data = data
