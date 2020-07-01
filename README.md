@@ -46,7 +46,7 @@ Once you've constructed an `App` instance, you can resuse it to fetch records fr
 >>> app.get("view_22")
 ```
 
-You can check the available data in your `App` instance like so:
+You can check the available data in your App instance like so:
 
 ```python
 >>> app.data.keys()
@@ -55,7 +55,24 @@ You can check the available data in your `App` instance like so:
 >>> view_22_records = [record.format() for record in app.records("view_22")]
 ```
 
-You can also bring your own Knack metadata and/or record data to an `App`:
+References to all available data endpoints are stored at `App.containers`. This is handy if you want to check the name of container, or vice-versa:
+
+```python
+>>> from pprint import pprint as print
+>>> print(list( app.containers.keys() )) 
+['_conflicts',
+ 'object_1',
+ 'My Boring Object', # Eek, I recommend you use lower_snake_case for your object names
+ 'object_2',
+ 'My Exciting Object',
+ 'view_1',
+ 'My Boring View']
+
+>>> app.containers("object_1")
+Container(obj='object_1', view=None, scene=None, name='My Boring Object')
+```
+
+You can cut down on API calls by side-loading your own Knack metadata and/or record data to an `App`:
 
 ```python
 >>> import json
@@ -87,5 +104,8 @@ You can also bring your own Knack metadata and/or record data to an `App`:
 * Pythonic use of `exceptions`, `warnings`, and `logging`.
 * Automatic localization (no need to set TZ info)
 * "Raw" data is available with timestamp corrections
-* Reduce API calls metadata and/or record side-loading
+* Reduce API calls with metadata and/or record side-loading
+```python
+>>> data = knackpy.get("my_app_id", api_key="myverysecretapikey", obj="object_3", record_limit=10)
+```
 * Null values are consistently returned as `NoneType`s
