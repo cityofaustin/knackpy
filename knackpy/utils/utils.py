@@ -42,7 +42,7 @@ def generate_container_index(metadata):
     for obj in metadata["objects"]:
         container = Container(obj=obj["key"], scene=None, view=None, name=obj["name"])
         # add both `name` and `key` identiefiers to index
-        # if name already exists in index, add it to `_conflicts` instead.
+        # knack does not allow dupe obj names, so no concern for conflicts here 
         container_index[container.obj] = container
 
         if container.name in container_index:

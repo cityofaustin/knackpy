@@ -19,7 +19,6 @@ class App:
     """
     Knack application wrapper. This thing does it all, folks!
     """
-
     def __repr__(self):
         return f"""<App [{self.metadata["name"]}]>"""
 
@@ -40,8 +39,9 @@ class App:
         self.session = KnackSession(self.app_id, api_key=self.api_key, timeout=timeout)
         self.metadata = self._get_metadata() if not metadata else metadata
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
-        self.timezone = self.set_timezone(self.tzinfo)
-        self.field_defs = _fields.generate_field_defs(self.metadata)
+        self.timezone = self.get_timezone(self.tzinfo)
+        field_defs = _fields.generate_field_defs(self.metadata)
+        self.field_defs = _fields.set_field_def_views(field_defs, self.metadata)
         self.container_index = utils.generate_container_index(self.metadata)
         self.data = {}
         logging.debug(self)
@@ -68,7 +68,7 @@ class App:
         return res.json()["application"]
 
     @staticmethod
-    def set_timezone(tzinfo):
+    def get_timezone(tzinfo):
         # TODO: move to utils
         """
         Knack stores timezone information in the app metadata, but it does not use IANA
@@ -97,6 +97,7 @@ class App:
         Returns (hopefully):
             - a `pytz.timezone` instance
         """
+
         try:
             # first let pytz try to handle the tzinfo
             return pytz.timezone(tzinfo)

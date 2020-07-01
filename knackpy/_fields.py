@@ -3,7 +3,11 @@ from knackpy.exceptions.exceptions import ValidationError
 from knackpy.utils import formatters, utils
 
 
-def _set_field_def_views(field_defs, metadata):
+def set_field_def_views(field_defs, metadata):
+    """
+    Update FieldDef's  `views` property to include a list of all view keys that use
+    this field.
+    """
     for scene in metadata["scenes"]:
         for view in scene["views"]:
             if view["type"] == "table":
@@ -11,9 +15,9 @@ def _set_field_def_views(field_defs, metadata):
 
                 for key in field_keys:
                     field_defs[key].views.append(view["key"])
-
             else:
-                print("IGNORING", view["type"])
+                # todo: should we handle non-table views?
+                continue
 
     return field_defs
 
@@ -36,11 +40,11 @@ def generate_field_defs(metadata):
 
             except KeyError:
                 # built-in "Accounts" does not have an identifier
-                 field["identifier"] = False
-                 
+                field["identifier"] = False
+
             field_defs[field["key"]] = FieldDef(**field)
 
-    return _set_field_def_views(field_defs, metadata)
+    return field_defs
 
 
 class FieldDef:
