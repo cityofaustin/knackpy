@@ -52,12 +52,11 @@ class FieldDef:
 
     def __repr__(self):
         name = getattr(self, "name", "(no name)")
-        return f"<FieldDef [{name}]>"
+        return f"<FieldDef \'{name}\'>"
 
     def __init__(self, **kwargs):
 
         for attr in [
-            "_id",
             "key",
             "name",
             "type_",

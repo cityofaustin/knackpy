@@ -45,7 +45,7 @@ def test_constructor_success(field_def_data):
 
 
 def test_constructor_fail_missing_required(field_def_data):
-    bad_data = drop_key_from_dict(field_def_data, "_id")
+    bad_data = drop_key_from_dict(field_def_data, "object")
     with pytest.raises(knackpy.exceptions.exceptions.ValidationError):
         assert knackpy._fields.FieldDef(**bad_data)
 
