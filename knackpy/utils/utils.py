@@ -14,17 +14,13 @@ def valid_name(key):
         return key
 
 
-def generate_container_index(metadata):
-    """
-        Returns a dict of knack object keys, object names, view keys, and view names,
+def generate_containers(metadata):
+    """Returns a dict of knack object keys, object names, view keys, and view names,
         that serves as lookup for finding Knack app record containers (objects or views)
         by name or key.
 
         Note that namespace conflicts are highlighly likely, especially with views,
         whose default name in Knack is their parent object!
-
-        If an app has multiple views with the same name, the index will only have
-        one reference to either (which ever name was processed last).
 
         If an app has object names that conflict with view names, the object names
         will take prioirty, and the lookup will have no entry for the view of this
@@ -32,39 +28,24 @@ def generate_container_index(metadata):
 
         As such, the best practice is to use keys (object_xx or view_xx) as much 
         as possible, especially when fetching data from views.
-
-        TODO: might be a good use case collections.ChainMap or Python v3.8's
-        dataclasses: "https://docs.python.org/3/library/dataclasses.html"
         """
-    container_index = {"_conflicts": []}
+
     Container = collections.namedtuple("Container", "obj view scene name")
 
-    for obj in metadata["objects"]:
-        container = Container(obj=obj["key"], scene=None, view=None, name=obj["name"])
-        # add both `name` and `key` identiefiers to index
-        # knack does not allow dupe obj names, so no concern for conflicts here 
-        container_index[container.obj] = container
+    obj_containers = {
+        obj["key"]: Container(obj=obj["key"], scene=None, view=None, name=obj["name"])
+        for obj in metadata["objects"]
+    }
+    
+    view_containers = {
+        view["key"]: Container(
+            obj=None, view=view["key"], scene=scene["key"], name=view["name"]
+        )
+        for scene in metadata["scenes"]
+        for view in scene["views"]
+    }
 
-        if container.name in container_index:
-            container_index["_conflicts"].append(container)
-        else:
-            container_index[container.name] = container
-
-    for scene in metadata["scenes"]:
-        for view in scene["views"]:
-            container = Container(
-                obj=None, view=view["key"], scene=scene["key"], name=view["name"]
-            )
-            # add both `name` and `key` identiefiers to index
-            # if name already exists in index, add it to `_conflicts` instead.
-            container_index[container.view] = container
-
-        if container.name in container_index:
-            container_index["_conflicts"].append(container)
-        else:
-            container_index[container.name] = container
-
-    return container_index
+    return {**obj_containers, **view_containers}
 
 
 def correct_knack_timestamp(mills_timestamp, timezone):

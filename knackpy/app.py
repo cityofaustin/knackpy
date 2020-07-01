@@ -1,7 +1,6 @@
 import collections
 import logging
 import warnings
-
 import pytz
 
 from knackpy import api
@@ -42,7 +41,7 @@ class App:
         self.timezone = self.get_timezone(self.tzinfo)
         field_defs = _fields.generate_field_defs(self.metadata)
         self.field_defs = _fields.set_field_def_views(field_defs, self.metadata)
-        self.containers = utils.generate_container_index(self.metadata)
+        self.containers = utils.generate_containers(self.metadata)
         self.data = {}
         logging.debug(self)
 
@@ -124,7 +123,10 @@ class App:
             """
         )
 
-    def get(self, client_key, **kwargs):
+    def _find_container(self, client_key):
+        return [self.containers[key] for key, value in self.containers.items() if key == client_key or self.containers[key].name == client_key][0]
+        
+    def get(self, client_key, refresh=False, **kwargs):
         """
         *client_keys: each arg must be an object or view key or name string that  exists
             in the app
@@ -134,7 +136,7 @@ class App:
         Returns:
             - `Records` generator
         """
-        container = self.containers[client_key]
+        container = self._find_container(client_key)
 
         container_key = container.obj or container.view
 
@@ -142,20 +144,13 @@ class App:
             obj=container.obj, scene=container.scene, view=container.view
         )
 
-        self.data[client_key] = self.session._get_paginated_data(route, **kwargs)
+        if not self.data.get(container_key) or refresh:
+            # fetch data if it has not already been collected, or force via `refresh=True`
+            self.data[container_key] = self.session._get_paginated_data(route, **kwargs)
 
-        return self._generate_records(container_key, self.data[client_key])
+        return self._generate_records(container_key, self.data[container_key])
 
     def _generate_records(self, container_key, data):
         return _records.Records(
             container_key, data, self.field_defs, self.timezone
         ).records()
-
-    def records(self, client_key):
-        """
-        Returns already-gotten data as a `Records` generator. Use this method to re-iterate
-        on records returned from `get()`.
-        """
-        container = self.containers[client_key]
-        container_key = container.obj or container.view
-        return self._generate_records(container_key, self.data[client_key])

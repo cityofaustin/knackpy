@@ -59,9 +59,9 @@ def test_correct_knack_timestamp_during_dst(timezone):
     assert timestamp_output == 1593636445000
 
 
-def test_generate_container_index(metadata):
-    container_index = knackpy.utils.utils.generate_container_index(metadata)
-    assert container_index["all_fields_test"].obj == "object_3"
+def test_generate_containers(metadata):
+    containers = knackpy.utils.utils.generate_containers(metadata)
+    assert len(containers.keys()) > 0
 
 
 def test_humanize_bytes():
