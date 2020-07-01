@@ -15,12 +15,13 @@ You can use `knackpy.get()` to fetch "raw" data from your Knack app. Be aware th
   fout.write(json.dumps(data))
 ```
 
-More likely, you'll want to use `knackpy.App` to correct and format your data.
+More likely, you'll want to use the `App` class to correct and format your data.
 
 ```python
 >>> import knackpy
 >>> app = knackpy.App(app_id,  api_key="myverysecretapikey")
-# containers (objects and view identifiers) and be supplied as Knack keys (`object_1`, `view_22`) or names (`my_exciting_object_name`, `my_exciting_view_name`)
+
+# containers can be supplied as Knack keys (`object_1`, `view_22`) or names (`my_exciting_object_name`, `my_exciting_view_name`)
 >>> container = "my_exciting_object_name"
 >>> records = app.get(container)
 >>> records_formatted = [record.format() for record in records]
@@ -29,8 +30,6 @@ More likely, you'll want to use `knackpy.App` to correct and format your data.
 Knackpy is designed to handle lots of records, so `App.get()` returns a generator function. You'll need to re-intialize the generator with `App.records(<container:str>)` each time you iterate on your records.
 
 ```python
->>> import knackpy
->>> app = knackpy.App(app_id,  api_key="myverysecretapikey")
 >>> records = app.get("my_exciting_object_name") 
 >>> records_formatted = [record.format() for record in records]
 # re-intialize the records generator. `<container>` must match a name you supplied to App.get() `
@@ -45,17 +44,28 @@ Once you've constructed an `App` instance, you can resuse it to fetch records fr
 >>> app.get("my_exciting_object_name") 
 >>> app.get("my_boring_object_name")
 >>> app.get("view_22")
+```
+
+You can check the available data in your `App` instance like so:
+
+```python
 >>> app.data.keys()
 ["my_boring_object", "my_exciting_object", "view_22"]
+
+>>> view_22_records = [record.format() for record in app.records("view_22")]
 ```
 
 You can also bring your own Knack metadata and/or record data to an `App`:
 
 ```python
 >>> import json
+
+# you can find your app's metadata at: https://{subdomain}.knack.com/v1/applications"
+
 >> my_metadata = json.loads("my_metadata.json")
 >> app = knackpy.App(app_id,  metadata=my_metadata)
-# note that the top-level keys of side-loaded must be container names that exist in your app
+
+# note that the top-level keys of side-loaded records must be container names that exist in your app's metadata
 >> data = { "my_object_name": json.loads("my_data.json") }
 >> app.data = data
 >> records = [record.format() for record in app.records("my_object_name")]
@@ -67,12 +77,15 @@ You can also bring your own Knack metadata and/or record data to an `App`:
 * The `Knack` class is now `App`, and it's API is more intuitive.
 * Fetch records using object/view names
 * No more rows-per-page or page count limiting; just set a `record_limit`.
-* `App`s have built-in metadata:
+* `App` summary stats:
 
 ```python
 >>> app.info()
-# {'objects': 10, 'scenes': 4, 'records': 6786, 'size': '25.47mb'}
+{'objects': 10, 'scenes': 4, 'records': 6786, 'size': '25.47mb'}
 ```
 
 * Pythonic use of `exceptions`, `warnings`, and `logging`.
 * Automatic localization (no need to set TZ info)
+* "Raw" data is available with timestamp corrections
+* Reduce API calls metadata and/or record side-loading
+* Null values are consistently returned as `NoneType`s
