@@ -4,25 +4,23 @@ import types
 import knackpy
 import pytest
 
-OBJ_NAME_KEY = "all_fields_test"
+KEY = "all_fields_test"
+
 
 @pytest.fixture
 def app():
-    """
-    Records are not dependent on the App class, but App wraps a bunch of helpful methods
-    that get us to the point of generating a record. So we use it as a fixture rather than 
-    duplicating that code here.
-    """
     with open("tests/_metadata.json", "r") as fin:
         metadata = json.loads(fin.read())
+        metadata = metadata["application"]
 
     with open("tests/_all_fields.json", "r") as fin:
         data = json.loads(fin.read())
         data = data["records"]
 
     app = knackpy.App(app_id=metadata["id"], metadata=metadata)
-    app.data = {OBJ_NAME_KEY: data}
+    app.data = {KEY: data}
     return app
+
 
 @pytest.fixture
 def records(app):

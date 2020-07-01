@@ -52,7 +52,10 @@ def image(value):
 
 def file(value):
     # stack says it's ok to use `file` as a name: https://stackoverflow.com/questions/24942358/is-file-a-keyword-in-python#:~:text=1%20Answer&text=It%20can%20be%20seen%20as,by%20the%20open()%20function.
-    return value["url"]
+    try:
+        return value["url"]
+    except TypeError:
+        return value
 
 
 def date_time(value, timezone=datetime.timezone.utc):
