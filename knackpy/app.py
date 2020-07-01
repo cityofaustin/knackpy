@@ -42,7 +42,7 @@ class App:
         self.timezone = self.get_timezone(self.tzinfo)
         field_defs = _fields.generate_field_defs(self.metadata)
         self.field_defs = _fields.set_field_def_views(field_defs, self.metadata)
-        self.container_index = utils.generate_container_index(self.metadata)
+        self.containers = utils.generate_container_index(self.metadata)
         self.data = {}
         logging.debug(self)
 
@@ -134,7 +134,7 @@ class App:
         Returns:
             - `Records` generator
         """
-        container = self.container_index[client_key]
+        container = self.containers[client_key]
 
         container_key = container.obj or container.view
 
@@ -156,6 +156,6 @@ class App:
         Returns already-gotten data as a `Records` generator. Use this method to re-iterate
         on records returned from `get()`.
         """
-        container = self.container_index[client_key]
+        container = self.containers[client_key]
         container_key = container.obj or container.view
         return self._generate_records(container_key, self.data[client_key])
