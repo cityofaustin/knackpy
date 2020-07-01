@@ -58,8 +58,7 @@ You can check the available data in your App instance like so:
 References to all available data endpoints are stored at `App.containers`. This is handy if you want to check the name of container, or vice-versa:
 
 ```python
->>> from pprint import pprint as print
->>> print(list( app.containers.keys() )) 
+>>> app.containers.keys()
 ['_conflicts',
  'object_1',
  'My Boring Object', # Eek, I recommend you use lower_snake_case for your object names
