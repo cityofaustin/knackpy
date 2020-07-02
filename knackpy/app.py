@@ -34,7 +34,9 @@ class App:
         # initialization. This is not stored in Class state and can be
         # overridden by the `get` method.
         self.session = KnackSession(self.app_id, api_key=self.api_key, timeout=timeout)
-        self.metadata = self._get_metadata() if not metadata else metadata
+        self.metadata = (
+            api.metadata(self.app_id, timeout=timeout) if not metadata else metadata
+        )
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
         self.timezone = self.get_timezone(self.tzinfo)
         field_defs = _fields.generate_field_defs(self.metadata)
@@ -57,12 +59,6 @@ class App:
             "records": total_records,
             "size": total_size,
         }
-
-    def _get_metadata(self, route=f"/applications"):
-        route = f"{route}/{self.app_id}"
-        # todo: use API instead?
-        res = self.session.request("get", route)
-        return res.json()["application"]
 
     @staticmethod
     def get_timezone(tzinfo):
