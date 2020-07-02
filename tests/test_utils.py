@@ -61,7 +61,7 @@ def test_correct_knack_timestamp_during_dst(timezone):
 
 def test_generate_containers(metadata):
     containers = knackpy.utils.utils.generate_containers(metadata)
-    assert len(containers.keys()) > 0
+    assert len(containers) > 0
 
 
 def test_humanize_bytes():

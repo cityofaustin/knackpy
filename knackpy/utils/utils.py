@@ -32,20 +32,18 @@ def generate_containers(metadata):
 
     Container = collections.namedtuple("Container", "obj view scene name")
 
-    obj_containers = {
-        obj["key"]: Container(obj=obj["key"], scene=None, view=None, name=obj["name"])
+    obj_containers = [
+        Container(obj=obj["key"], scene=None, view=None, name=obj["name"])
         for obj in metadata["objects"]
-    }
+    ]
 
-    view_containers = {
-        view["key"]: Container(
-            obj=None, view=view["key"], scene=scene["key"], name=view["name"]
-        )
+    view_containers = [
+        Container(obj=None, view=view["key"], scene=scene["key"], name=view["name"])
         for scene in metadata["scenes"]
         for view in scene["views"]
-    }
+    ]
 
-    return {**obj_containers, **view_containers}
+    return obj_containers + view_containers
 
 
 def correct_knack_timestamp(mills_timestamp, timezone):

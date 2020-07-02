@@ -124,18 +124,30 @@ class App:
         )
 
     def _find_container(self, client_key):
-        return [self.containers[key] for key, value in self.containers.items() if key == client_key or self.containers[key].name == client_key][0]
+
+        matches = [container for container in self.containers if client_key in [container.obj, container.view, container.name]]
+
+        if len(matches) > 1:
+            raise ValidationError(f"Multiple containers use name {client_key}. Try using a view or object key.")
+        
+        try:
+            return matches[0]
+        except IndexError:
+            raise ValidationError(f"Unknown container specified: {client_key}. Inspect App.containers for available containers.")
+
         
     def get(self, client_key, refresh=False, **kwargs):
-        """
-        *client_keys: each arg must be an object or view key or name string that  exists
-            in the app
-        **kwargs: supported kwargs are record_limit (type: int), max_attempts (type: int),
-            and filters (type: dict). others are ignored.
+        """Get records from a knack object or view. Supported kwargs are record_limit
+            (type: int), max_attempts (type: int), and filters (type: dict).
 
-        Returns:
-            - `Records` generator
-        """
+            Args:
+                client_key (str): an object or view key or name string that
+                    exists in the app
+                refresh (bool, optional): [description]. Defaults
+                    to False.
+
+            Returns: [generator]: record generator
+        """        
         container = self._find_container(client_key)
 
         container_key = container.obj or container.view
