@@ -33,7 +33,7 @@ Container identifiers can be supplied as Knack keys (`object_1`, `view_1`) or na
 >>> records = app.get("my_exciting_object") 
 >>> records_formatted = [record.format() for record in records]
 # re-intialize the records generator
->>> records = app.get(container="my_exciting_object") 
+>>> records = app.get("my_exciting_object") 
 # these records are raw, but the timestamps have been corrected
 >>> records_raw = [record.raw for record in records]
 ```
@@ -78,7 +78,8 @@ You can cut down on API calls by side-loading your own Knack metadata and/or rec
 # you can find your app's metadata at: https://{subdomain}.knack.com/v1/applications"
 >> my_metadata = json.loads("my_metadata.json")
 >> app = knackpy.App(app_id,  metadata=my_metadata)
-# note that the top-level keys of side-loaded records must be container names that exist in your app's metadata
+# note that the top-level keys of side-loaded records must be container names
+# that exist in your app's metadata
 >> data = { "my_object_name": json.loads("my_data.json") }
 >> app.data = data
 >> records = [record.format() for record in app.get("my_object_name")]
