@@ -57,7 +57,7 @@ You can check the available data in your App instance like so:
 ```python
 >>> app.data.keys()
 ["object_1", "object_2", "view_1"]
->>> view_1_records = [record.format() for record in app.get("view_22")]
+>>> view_1_records = [record.format() for record in app.records("view_22")]
 ```
 
 References to all available data endpoints are stored at `App.containers`. This is handy if you want to check the name of a container, or its key:
@@ -82,7 +82,7 @@ You can cut down on API calls by side-loading your own Knack metadata and/or rec
 # that exist in your app's metadata
 >> data = { "my_object_name": json.loads("my_data.json") }
 >> app.data = data
->> records = [record.format() for record in app.get("my_object_name")]
+>> records = [record.format() for record in app.records("my_object_name")]
 ```
 
 

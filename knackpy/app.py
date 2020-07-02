@@ -137,7 +137,7 @@ class App:
                 f"Unknown container specified: {client_key}. Inspect App.containers for available containers."
             )
 
-    def get(self, client_key, refresh=False, **kwargs):
+    def records(self, client_key, refresh=False, **kwargs):
         """Get records from a knack object or view. Supported kwargs are record_limit
             (type: int), max_attempts (type: int), and filters (type: dict).
 
