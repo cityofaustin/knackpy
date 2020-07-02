@@ -11,13 +11,12 @@ from knackpy.utils import utils
 from knackpy.utils.timezones import TIMEZONES
 from knackpy.exceptions.exceptions import ValidationError
 
-import pdb
-
 
 class App:
     """
     Knack application wrapper. This thing does it all, folks!
     """
+
     def __repr__(self):
         return f"""<App [{self.metadata["name"]}]>"""
 
@@ -125,17 +124,24 @@ class App:
 
     def _find_container(self, client_key):
 
-        matches = [container for container in self.containers if client_key in [container.obj, container.view, container.name]]
+        matches = [
+            container
+            for container in self.containers
+            if client_key in [container.obj, container.view, container.name]
+        ]
 
         if len(matches) > 1:
-            raise ValidationError(f"Multiple containers use name {client_key}. Try using a view or object key.")
-        
+            raise ValidationError(
+                f"Multiple containers use name {client_key}. Try using a view or object key."
+            )
+
         try:
             return matches[0]
         except IndexError:
-            raise ValidationError(f"Unknown container specified: {client_key}. Inspect App.containers for available containers.")
+            raise ValidationError(
+                f"Unknown container specified: {client_key}. Inspect App.containers for available containers."
+            )
 
-        
     def get(self, client_key, refresh=False, **kwargs):
         """Get records from a knack object or view. Supported kwargs are record_limit
             (type: int), max_attempts (type: int), and filters (type: dict).
@@ -147,7 +153,7 @@ class App:
                     to False.
 
             Returns: [generator]: record generator
-        """        
+        """
         container = self._find_container(client_key)
 
         container_key = container.obj or container.view
