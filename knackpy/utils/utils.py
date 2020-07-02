@@ -22,9 +22,8 @@ def generate_containers(metadata):
         Note that namespace conflicts are highlighly likely, especially with
         views, whose default name in Knack is their parent object!
 
-        If an app has object names that conflict with view names, the object
-        names will take prioirty, and the lookup will have no entry for the
-        view of this name.
+        If an app has object names that conflict with view names, a `ValidationError`
+        will raise when attempting to query data by that name.
 
         As such, the best practice is to use keys (object_xx or view_xx) as
         much as possible, especially when fetching data from views.
