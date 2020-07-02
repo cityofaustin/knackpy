@@ -12,7 +12,7 @@ You can use `knackpy.get()` to fetch "raw" data from your Knack app. Be aware th
 >>> import knackpy
 >>> data = knackpy.get("my_app_id", api_key="myverysecretapikey", obj="object_1")
 >>> with open("object_1.json", "w") as fout:
-  fout.write(json.dumps(data))
+...    fout.write(json.dumps(data))
 ```
 
 More likely, you'll want to use the `App` class to correct and format your data.
