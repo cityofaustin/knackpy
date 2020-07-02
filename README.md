@@ -106,3 +106,5 @@ You can cut down on API calls by side-loading your own Knack metadata and/or rec
 >>> data = knackpy.get("my_app_id", api_key="myverysecretapikey", obj="object_3", record_limit=10)
 ```
 * Null values are consistently returned as `NoneType`s
+- `knackpy.record`: param `obj_key` >> `obj`.
+- the id key of a `record` create/update/detele object must be "id"

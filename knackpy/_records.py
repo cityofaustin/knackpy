@@ -3,7 +3,7 @@ from knackpy.utils import utils
 
 class Record:
     def __repr__(self):
-        return f"<Record '{self.data[self.identifier]} '[{len(self.field_defs)} fields]"
+        return f"<Record '{self.data[self.identifier]}'>"
 
     def __init__(self, data, field_defs, identifier, timezone):
         self.data = data

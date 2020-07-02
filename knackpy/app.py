@@ -1,25 +1,52 @@
+import datetime
 import logging
 import warnings
+import typing
+
+import requests
 import pytz
 
-from knackpy import api
+import knackpy
 from knackpy import _records
 from knackpy import _fields
-from knackpy._knack_session import KnackSession
 from knackpy.utils import utils
 from knackpy.utils.timezones import TIMEZONES
 from knackpy.exceptions.exceptions import ValidationError
 
 
 class App:
-    """
-    Knack application wrapper. This thing does it all, folks!
-    """
+    """Knack application wrapper. This thing does it all, folks!
+
+    Note that requet params `timeout` and `max_attempts` are defined here at 
+    construction, while `record_limit` and `filters` are defined in `App.records()`.
+    The thinking being that the user will want to specifiy these params differently
+    based on the container being queried.
+
+        Args:
+            app_id (str): Knack application ID string.
+            metadata (str, optional): [description]. Defaults to None.
+            api_key (str, optional): [description]. Defaults to None.
+            tzinfo (pytz.Timezone, optional): [description]. Defaults to None.
+            max_attempts (int): the maximum number of attempts to make if a request
+                times out. Default values that are set in `knackpy.api.request`.
+            timeout (int, optional): Number of seconds to wait before a Knack API
+                request times out. Default values that are set in
+                `knackpy.api.request`.
+        """
 
     def __repr__(self):
         return f"""<App [{self.metadata["name"]}]>"""
 
-    def __init__(self, app_id, metadata=None, api_key=None, timeout=30, tzinfo=None):
+    def __init__(
+        self,
+        *,
+        app_id: str,
+        api_key: str = None,
+        metadata: str = None,
+        tzinfo: datetime.tzinfo = None,
+        max_attempts: int = None,
+        timeout: None,
+    ):
 
         if not api_key:
             warnings.warn(
@@ -28,13 +55,10 @@ class App:
 
         self.app_id = app_id
         self.api_key = api_key
-        # we accept timeout as an init kwarg because the client may want to set
-        # timeout for getting metadata, which is a side-effect of
-        # initialization. This is not stored in Class state and can be
-        # overridden by the `get` method.
-        self.session = KnackSession(self.app_id, api_key=self.api_key, timeout=timeout)
+        self.timeout = timeout
+        self.max_attempts = max_attempts
         self.metadata = (
-            api.metadata(self.app_id, timeout=timeout) if not metadata else metadata
+            self._get_metadata() if not metadata else metadata["application"]
         )
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
         self.timezone = self.get_timezone(self.tzinfo)
@@ -43,6 +67,9 @@ class App:
         self.containers = utils.generate_containers(self.metadata)
         self.data = {}
         logging.debug(self)
+
+    def _get_metadata(self):
+        return knackpy.api.metadata(app_id=self.app_id, timeout=self.timeout)
 
     def info(self):
         total_obj = len(self.metadata.get("objects"))
@@ -128,40 +155,100 @@ class App:
 
         if len(matches) > 1:
             raise ValidationError(
-                f"Multiple containers use name {client_key}. Try using a view or object key." # noqa
+                f"Multiple containers use name {client_key}. Try using a view or object key."  # noqa
             )
 
         try:
             return matches[0]
         except IndexError:
             raise ValidationError(
-                f"Unknown container specified: {client_key}. Inspect App.containers for available containers." # noqa
+                f"Unknown container specified: {client_key}. Inspect App.containers for available containers."  # noqa
             )
 
-    def records(self, client_key, refresh=False, **kwargs):
+    def _build_request_kwargs(
+        self, max_attempts: int, timeout: int, record_limit: int
+    ) -> dict:
+        """
+        Compile the keyword arguments to be passed to `knackpy.api`. We drop params
+        that are NoneType because we don't want to override the default values for
+        these params that are define in the api methods.
+
+        TODO: a more pythonic approach would be...?
+        """
+        request_kwargs = {}
+        if record_limit:
+            request_kwargs["record_limit"] = record_limit
+        if max_attempts:
+            request_kwargs["max_attempts"] = max_attempts
+        if timeout:
+            request_kwargs["timeout"] = timeout
+
+        return request_kwargs
+
+    def records(
+        self,
+        client_key: str,
+        refresh: bool = False,
+        record_limit: int = None,
+        filters: typing.Union[dict, list] = None,
+    ):
         """Get records from a knack object or view. Supported kwargs are record_limit
             (type: int), max_attempts (type: int), and filters (type: dict).
 
+            Note that we accept the request params `record_limit` and `filters` here
+            because the user would presumably want to set these on a per-object/view
+            basis. They are not stored in state. Whereas `max_attempts` and
+            `timtout` are set on App construction and persist in `App` state.
+
+            Note also that if HTTPErrors are encountered, the `requests.Response`
+            object is stored at `self.response`, and then the exception is reaised.
+            This allows the user to inspect the content of the response at
+            `App.response`.
+
             Args:
                 client_key (str): an object or view key or name string that
-                    exists in the app
-                refresh (bool, optional): [description]. Defaults
-                    to False.
-
-            Returns: [generator]: record generator
+                    exists in the app.
+                refresh (bool, optional): Force the re-querying of data from Knack
+                    API. Defaults to False.
+                record_limit (int): the maximum number of records to retrieve.
+                    Default value is set in `knackpy.api.request`.
+                filters (dict or list, optional): A dict or of Knack API filiters.
+                    See: https://www.knack.com/developer-documentation/#filters.
+                
+            Returns:
+                [generator]: A generator which yields Knack record data.
+            
+            Raises:
+                [requests.HTTPError]: If HTTPErrors, they are raised.
         """
         container = self._find_container(client_key)
 
         container_key = container.obj or container.view
 
-        route = api._route(
+        route = knackpy.api._record_route(
             obj=container.obj, scene=container.scene, view=container.view
         )
 
         if not self.data.get(container_key) or refresh:
-            # fetch data if it has not already been collected, or force via
-            # `refresh=True`
-            self.data[container_key] = self.session._get_paginated_data(route, **kwargs)
+            request_kwargs = self._build_request_kwargs(
+                self.max_attempts, self.timeout, record_limit
+            )
+
+            self.data[container_key], self.response = knackpy.api.get(
+                app_id=self.app_id,
+                api_key=self.api_key,
+                obj=container.obj,
+                scene=container.scene,
+                view=container.scene,
+                filters=filters,
+                **request_kwargs,
+            )
+
+            try:
+                self.response.raise_for_status()
+            except AttributeError:
+                # handle case when response is None.
+                pass
 
         return self._generate_records(container_key, self.data[container_key])
 
