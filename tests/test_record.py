@@ -1,5 +1,4 @@
 import json
-import types
 
 import knackpy
 import pytest
@@ -27,6 +26,7 @@ def records(app):
     return knackpy._records.Records(
         "object_3", app.data[KEY], app.field_defs, app.timezone
     )
+
 
 def test_basic_constructor(app, records):
     assert len([record for record in records.records()]) == len(app.data[KEY])

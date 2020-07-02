@@ -5,8 +5,6 @@ import warnings
 
 import requests
 
-from knackpy.exceptions.exceptions import ValidationError
-
 MAX_ROWS_PER_PAGE = 1000  # max supported by Knack API
 
 
@@ -44,7 +42,7 @@ class KnackSession:
 
     def _continue(self, total_records, current_records, record_limit):
 
-        if total_records == None:
+        if total_records is None:
             return True
 
         elif current_records < record_limit and total_records > current_records:
@@ -83,7 +81,7 @@ class KnackSession:
                     break
 
                 except requests.exceptions.Timeout as e:
-                    warnings.warn(f"Request timeout. Trying again...")
+                    warnings.warn("Request timeout. Trying again...")
                     if attempts < max_attempts:
                         attempts += 1
                         continue

@@ -1,5 +1,4 @@
 import datetime
-import pdb
 
 
 def default(value):
@@ -15,7 +14,7 @@ def default(value):
     - id  x
     - multiple_choice  x
     - name  x
-    - number 
+    - number
     - password
     - rating
     - rich_text
@@ -51,7 +50,8 @@ def image(value):
 
 
 def file(value):
-    # stack says it's ok to use `file` as a name: https://stackoverflow.com/questions/24942358/is-file-a-keyword-in-python#:~:text=1%20Answer&text=It%20can%20be%20seen%20as,by%20the%20open()%20function.
+    # stack says it's ok to use `file` as a name:
+    # https://stackoverflow.com/questions/24942358/is-file-a-keyword-in-python#:~:text=1%20Answer&text=It%20can%20be%20seen%20as,by%20the%20open()%20function. # noqa
     try:
         return value["url"]
     except TypeError:
@@ -70,7 +70,7 @@ def date_time(value, timezone=datetime.timezone.utc):
             "date": "09/11/2019",
             "date_formatted": "09/11/2019",
             "hours": "04",
-            "iso_timestamp": "2019-09-11T16:14:00.000Z", 
+            "iso_timestamp": "2019-09-11T16:14:00.000Z",
             "minutes": "14",
             "time": 974,
             "timestamp": "09/11/2019 04:14 pm",
@@ -86,5 +86,6 @@ def date_time(value, timezone=datetime.timezone.utc):
 
 
 def timer(value):
-    # we're handling somthing that looks like this: '<span>09/11/19</span>&nbsp;4:14pm to 5:14pm = 1:00 hours'
+    # we're handling somthing that looks like this:
+    # '<span>09/11/19</span>&nbsp;4:14pm to 5:14pm = 1:00 hours'
     return value.replace("<span>", "").replace("</span>", "").replace("&nbsp;", "; ")

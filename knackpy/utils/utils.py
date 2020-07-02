@@ -2,8 +2,6 @@ import collections
 import datetime
 import math
 
-from knackpy._fields import FieldDef
-
 
 def valid_name(key):
     # TODO: subfield conflicts?

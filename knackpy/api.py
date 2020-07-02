@@ -1,10 +1,5 @@
-import logging
-import warnings
-
 from knackpy import _knack_session
 from knackpy.exceptions.exceptions import ValidationError
-
-import pdb
 
 
 def _route(obj=None, scene=None, view=None):
@@ -30,7 +25,7 @@ def _route(obj=None, scene=None, view=None):
         return f"/objects/{obj}/records"
 
     raise ValidationError(
-        f"Insufficient knack keys provided. Knack Requsts requires an obj key or a scene and view key"
+        "Insufficient knack keys provided. Knack Requsts requires an obj key or a scene and view key"  # noqa
     )
 
 
@@ -72,7 +67,7 @@ def metadata(app_id: str, **kwargs):
     session = _knack_session.KnackSession(app_id, **kwargs)
     res = session.request("get", endpoint)
     return res.json()["application"]
-    
+
 
 def create():
     ...

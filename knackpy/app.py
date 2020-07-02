@@ -1,4 +1,3 @@
-import collections
 import logging
 import warnings
 import pytz
@@ -64,37 +63,39 @@ class App:
     def get_timezone(tzinfo):
         # TODO: move to utils
         """
-        Knack stores timezone information in the app metadata, but it does not use IANA
-        timezone database names. Instead it uses common names e.g.,
+        Knack stores timezone information in the app metadata, but it does not
+        use IANA timezone database names. Instead it uses common names e.g.,
         "Eastern Time (US & Canada)" instead of "US/Eastern".
 
-        I'm sure these common names are standardized somewhere, and I did not bother to
-        munge the IANA timezone DB to figure it out, so I created the `TIMZONES` index in
-        `knackpy.utils.timezones` by copying a table from the internets.
-        
-        As such, we can't be certain our index contains all of the timezone names that knack
-        uses in its metadata. So, this method will attempt to lookup the Knack metadata
-        timezone in our TIMEZONES index, and raise an error of it fails.
+        I'm sure these common names are standardized somewhere, and I did not
+        bother to munge the IANA timezone DB to figure it out, so I created the
+        `TIMZONES` index in `knackpy.utils.timezones` by copying a table from
+        the internets.
 
-        Alternatively, the client can override the Knack timezone common name by including
-        an IANA-compliant timezone name (e.g., "US/Central")by passing the `tzinfo` kwarg
-        when constructing the `App` innstance, or directly to this method.
+        As such, we can't be certain our index contains all of the timezone
+        names that knack uses in its metadata. So, this method will attempt to
+        lookup the Knack metadata timezone in our TIMEZONES index, and raise an
+        error of it fails.
 
-        See also, note in knackpy._fields.real_unix_timestamp_mills() about why we
-        need valid timezone info to handle Knack records.
+        Alternatively, the client can override the Knack timezone common name by
+        including an IANA-compliant timezone name (e.g., "US/Central")by passing
+        the `tzinfo` kwarg when constructing the `App` innstance, or directly to
+        this method.
+
+        See also, note in knackpy._fields.real_unix_timestamp_mills() about why
+        we need valid timezone info to handle Knack records.
 
         Inputs:
-        - tzinfo (str): either an IANA-compliant timezone name, or the common timezone name
-        available in metadata.settings.timezone
+        - tzinfo (str): either an IANA-compliant timezone name, or the common
+          timezone name available in metadata.settings.timezone
 
-        Returns (hopefully):
-            - a `pytz.timezone` instance
+        Returns (hopefully): - a `pytz.timezone` instance
         """
 
         try:
             # first let pytz try to handle the tzinfo
             return pytz.timezone(tzinfo)
-        except:
+        except pytz.exceptions.UnknownTimeZoneError:
             pass
 
         try:
@@ -106,14 +107,14 @@ class App:
             ]
             return pytz.timezone(matches[0])
 
-        except (pytz.exceptions.UnknownTimeZoneError, IndexError) as e:
+        except (pytz.exceptions.UnknownTimeZoneError, IndexError):
             pass
 
         raise ValidationError(
             """
-                Unknown timezone supplied. `tzinfo` should formatted as a timezone string
-                compliant to the IANA timezone database.
-                See: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+                Unknown timezone supplied. `tzinfo` should formatted as a
+                timezone string compliant to the IANA timezone database. See:
+                https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
             """
         )
 
@@ -127,14 +128,14 @@ class App:
 
         if len(matches) > 1:
             raise ValidationError(
-                f"Multiple containers use name {client_key}. Try using a view or object key."
+                f"Multiple containers use name {client_key}. Try using a view or object key." # noqa
             )
 
         try:
             return matches[0]
         except IndexError:
             raise ValidationError(
-                f"Unknown container specified: {client_key}. Inspect App.containers for available containers."
+                f"Unknown container specified: {client_key}. Inspect App.containers for available containers." # noqa
             )
 
     def records(self, client_key, refresh=False, **kwargs):
@@ -158,7 +159,8 @@ class App:
         )
 
         if not self.data.get(container_key) or refresh:
-            # fetch data if it has not already been collected, or force via `refresh=True`
+            # fetch data if it has not already been collected, or force via
+            # `refresh=True`
             self.data[container_key] = self.session._get_paginated_data(route, **kwargs)
 
         return self._generate_records(container_key, self.data[container_key])

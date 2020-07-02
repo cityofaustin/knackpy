@@ -105,4 +105,7 @@ def test_format_date_time(record):
 
 
 def test_timer(record):
-    assert knackpy.utils.formatters.timer(record["timer_field"]) == "09/11/19; 4:35pm to 5:35pm = 1:00 hours"
+    assert (
+        knackpy.utils.formatters.timer(record["timer_field"])
+        == "09/11/19; 4:35pm to 5:35pm = 1:00 hours"
+    )
