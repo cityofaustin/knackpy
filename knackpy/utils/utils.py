@@ -16,18 +16,18 @@ def valid_name(key):
 
 def generate_containers(metadata):
     """Returns a dict of knack object keys, object names, view keys, and view names,
-        that serves as lookup for finding Knack app record containers (objects or views)
-        by name or key.
+        that serves as lookup for finding Knack app record containers (objects
+        or views) by name or key.
 
-        Note that namespace conflicts are highlighly likely, especially with views,
-        whose default name in Knack is their parent object!
+        Note that namespace conflicts are highlighly likely, especially with
+        views, whose default name in Knack is their parent object!
 
-        If an app has object names that conflict with view names, the object names
-        will take prioirty, and the lookup will have no entry for the view of this
-        name.
+        If an app has object names that conflict with view names, the object
+        names will take prioirty, and the lookup will have no entry for the
+        view of this name.
 
-        As such, the best practice is to use keys (object_xx or view_xx) as much 
-        as possible, especially when fetching data from views.
+        As such, the best practice is to use keys (object_xx or view_xx) as
+        much as possible, especially when fetching data from views.
         """
 
     Container = collections.namedtuple("Container", "obj view scene name")
@@ -36,7 +36,7 @@ def generate_containers(metadata):
         obj["key"]: Container(obj=obj["key"], scene=None, view=None, name=obj["name"])
         for obj in metadata["objects"]
     }
-    
+
     view_containers = {
         view["key"]: Container(
             obj=None, view=view["key"], scene=scene["key"], name=view["name"]
@@ -49,21 +49,23 @@ def generate_containers(metadata):
 
 
 def correct_knack_timestamp(mills_timestamp, timezone):
-    """
-    Receive a knack mills timestamp (type: int) and and pytz timezone and
-    return a (naive) unix milliseconds timestamp int.
+    """You may be wondering why timezone settings are concern, given that
+    Knackpy, like the Knack API, returns timestamp values as Unix timestamps in
+    millesconds (thus, there is no timezone encoding at all). However, the Knack
+    API confusingly returns millisecond timestamps in your localized timezone!
 
-    You may be wondering why timezone settings are concern, given that Knackpy, like the
-    Knack API, returns timestamp values as Unix timestamps in millesconds (thus, there is
-    no timezone encoding at all). However, the Knack API confusingly returns millisecond
-    timestamps in your localized timezone!
+    For example, if you inspect a timezone value in Knack, e.g., 1578254700000,
+    this value represents Sunday, January 5, 2020 8:05:00 PM **local time**.
 
-    For example, if you inspect a timezone value in Knack, e.g., 1578254700000, this value
-    represents Sunday, January 5, 2020 8:05:00 PM **local time**.
+    Args: mills_timestamp ([int]): the Knack "local" timestamp, in milliseonds
+        timezone ([pytz.timezone]): pytz timezone object
+
+    Returns: [int]: a real UTC timestamp
     """
     timestamp = mills_timestamp / 1000
-    # Don't use datetime.utcfromtimestamp()! this will assume the input timestamp is in local (system) time
-    # If you try to pass our timezone to the tz parameter here, it will have no affect. Ask Guido why??
+    # Don't use datetime.utcfromtimestamp()! this will assume the input
+    # timestamp is in local (system) time If you try to pass our timezone to
+    # the tz parameter here, it will have no affect.
     dt_utc = datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)
     # All we've done so far is create a datetime object from our timestamp
     # now we have to remove the timezone info that we supplied
@@ -79,7 +81,7 @@ def correct_knack_timestamp(mills_timestamp, timezone):
 
 
 def _humanize_bytes(bytes_):
-    # courtesy of https://stackoverflow.com/questions/5194057/better-way-to-convert-file-sizes-in-python
+    # courtesy of https://stackoverflow.com/questions/5194057/better-way-to-convert-file-sizes-in-python # noqa
     if bytes_ == 0:
         return "0B"
     size_name = ("b", "kb", "mb", "gb", "tb", "pb", "eb", "zb", "yb")

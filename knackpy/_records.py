@@ -6,7 +6,7 @@ from knackpy.utils import utils
 
 class Record:
     def __repr__(self):
-        return f"<Record \'{self.data[self.identifier]} \'[{len(self.field_defs)} fields]"
+        return f"<Record '{self.data[self.identifier]} '[{len(self.field_defs)} fields]"
 
     def __init__(self, data, field_defs, identifier, timezone):
         self.data = data
@@ -16,9 +16,9 @@ class Record:
         self.raw = self._handle_record()
 
     def _handle_record(self):
-            record = self._replace_empty_strings(self.data)
-            record = self._correct_knack_timestamp(record, self.timezone)
-            return record
+        record = self._replace_empty_strings(self.data)
+        record = self._correct_knack_timestamp(record, self.timezone)
+        return record
 
     def format(self):
 
@@ -45,11 +45,11 @@ class Record:
         available at the non-raw key. Knack includes the raw key in the dict
         when formatting is applied, allowing access to the unformatted data.
 
-        Generally, the Knack formatting, where it exists, is fine.
-        However there are cases where we want to apply our own formatters, 
-        such datestamps, (where the formatted value does not include a timezone
-        offset), or address fields, where we want to parse out the lat/lon
-        properties as subfields.
+        Generally, the Knack formatting, where it exists, is fine. However there
+        are cases where we want to apply our own formatters, such datestamps,
+        (where the formatted value does not include a timezone offset), or
+        address fields, where we want to parse out the lat/lon properties as
+        subfields.
 
         And there are still more cases, where we want to apply additional
         formatting to the knack-formatted value, e.g. Timers.
@@ -105,33 +105,34 @@ class Record:
 
 class Records:
     """
-    A wrapper for Knack record data. At initialization, the class is readied to yield
-    records from Records.records().
+    A wrapper for Knack record data. At initialization, the class is readied to
+    yield records from Records.records().
 
-    When Records.records() is called, a generator is returned. With each `yield` the
-    generator handles the raw Knack record by updating any empty string values to NoneTypes,
-    corrects Knack's "local" timestamps, and applies the client-specified formatting.
+    When Records.records() is called, a generator is returned. With each `yield`
+    the generator handles the raw Knack record by updating any empty string
+    values to NoneTypes, corrects Knack's "local" timestamps, and applies the
+    client-specified formatting.
     """
 
     def __repr__(self):
         return f"<Records [{len(self.data)} records]>"
 
     def __init__(
-        self,
-        container_key,
-        data,
-        field_defs,
-        timezone,
+        self, container_key, data, field_defs, timezone,
     ):
         self.container_key = container_key
         self.data = data
         self.timezone = timezone
         self.field_defs = self._filter_field_defs_by_container_key(field_defs)
         try:
-            self.identifier = [field_def.key for field_def in self.field_defs if field_def.identifier][0]
+            self.identifier = [
+                field_def.key for field_def in self.field_defs if field_def.identifier
+            ][0]
         except IndexError:
-            # it seems that the object will not have an identifer in the metadata if it has not been manually set by the user
-            # knack presumably just uses the first field that was created with the object. we'll use the id
+            # it seems that the object will not have an identifer in the
+            # metadata if it has not been manually set by the user knack
+            # presumably just uses the first field that was created with the
+            # object. we'll use the id
             self.identifier = "id"
         return None
 
@@ -147,41 +148,40 @@ class Records:
         for record in self.data:
             yield Record(record, self.field_defs, self.identifier, self.timezone)
 
-    
-    def to_csv(
-        self,
-        *obj_or_view_keys,
-        path="",
-        delimiter=",",
-        format_keys=False,
-        format_values=False,
-    ):
-        print("NOT RE-IMPLEMTED!")
-        pass
-        obj_or_view_keys = obj_or_view_keys if obj_or_view_keys else list(self.keys())
+    # def to_csv(
+    #     self,
+    #     *obj_or_view_keys,
+    #     path="",
+    #     delimiter=",",
+    #     format_keys=False,
+    #     format_values=False,
+    # ):
+    #     print("NOT RE-IMPLEMTED!")
+    #     pass
+    #     obj_or_view_keys = obj_or_view_keys if obj_or_view_keys else list(self.keys())
 
-        for key in keys:
-            fieldnames = self._get_fieldnames(key, format_keys)
+    #     for key in keys:
+    #         fieldnames = self._get_fieldnames(key, format_keys)
 
-            if not fieldnames:
-                warnings.warn(f"No records found in '{key}'")
-                continue
+    #         if not fieldnames:
+    #             warnings.warn(f"No records found in '{key}'")
+    #             continue
 
-            records = self.get(
-                key, format_keys=format_keys, format_values=format_values
-            )
+    #         records = self.get(
+    #             key, format_keys=format_keys, format_values=format_values
+    #         )
 
-            fname = f"{key}.csv"
+    #         fname = f"{key}.csv"
 
-            with open(fname, "w") as fout:
-                writer = csv.DictWriter(
-                    fout, fieldnames=fieldnames, delimiter=delimiter
-                )
-                writer.writeheader()
-                for record in records:
-                    writer.writerow(record)
+    #         with open(fname, "w") as fout:
+    #             writer = csv.DictWriter(
+    #                 fout, fieldnames=fieldnames, delimiter=delimiter
+    #             )
+    #             writer.writeheader()
+    #             for record in records:
+    #                 writer.writerow(record)
 
-    def _get_fieldnames(self, key, format_keys):
-        records = self.get(key, format_keys)
-        for record in records:
-            return record.keys()
+    # def _get_fieldnames(self, key, format_keys):
+    #     records = self.get(key, format_keys)
+    #     for record in records:
+    #         return record.keys()
