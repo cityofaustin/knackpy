@@ -64,11 +64,11 @@ References to all available data endpoints are stored at `App.containers`. This 
 
 ```python
 >>> app.containers
-{
- 'object_1': Container(obj='object_1', view=None, scene=None, name='my_boring_object'),
- 'object_2': Container(obj='object_2', view=None, scene=None, name='my_exciting_object'),
- 'view_1': Container(obj=None, view='view_1', scene='scene_1', name='My Exciting View'),
-}
+[
+    Container(obj='object_1', view=None, scene=None, name='my_boring_object'),
+    Container(obj='object_2', view=None, scene=None, name='my_exciting_object'),
+    Container(obj=None, view='view_1', scene='scene_1', name='My Exciting View'),
+]
 ```
 
 You can cut down on API calls by side-loading your own Knack metadata and/or record data to an `App`:
