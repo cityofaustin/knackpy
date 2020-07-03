@@ -140,3 +140,4 @@ cython_debug/
 # custom
 .DS_Store
 notes.md
+pytest.ini
