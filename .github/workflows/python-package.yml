@@ -30,6 +30,9 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip install -e ../knackpy
     - name: Lint with flake8
+      env:
+        KNACK_APP_ID: ${{ secrets.KNACK_APP_ID }}
+        KNACK_API_KEY: ${{ secrets.KNACK_API_KEY }}
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
