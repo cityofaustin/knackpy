@@ -1,6 +1,15 @@
 # Knackpy v1.0 [under development]
 
-*Knackpy v1.0 is still under development*
+![Knackpy v1.0](https://github.com/cityofaustin/knackpy/workflows/Python%20package/badge.svg?branch=v1.0.0)
+
+*Knackpy v1.0 is under development. Documented methods should work, but check the status badge ^^*
+
+## Installation
+
+Knackpy requires Python v3.6+
+```bash
+$ pip install knackpy
+```
 
 ## Quick Start
 
