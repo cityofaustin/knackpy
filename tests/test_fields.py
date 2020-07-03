@@ -61,9 +61,7 @@ def test_format_date_time(record_data):
     """
     knack_date_time_dict = record_data["date_time"]
     timezone = pytz.timezone("US/Central")
-    date_iso_formatted = knackpy.formatters.date_time(
-        knack_date_time_dict, timezone
-    )
+    date_iso_formatted = knackpy.formatters.date_time(knack_date_time_dict, timezone)
     assert date_iso_formatted == "2019-09-11T11:14:00-05:00"
 
 
@@ -74,7 +72,5 @@ def test_format_address(record_data):
     """
     knack_date_time_dict = record_data["date_time"]
     timezone = pytz.timezone("US/Central")
-    date_iso_formatted = knackpy.formatters.date_time(
-        knack_date_time_dict, timezone
-    )
+    date_iso_formatted = knackpy.formatters.date_time(knack_date_time_dict, timezone)
     assert date_iso_formatted == "2019-09-11T11:14:00-05:00"

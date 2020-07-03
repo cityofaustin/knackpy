@@ -18,7 +18,7 @@ def app_data():
 
 @pytest.fixture
 def app(app_data):
-    knackpy_app = knackpy.App(
+    knackpy_app = knackpy.app.App(
         app_id=app_data["metadata"]["application"]["id"], metadata=app_data["metadata"]
     )
     app.data = {"all_fields_test": app_data["data"]}
@@ -31,7 +31,7 @@ def test_constructor_success(app):
 
 def test_constructor_fail_missing_app_id(app, app_data):
     with pytest.raises(TypeError):
-        knackpy.App()
+        knackpy.app.App()
 
 
 def test_get_by_key(app, app_data):
@@ -50,7 +50,7 @@ def test_get_by_dupe_name_fail(app, app_data):
 
 
 def test_tzinfo(app_data):
-    assert knackpy.App(
+    assert knackpy.app.App(
         app_id=app_data["metadata"]["application"]["id"],
         metadata=app_data["metadata"],
         tzinfo="US/Eastern",

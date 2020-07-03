@@ -1,5 +1,5 @@
 from knackpy.models import FIELD_SETTINGS
-import knackpy
+from . import utils, formatters
 
 
 def set_field_def_views(field_defs, metadata):
@@ -28,7 +28,7 @@ def generate_field_defs(metadata):
         for field in obj["fields"]:
             # drop reserved word `type` from knack field def
             field["type_"] = field.pop("type")
-            field["name"] = knackpy.utils.valid_name(field["name"])
+            field["name"] = utils.valid_name(field["name"])
             field["object"] = obj["key"]
 
             try:
@@ -79,6 +79,6 @@ class FieldDef:
         self.use_knack_format = settings.get("use_knack_format") if settings else False
 
         try:
-            self.formatter = getattr(knackpy.formatters, self.type_)
+            self.formatter = getattr(formatters, self.type_)
         except AttributeError:
-            self.formatter = getattr(knackpy.formatters, "default")
+            self.formatter = getattr(formatters, "default")

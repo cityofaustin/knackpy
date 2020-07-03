@@ -3,17 +3,16 @@ import logging
 import warnings
 import typing
 
-import requests
 import pytz
 
-import knackpy
-from knackpy.models import TIMEZONES
+from . import api, fields, records, utils
+from .models import TIMEZONES
 
 
 class App:
     """Knack application wrapper. This thing does it all, folks!
 
-    Note that requet params `timeout` and `max_attempts` are defined here at 
+    Note that requet params `timeout` and `max_attempts` are defined here at
     construction, while `record_limit` and `filters` are defined in `App.records()`.
     The thinking being that the user will want to specifiy these params differently
     based on the container being queried.
@@ -60,22 +59,20 @@ class App:
         )
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
         self.timezone = self.get_timezone(self.tzinfo)
-        field_defs = knackpy.fields.generate_field_defs(self.metadata)
-        self.field_defs = knackpy.fields.set_field_def_views(field_defs, self.metadata)
-        self.containers = knackpy.utils.generate_containers(self.metadata)
+        field_defs = fields.generate_field_defs(self.metadata)
+        self.field_defs = fields.set_field_def_views(field_defs, self.metadata)
+        self.containers = utils.generate_containers(self.metadata)
         self.data = {}
         logging.debug(self)
 
     def _get_metadata(self):
-        return knackpy.api.get_metadata(app_id=self.app_id, timeout=self.timeout)
+        return api.get_metadata(app_id=self.app_id, timeout=self.timeout)
 
     def info(self):
         total_obj = len(self.metadata.get("objects"))
         total_scenes = len(self.metadata.get("scenes"))
         total_records = self.metadata.get("counts").get("total_entries")
-        total_size = knackpy.utils.humanize_bytes(
-            self.metadata.get("counts").get("asset_size")
-        )
+        total_size = utils.humanize_bytes(self.metadata.get("counts").get("asset_size"))
 
         return {
             "objects": total_obj,
@@ -207,7 +204,7 @@ class App:
                     Default value is set in `knackpy.api.request`.
                 filters (dict or list, optional): A dict or of Knack API filiters.
                     See: https://www.knack.com/developer-documentation/#filters.
-                
+
             Returns:
                 [generator]: A generator which yields Knack record data.
         """
@@ -215,16 +212,12 @@ class App:
 
         container_key = container.obj or container.view
 
-        route = knackpy.api._record_route(
-            obj=container.obj, scene=container.scene, view=container.view
-        )
-
         if not self.data.get(container_key) or refresh:
             request_kwargs = self._build_request_kwargs(
                 self.max_attempts, self.timeout, record_limit
             )
 
-            self.data[container_key] = knackpy.api.get(
+            self.data[container_key] = api.get(
                 app_id=self.app_id,
                 api_key=self.api_key,
                 obj=container.obj,
@@ -237,6 +230,6 @@ class App:
         return self._generate_records(container_key, self.data[container_key])
 
     def _generate_records(self, container_key, data):
-        return knackpy.records.Records(
+        return records.Records(
             container_key, data, self.field_defs, self.timezone
         ).records()

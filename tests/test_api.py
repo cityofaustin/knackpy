@@ -1,8 +1,6 @@
-import json
 import os
 
 import knackpy
-import requests
 import pytest
 
 APP_ID = os.environ["KNACK_APP_ID"]
@@ -10,13 +8,16 @@ API_KEY = os.environ["KNACK_API_KEY"]
 OBJ = "object_3"  # "all_fields_test"
 UPDATE_KEY = "field_25"  # rating field type
 
+
 @pytest.fixture
 def record():
     return knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, record_limit=1)[0]
 
+
 def test_get_limit():
     records = knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, record_limit=1)
     assert len(records) == 1
+
 
 def test_record_create_delete():
     # yes, two tests in one :/
@@ -32,7 +33,7 @@ def test_record_create_delete():
         data={"id": new_record["id"]},
         obj=OBJ,
     )
-    assert response["delete"] == True
+    assert response["delete"]
 
 
 def test_record_update(record):
@@ -42,6 +43,7 @@ def test_record_update(record):
         method="update", app_id=APP_ID, api_key=API_KEY, data=data, obj=OBJ
     )
     assert record_updated[UPDATE_KEY] == update_value
+
 
 def test_get_metadata():
     metadata = knackpy.api.get_metadata(app_id=APP_ID)

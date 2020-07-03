@@ -1,6 +1,9 @@
+import json
 import logging
 import math
 import typing
+import warnings
+
 import requests
 
 MAX_ROWS_PER_PAGE = 1000  # max supported by Knack API
@@ -162,7 +165,7 @@ def get(
 ) -> [list, requests.Response]:
     """Get records from a knack object or view. This is the raw stuff with
     incorrect timestamps!
-        
+
     Args:
         app_id (str): [description]
         api_key (str, optional): [description]. Defaults to None.
@@ -176,13 +179,10 @@ def get(
 
     Returns:
         list: Knack records.
-        requests.Response: The Requests Response object if it contains an HTTPError, else None
     """
     route = _record_route(obj=obj, scene=scene, view=view)
 
     url = _url(subdomain="api", route=route)
-
-    headers = _headers(app_id, api_key)
 
     record_limit = record_limit if record_limit else math.inf
 
@@ -229,8 +229,8 @@ def _handle_method(method: str):
 
     else:
         raise TypeError(
-            f"Unknown record method requested: {method}. Choose from `create`, `update`, or `delete`."
-        )  # noqa
+            f"""Unknown record method requested: {method}. Choose from create, update,
+            or delete.""")
 
 
 def record(

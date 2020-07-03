@@ -1,4 +1,4 @@
-import knackpy
+from . import utils
 
 
 class Record:
@@ -90,7 +90,7 @@ class Record:
         # see note in knackpy.utils.correct_knack_timestamp
         for key, val in record.items():
             try:
-                val["unix_timestamp"] = knackpy.utils.correct_knack_timestamp(
+                val["unix_timestamp"] = utils.correct_knack_timestamp(
                     val["unix_timestamp"], timezone
                 )
                 record[key] = val
