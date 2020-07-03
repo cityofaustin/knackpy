@@ -10,13 +10,12 @@ KEY = "all_fields_test"
 def app():
     with open("tests/_metadata.json", "r") as fin:
         metadata = json.loads(fin.read())
-        metadata = metadata["application"]
 
     with open("tests/_all_fields.json", "r") as fin:
         data = json.loads(fin.read())
         data = data["records"]
 
-    app = knackpy.App(app_id=metadata["id"], metadata=metadata)
+    app = knackpy.App(app_id=metadata["application"]["id"], metadata=metadata)
     app.data = {KEY: data}
     return app
 
