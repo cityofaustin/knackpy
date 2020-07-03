@@ -173,9 +173,11 @@ def get(
         scene (str, optional): [description]. Defaults to None.
         view (str, optional): [description]. Defaults to None.
         max_attempts (int, optional): [description]. Defaults to 5.
-        record_limit (int, optional): [description]. Defaults to None.
-        timeout (int, optional): [description]. Defaults to None.
-        filters (dict, optional): [description]. Defaults to None.
+        record_limit (int, optional): [description]. Defaults to None (which is
+            handled as infinity).
+        timeout (int, optional): [description]. Defaults to 30.
+        filters ([list, dict], optional): Knack record filter dict or list. Defaults
+            to None.
 
     Returns:
         list: Knack records.
