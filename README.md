@@ -1,4 +1,4 @@
-# Knackpy v1.0 [under development]
+# Knackpy v1.0
 
 ![Build](https://github.com/cityofaustin/knackpy/workflows/Build/badge.svg?branch=v1.0.0)
 ![Coverage](https://raw.githubusercontent.com/cityofaustin/knackpy/v1.0.0/coverage.svg)
