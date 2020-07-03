@@ -23,20 +23,20 @@ def app():
 
 @pytest.fixture
 def records(app):
-    return knackpy._records.Records(
+    return knackpy.records.Records(
         "object_3", app.data[KEY], app.field_defs, app.timezone
     )
 
 
 def test_constructor_success(app):
-    assert knackpy._records.Records(
+    assert knackpy.records.Records(
         "object_3", app.data[KEY], app.field_defs, app.timezone
     )
 
 
 def test_constructor_fail(app):
     with pytest.raises(TypeError):
-        knackpy._records.Records()
+        knackpy.records.Records()
 
 
 def test_get(records):

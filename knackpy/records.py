@@ -1,4 +1,4 @@
-from knackpy.utils import utils
+import knackpy
 
 
 class Record:
@@ -87,10 +87,10 @@ class Record:
         return kwargs
 
     def _correct_knack_timestamp(self, record, timezone):
-        # see note in knackpy.utils.utils.correct_knack_timestamp
+        # see note in knackpy.utils.correct_knack_timestamp
         for key, val in record.items():
             try:
-                val["unix_timestamp"] = utils.correct_knack_timestamp(
+                val["unix_timestamp"] = knackpy.utils.correct_knack_timestamp(
                     val["unix_timestamp"], timezone
                 )
                 record[key] = val

@@ -45,7 +45,7 @@ def test_get_by_dupe_name_fail(app, app_data):
     # to side-load records, data[<key>] must exist in the app's container index
     # (ie, it has to exist in the app's metadata)
     app.data["object_3"] = app_data["data"]
-    with pytest.raises(knackpy.exceptions.exceptions.ValidationError):
+    with pytest.raises(KeyError):
         assert isinstance(app.records("all_fields_test"), types.GeneratorType)
 
 

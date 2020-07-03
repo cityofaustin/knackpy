@@ -7,11 +7,7 @@ import requests
 import pytz
 
 import knackpy
-from knackpy import _records
-from knackpy import _fields
-from knackpy.utils import utils
-from knackpy.utils.timezones import TIMEZONES
-from knackpy.exceptions.exceptions import ValidationError
+from knackpy.models import TIMEZONES
 
 
 class App:
@@ -64,9 +60,9 @@ class App:
         )
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
         self.timezone = self.get_timezone(self.tzinfo)
-        field_defs = _fields.generate_field_defs(self.metadata)
-        self.field_defs = _fields.set_field_def_views(field_defs, self.metadata)
-        self.containers = utils.generate_containers(self.metadata)
+        field_defs = knackpy.fields.generate_field_defs(self.metadata)
+        self.field_defs = knackpy.fields.set_field_def_views(field_defs, self.metadata)
+        self.containers = knackpy.utils.generate_containers(self.metadata)
         self.data = {}
         logging.debug(self)
 
@@ -77,7 +73,7 @@ class App:
         total_obj = len(self.metadata.get("objects"))
         total_scenes = len(self.metadata.get("scenes"))
         total_records = self.metadata.get("counts").get("total_entries")
-        total_size = utils._humanize_bytes(
+        total_size = knackpy.utils.humanize_bytes(
             self.metadata.get("counts").get("asset_size")
         )
 
@@ -111,7 +107,7 @@ class App:
         the `tzinfo` kwarg when constructing the `App` innstance, or directly to
         this method.
 
-        See also, note in knackpy._fields.real_unix_timestamp_mills() about why
+        See also, note in knackpy.fields.real_unix_timestamp_mills() about why
         we need valid timezone info to handle Knack records.
 
         Inputs:
@@ -139,7 +135,7 @@ class App:
         except (pytz.exceptions.UnknownTimeZoneError, IndexError):
             pass
 
-        raise ValidationError(
+        raise KeyError(
             """
                 Unknown timezone supplied. `tzinfo` should formatted as a
                 timezone string compliant to the IANA timezone database. See:
@@ -156,14 +152,14 @@ class App:
         ]
 
         if len(matches) > 1:
-            raise ValidationError(
+            raise KeyError(
                 f"Multiple containers use name {client_key}. Try using a view or object key."  # noqa
             )
 
         try:
             return matches[0]
         except IndexError:
-            raise ValidationError(
+            raise IndexError(
                 f"Unknown container specified: {client_key}. Inspect App.containers for available containers."  # noqa
             )
 
@@ -241,6 +237,6 @@ class App:
         return self._generate_records(container_key, self.data[container_key])
 
     def _generate_records(self, container_key, data):
-        return _records.Records(
+        return knackpy.records.Records(
             container_key, data, self.field_defs, self.timezone
         ).records()

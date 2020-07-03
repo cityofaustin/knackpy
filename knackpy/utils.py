@@ -75,7 +75,7 @@ def correct_knack_timestamp(mills_timestamp, timezone):
     return int(unix_timestamp * 1000)
 
 
-def _humanize_bytes(bytes_):
+def humanize_bytes(bytes_):
     # courtesy of https://stackoverflow.com/questions/5194057/better-way-to-convert-file-sizes-in-python # noqa
     if bytes_ == 0:
         return "0B"

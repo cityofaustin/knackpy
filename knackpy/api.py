@@ -1,8 +1,6 @@
 import logging
 import math
 import typing
-import knackpy
-from knackpy.exceptions.exceptions import ValidationError
 import requests
 
 MAX_ROWS_PER_PAGE = 1000  # max supported by Knack API
@@ -25,7 +23,7 @@ def _record_route(
         record_id (str, optional): A knack record ID. Defaults to empty string.
 
     Raises:
-        ValidationError: When an object key or both a scene and view key have
+        KeyError: When an object key or both a scene and view key have
         not been supplied.
 
     Returns:
@@ -36,7 +34,7 @@ def _record_route(
     elif obj:
         return f"/objects/{obj}/records/{record_id}"
 
-    raise ValidationError(
+    raise KeyError(
         "Insufficient knack keys provided. Knack Requests requires an obj key or a scene and view key"  # noqa
     )
 

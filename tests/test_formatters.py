@@ -58,47 +58,47 @@ def record():
 
 def test_default_handler():
     input_val = "hi how are you"
-    output_val = knackpy.utils.formatters.default(input_val)
+    output_val = knackpy.formatters.default(input_val)
     assert input_val == output_val
 
 
 def test_signature(record):
     input_data = record["signature_field"]
-    assert knackpy.utils.formatters.signature(input_data)
+    assert knackpy.formatters.signature(input_data)
 
 
 def test_email(record):
     assert (
-        knackpy.utils.formatters.email(record["email_field"])
+        knackpy.formatters.email(record["email_field"])
         == "pizzathehut@spaceballs.town"
     )
 
 
 def test_link(record):
     assert (
-        knackpy.utils.formatters.link(record["link_field"]) == "http://spaceballs.town"
+        knackpy.formatters.link(record["link_field"]) == "http://spaceballs.town"
     )
 
 
 def test_phone(record):
-    assert knackpy.utils.formatters.phone(record["phone_field"]) == "5129743546"
+    assert knackpy.formatters.phone(record["phone_field"]) == "5129743546"
 
 
 def test_image_with_url_key(record):
-    assert knackpy.utils.formatters.image(record["image_field"]) == "spaceballs.town"
+    assert knackpy.formatters.image(record["image_field"]) == "spaceballs.town"
 
 
 def test_image_without_url_key(record):
-    assert knackpy.utils.formatters.image("spaceballs.town") == "spaceballs.town"
+    assert knackpy.formatters.image("spaceballs.town") == "spaceballs.town"
 
 
 def test_file(record):
-    assert knackpy.utils.formatters.file(record["file_field"]) == "spaceballs.town"
+    assert knackpy.formatters.file(record["file_field"]) == "spaceballs.town"
 
 
 def test_format_date_time(record):
     timezone = pytz.timezone("US/Central")
-    iso_formatted = knackpy.utils.formatters.date_time(
+    iso_formatted = knackpy.formatters.date_time(
         record["date_time_field"], timezone
     )
     assert iso_formatted == "2019-09-11T11:14:00-05:00"
@@ -106,6 +106,6 @@ def test_format_date_time(record):
 
 def test_timer(record):
     assert (
-        knackpy.utils.formatters.timer(record["timer_field"])
+        knackpy.formatters.timer(record["timer_field"])
         == "09/11/19; 4:35pm to 5:35pm = 1:00 hours"
     )

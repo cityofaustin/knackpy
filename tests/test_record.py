@@ -22,7 +22,7 @@ def app():
 
 @pytest.fixture
 def records(app):
-    return knackpy._records.Records(
+    return knackpy.records.Records(
         "object_3", app.data[KEY], app.field_defs, app.timezone
     )
 

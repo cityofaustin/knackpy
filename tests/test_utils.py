@@ -18,7 +18,7 @@ def metadata():
 
 
 def test_valid_name():
-    assert knackpy.utils.utils.valid_name("id") == "_id"
+    assert knackpy.utils.valid_name("id") == "_id"
 
 
 def test_correct_knack_timestamp(timezone):
@@ -34,7 +34,7 @@ def test_correct_knack_timestamp(timezone):
     US/Central: Wednesday, January 1, 2020 3:47:25 PM GMT-06:00
     """
     timestamp_input = 1577893645000
-    timestamp_output = knackpy.utils.utils.correct_knack_timestamp(
+    timestamp_output = knackpy.utils.correct_knack_timestamp(
         timestamp_input, timezone
     )
     assert timestamp_output == 1577915245000
@@ -53,21 +53,21 @@ def test_correct_knack_timestamp_during_dst(timezone):
     US/Central 3:47:25 PM GMT-05:00 DST
     """
     timestamp_input = 1593618445000
-    timestamp_output = knackpy.utils.utils.correct_knack_timestamp(
+    timestamp_output = knackpy.utils.correct_knack_timestamp(
         timestamp_input, timezone
     )
     assert timestamp_output == 1593636445000
 
 
 def test_generate_containers(metadata):
-    containers = knackpy.utils.utils.generate_containers(metadata)
+    containers = knackpy.utils.generate_containers(metadata)
     assert len(containers) > 0
 
 
 def test_humanize_bytes():
-    kb = knackpy.utils.utils._humanize_bytes(1000000)
+    kb = knackpy.utils.humanize_bytes(1000000)
     assert kb == "976.56kb"
-    mb = knackpy.utils.utils._humanize_bytes(10000000)
+    mb = knackpy.utils.humanize_bytes(10000000)
     assert mb == "9.54mb"
-    gb = knackpy.utils.utils._humanize_bytes(10000000000)
+    gb = knackpy.utils.humanize_bytes(10000000000)
     assert gb == "9.31gb"
