@@ -47,10 +47,10 @@ jobs:
       run: |
         coverage-badge -o coverage.svg
     - name: Upload coverage badge
-        uses: actions/upload-artifact@v1
-        with:
-          name: coverage
-          path: coverage.svg
+      uses: actions/upload-artifact@v1
+      with:
+        name: coverage
+        path: coverage.svg
       env:
         KNACK_APP_ID: ${{ secrets.KNACK_APP_ID }}
         KNACK_API_KEY: ${{ secrets.KNACK_API_KEY }}
