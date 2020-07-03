@@ -231,7 +231,7 @@ def metadata(*, app_id: str, timeout: int = 30):
     url = _url(subdomain="loader", route=f"/applications/{app_id}")
     res = _request(method="GET", url=url, headers=None)
     res.raise_for_status()
-    return res.json()["application"]
+    return res.json()
 
 
 def _handle_method(method: str):
