@@ -5,21 +5,6 @@ import knackpy
 from knackpy.exceptions.exceptions import ValidationError
 import requests
 
-"""
-heavy construction.
-todo:
-- move app calls to this api
-- look through the args passing between funcs
-
-SESSION:
-- stores last response
-
-API:
-- returns response obj
-- app - tries to parse records, stores response, how to inspect response errors? 
-
-"""
-
 MAX_ROWS_PER_PAGE = 1000  # max supported by Knack API
 
 
@@ -209,7 +194,7 @@ def get(
         MAX_ROWS_PER_PAGE if record_limit >= MAX_ROWS_PER_PAGE else record_limit
     )
 
-    records = _get_paginated_records(
+    return _get_paginated_records(
         app_id=app_id,
         api_key=api_key,
         url=url,
@@ -218,8 +203,6 @@ def get(
         rows_per_page=rows_per_page,
         filters=filters,
     )
-
-    return records
 
 
 def get_metadata(*, app_id: str, timeout: int = 30) -> dict:
@@ -262,14 +245,9 @@ def record(
     max_attempts: int = 5,
     timeout: int = 30,
 ):
-    if method != "create" and not data.get("id"):
-        raise ValidationError(
-            "Unable to perform requested method. Data is missing an `id` property."
-        )
+    record_id = data["id"] if method != "create" else ""
     headers = _headers(app_id, api_key)
-    route = _record_route(obj=obj)
+    route = _record_route(obj=obj, record_id=record_id)
     method = _handle_method(method)
     url = _url(subdomain="api", route=route)
-    breakpoint()
-    print("implement delete/update")
     return _request(method=method, url=url, headers=headers, data=data).json()
