@@ -1,9 +1,9 @@
-name: Python application
+name: Python package format and lint
 # This workflow is triggered on all pushes and PRs to master
 on:
   push:
     branches:
-      - * 
+      - '*'
   pull_request:
     branches:
       - master
@@ -23,6 +23,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install black pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        black .
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
