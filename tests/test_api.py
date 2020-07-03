@@ -14,6 +14,10 @@ UPDATE_KEY = "field_25"  # rating field type
 def record():
     return knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, record_limit=1)[0]
 
+def test_get_limit():
+    records = knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, record_limit=1)
+    assert len(records) == 1
+
 def test_record_create_delete():
     # yes, two tests in one :/
     new_record = knackpy.api.record(
@@ -38,3 +42,7 @@ def test_record_update(record):
         method="update", app_id=APP_ID, api_key=API_KEY, data=data, obj=OBJ
     )
     assert record_updated[UPDATE_KEY] == update_value
+
+def test_get_metadata():
+    metadata = knackpy.api.get_metadata(app_id=APP_ID)
+    assert metadata["application"]
