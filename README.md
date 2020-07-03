@@ -9,13 +9,19 @@ You can use `knackpy.get()` to fetch "raw" data from your Knack app. Be aware th
 ```python
 # This is equivalent to exporting records in JSON format from the Knack Builder
 >>> import knackpy
->>> data = knackpy.get("my_app_id", api_key="myverysecretapikey", obj="object_1")
+>>> data = knackpy.get(
+...     app_id="myappid",
+...     api_key="myverysecretapikey",
+...     obj="object_1",
+...     record_limit=None,
+...     timeout=30
+... )
 ```
 
 More likely, you'll want to use the `App` class to correct and format your data.
 
 ```python
->>> app = knackpy.App(app_id,  api_key="myverysecretapikey")
+>>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey")
 >>> records = app.get("object_1")
 >>> records_formatted = [record.format() for record in records]
 ```
@@ -23,7 +29,7 @@ More likely, you'll want to use the `App` class to correct and format your data.
 Container identifiers can be supplied as Knack keys (`object_1`, `view_1`) or names (`my_exciting_object`, `My Exciting View`)
 
 ```python
->>> app = knackpy.App(app_id,  api_key="myverysecretapikey")
+>>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey")
 >>> records = app.get("my_exciting_object")
 ```
 
@@ -71,20 +77,23 @@ References to all available data endpoints are stored at `App.containers`. This 
 ]
 ```
 
-You can cut down on API calls by side-loading your own Knack metadata and/or record data to an `App`:
-
+You can cut down on API calls by providing your own Knack metadata when creating an `App` instance:
 ```python
 >>> import json
-# you can find your app's metadata at: https://{subdomain}.knack.com/v1/applications"
->> my_metadata = json.loads("my_metadata.json")
->> app = knackpy.App(app_id,  metadata=my_metadata)
-# note that the top-level keys of side-loaded records must be container names
-# that exist in your app's metadata
->> data = { "my_object_name": json.loads("my_data.json") }
->> app.data = data
->> records = [record.format() for record in app.records("my_object_name")]
+# you can find your app's metadata at: https://loader.knack.com/v1/applications/<app_id:str>"
+>>> with open("my_metadata.json", "r") as fin:
+...     metadata = json.loads(fin.read())
+>> app = knackpy.App(app_id,  metadata=metadata)
 ```
 
+You can side-load record data into your your app as well. Note that you must assign your data to a valid key that exists in your app:
+
+```python
+>>> with open("my_knack_data.json", "r") as fin:
+...     data = { "object_3": json.loads(fin.read()) }
+>> app.data = data
+>> records = [record.format() for record in app.records("object_3")]
+```
 
 ## What's New in v1.0
 
