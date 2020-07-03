@@ -23,13 +23,13 @@ API:
 MAX_ROWS_PER_PAGE = 1000  # max supported by Knack API
 
 
-def _url(*, subdomain: str, route: str):
+def _url(*, subdomain: str, route: str) -> str:
     return f"https://{subdomain}.knack.com/v1{route}"
 
 
 def _record_route(
     obj: str = None, scene: str = None, view: str = None, record_id: str = ""
-):
+) -> str:
     """Construct a Knack API route. Reqires either an object key or a scene key
     and a view key.
 
@@ -52,7 +52,7 @@ def _record_route(
         return f"/objects/{obj}/records/{record_id}"
 
     raise ValidationError(
-        "Insufficient knack keys provided. Knack Requsts requires an obj key or a scene and view key"  # noqa
+        "Insufficient knack keys provided. Knack Requests requires an obj key or a scene and view key"  # noqa
     )
 
 
@@ -65,15 +65,23 @@ def _headers(app_id: str, api_key: str):
 
 
 def _request(
-    *, method: str, url: str, headers: dict, timeout: int = 30, params: dict = None
-):
+    *,
+    method: str,
+    url: str,
+    headers: dict,
+    timeout: int = 30,
+    params: dict = None,
+    data: dict = None,
+) -> requests.Response:
     session = requests.Session()
-    req = requests.Request(method, url, headers=headers, params=params)
+    req = requests.Request(method, url, headers=headers, params=params, json=data)
     prepped = req.prepare()
-    return session.send(prepped, timeout=timeout)
+    res = session.send(prepped, timeout=timeout)
+    res.raise_for_status()
+    return res
 
 
-def _continue(total_records, current_records, record_limit):
+def _continue(total_records: int, current_records: int, record_limit: int) -> bool:
     if total_records is None:
         return True
 
@@ -83,7 +91,7 @@ def _continue(total_records, current_records, record_limit):
     return False
 
 
-def _get_paginated_data(
+def _get_paginated_records(
     *,
     app_id: str,
     url: str,
@@ -93,7 +101,7 @@ def _get_paginated_data(
     api_key: str = None,
     timeout: int = None,
     filters: typing.Union[dict, list] = None,
-):
+) -> list:
     """[summary]
 
     Args:
@@ -111,7 +119,6 @@ def _get_paginated_data(
 
     Returns:
         list: Knack records.
-        requests.Response: If HTTPErrors, else None
     """
     headers = _headers(app_id, api_key)
     records = []
@@ -147,11 +154,6 @@ def _get_paginated_data(
                     raise e
             break
 
-        try:
-            res.raise_for_status()
-        except requests.exceptions.HTTPError:
-            return None, res
-
         total_records = res.json()[
             "total_records"
         ]  # note that this number could change between requests
@@ -160,7 +162,7 @@ def _get_paginated_data(
         page += 1
 
     # lazily shaving off any remainder to keep the client happy
-    return records[0:record_limit] if record_limit < math.inf else records, None
+    return records[0:record_limit] if record_limit < math.inf else records
 
 
 def get(
@@ -174,7 +176,7 @@ def get(
     filters: dict = None,
     max_attempts: int = 5,
     timeout: int = 30,
-):
+) -> [list, requests.Response]:
     """Get records from a knack object or view. This is the raw stuff with
     incorrect timestamps!
         
@@ -207,7 +209,7 @@ def get(
         MAX_ROWS_PER_PAGE if record_limit >= MAX_ROWS_PER_PAGE else record_limit
     )
 
-    return _get_paginated_data(
+    records = _get_paginated_records(
         app_id=app_id,
         api_key=api_key,
         url=url,
@@ -217,8 +219,10 @@ def get(
         filters=filters,
     )
 
+    return records
 
-def metadata(*, app_id: str, timeout: int = 30):
+
+def get_metadata(*, app_id: str, timeout: int = 30) -> dict:
     """Fetch Knack application metadata. You can find your app's metadata at:
     `https://{subdomain}.knack.com/v1/applications/<app_id:str>`.
 
@@ -229,9 +233,7 @@ def metadata(*, app_id: str, timeout: int = 30):
         dict: A dictionary of Knack application metadata.
     """
     url = _url(subdomain="loader", route=f"/applications/{app_id}")
-    res = _request(method="GET", url=url, headers=None)
-    res.raise_for_status()
-    return res.json()
+    return _request(method="GET", url=url, headers=None).json()
 
 
 def _handle_method(method: str):
@@ -245,36 +247,29 @@ def _handle_method(method: str):
         return "DELETE"
 
     else:
-        raise ValidationError(
-            f"Unknown method requested: {method}. Choose from `create`, `update`, or `delete`."
+        raise TypeError(
+            f"Unknown record method requested: {method}. Choose from `create`, `update`, or `delete`."
         )  # noqa
 
 
-def record():
-    ...
-
-
-# def record(
-#     data: dict,
-#     *,
-#     app_id: str,
-#     method: str,
-#     api_key: str,
-#     obj: str,
-#     timeout: int = 10,
-#     max_attempts: int = 5,
-# ):
-#     print("not implemented: test with real data to understand error")
-#     if method != "create" and not data.get("id"):
-#         raise ValidationError(
-#             "Unable to perform requested method. Data is missing an `id` property."
-#         )  # noqa
-
-#     session = _knack_session.KnackSession(
-#         app_id, timeout=timeout, max_attempts=max_attempts
-#     )
-#     route = _record_route(obj=obj)
-#     method = _handle_method(method)
-#     res = session.request(method, route)
-#     breakpoint()
-#     return res.json()
+def record(
+    *,
+    app_id: str,
+    api_key: str,
+    data: dict,
+    method: str,
+    obj: str = None,
+    max_attempts: int = 5,
+    timeout: int = 30,
+):
+    if method != "create" and not data.get("id"):
+        raise ValidationError(
+            "Unable to perform requested method. Data is missing an `id` property."
+        )
+    headers = _headers(app_id, api_key)
+    route = _record_route(obj=obj)
+    method = _handle_method(method)
+    url = _url(subdomain="api", route=route)
+    breakpoint()
+    print("implement delete/update")
+    return _request(method=method, url=url, headers=headers, data=data).json()

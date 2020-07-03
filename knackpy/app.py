@@ -58,7 +58,9 @@ class App:
         self.timeout = timeout
         self.max_attempts = max_attempts
         self.metadata = (
-            self._get_metadata()["application"] if not metadata else metadata["application"]
+            self._get_metadata()["application"]
+            if not metadata
+            else metadata["application"]
         )
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
         self.timezone = self.get_timezone(self.tzinfo)
@@ -69,7 +71,7 @@ class App:
         logging.debug(self)
 
     def _get_metadata(self):
-        return knackpy.api.metadata(app_id=self.app_id, timeout=self.timeout)
+        return knackpy.api.get_metadata(app_id=self.app_id, timeout=self.timeout)
 
     def info(self):
         total_obj = len(self.metadata.get("objects"))
@@ -200,11 +202,6 @@ class App:
             basis. They are not stored in state. Whereas `max_attempts` and
             `timtout` are set on App construction and persist in `App` state.
 
-            Note also that if HTTPErrors are encountered, the `requests.Response`
-            object is stored at `self.response`, and then the exception is reaised.
-            This allows the user to inspect the content of the response at
-            `App.response`.
-
             Args:
                 client_key (str): an object or view key or name string that
                     exists in the app.
@@ -217,9 +214,6 @@ class App:
                 
             Returns:
                 [generator]: A generator which yields Knack record data.
-            
-            Raises:
-                [requests.HTTPError]: If HTTPErrors, they are raised.
         """
         container = self._find_container(client_key)
 
@@ -234,7 +228,7 @@ class App:
                 self.max_attempts, self.timeout, record_limit
             )
 
-            self.data[container_key], self.response = knackpy.api.get(
+            self.data[container_key] = knackpy.api.get(
                 app_id=self.app_id,
                 api_key=self.api_key,
                 obj=container.obj,
@@ -243,12 +237,6 @@ class App:
                 filters=filters,
                 **request_kwargs,
             )
-
-            try:
-                self.response.raise_for_status()
-            except AttributeError:
-                # handle case when response is None.
-                pass
 
         return self._generate_records(container_key, self.data[container_key])
 

@@ -55,3 +55,7 @@ def test_tzinfo(app_data):
         metadata=app_data["metadata"],
         tzinfo="US/Eastern",
     )
+
+
+def test_info(app):
+    assert isinstance(app.info(), dict)
