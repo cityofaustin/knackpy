@@ -45,7 +45,7 @@ class App:
         metadata: str = None,
         tzinfo: datetime.tzinfo = None,
         max_attempts: int = None,
-        timeout: None,
+        timeout: int = None,
     ):
 
         if not api_key:
@@ -58,7 +58,7 @@ class App:
         self.timeout = timeout
         self.max_attempts = max_attempts
         self.metadata = (
-            self._get_metadata() if not metadata else metadata["application"]
+            self._get_metadata()["application"] if not metadata else metadata["application"]
         )
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
         self.timezone = self.get_timezone(self.tzinfo)
