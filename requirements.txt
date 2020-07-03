@@ -1,2 +1,2 @@
 pytz
-requests
+requests==2
