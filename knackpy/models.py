@@ -1,5 +1,4 @@
-BASE_URL = "https://api.knack.com/v1/"
-BASE_URL_METADATA = "https://loader.knack.com/v1"
+MAX_ROWS_PER_PAGE = 1000  # max supported by Knack API
 
 FIELD_SETTINGS = {
     "address": {

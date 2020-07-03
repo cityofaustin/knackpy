@@ -6,7 +6,7 @@ import warnings
 
 import requests
 
-MAX_ROWS_PER_PAGE = 1000  # max supported by Knack API
+from .models import MAX_ROWS_PER_PAGE
 
 
 def _url(*, subdomain: str, route: str) -> str:
