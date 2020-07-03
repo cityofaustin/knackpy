@@ -10,25 +10,11 @@ API_KEY = os.environ["KNACK_API_KEY"]
 OBJ = "object_3"  # "all_fields_test"
 UPDATE_KEY = "field_25"  # rating field type
 
-
 @pytest.fixture
 def record():
     return knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, record_limit=1)[0]
 
-
-@pytest.fixture
-def app_data():
-    with open("tests/_metadata.json", "r") as fin:
-        metadata = json.loads(fin.read())
-
-    with open("tests/_all_fields.json", "r") as fin:
-        data = json.loads(fin.read())
-        data = data["records"]
-
-    return {"data": data, "metadata": metadata}
-
-
-def test_record_create_delete(app_data):
+def test_record_create_delete():
     # yes, two tests in one :/
     new_record = knackpy.api.record(
         method="create", app_id=APP_ID, api_key=API_KEY, data={}, obj=OBJ
