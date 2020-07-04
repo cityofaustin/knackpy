@@ -1,4 +1,6 @@
 import os
+import random
+import time
 
 import knackpy
 import pytest
@@ -15,33 +17,40 @@ FILTERS = {
     ],
 }
 
+@pytest.fixture
+def random_pause():
+    seconds = random.randrange(1, 10, 1)
+    time.sleep(seconds/10)
 
 @pytest.fixture
-def records():
+def records(random_pause):
+    random_pause
     return knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, record_limit=1)
-
 
 def test_get_limit(records):
     assert len(records) == 1
 
 
 def test_get_no_limit():
+    random_pause
     records = knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ)
     assert len(records) > 1
 
 
 def test_get_filters():
+    random_pause
     records = knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, filters=FILTERS)
     assert len(records) == 1
 
 
 def test_record_create_delete():
     # yes, two tests in one :/
+    random_pause
     new_record = knackpy.api.record(
         method="create", app_id=APP_ID, api_key=API_KEY, data={}, obj=OBJ
     )
     assert new_record
-
+    random_pause
     response = knackpy.api.record(
         method="delete",
         app_id=APP_ID,
