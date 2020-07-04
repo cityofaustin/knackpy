@@ -1,5 +1,8 @@
+import csv
 import datetime
+import itertools
 import logging
+import os
 import warnings
 import typing
 
@@ -132,7 +135,7 @@ class App:
         except (pytz.exceptions.UnknownTimeZoneError, IndexError):
             pass
 
-        raise KeyError(
+        raise ValueError(
             """
                 Unknown timezone supplied. `tzinfo` should formatted as a
                 timezone string compliant to the IANA timezone database. See:
@@ -149,14 +152,14 @@ class App:
         ]
 
         if len(matches) > 1:
-            raise KeyError(
+            raise ValueError(
                 f"Multiple containers use name {client_key}. Try using a view or object key."  # noqa
             )
 
         try:
             return matches[0]
-        except IndexError:
-            raise IndexError(
+        except ValueError:
+            raise ValueError(
                 f"Unknown container specified: {client_key}. Inspect App.containers for available containers."  # noqa
             )
 
@@ -233,3 +236,42 @@ class App:
         return records.Records(
             container_key, data, self.field_defs, self.timezone
         ).records()
+
+
+    def write_one(self, *, records: list, key: str, out_dir: str = ""):
+        if not records:
+            return False
+            
+        csv_data = [record.format() for record in records]
+        
+        fieldnames = csv_data[0].keys()
+        # not all records will contain all fields. so collect all fieldnames
+        # from all records. if we wanted to ensure that all records had the
+        # same shape, we would need to re-write the formatters to return
+        # empty vals for types that produce multiple keys, e.g. address
+
+        # all_fieldnames = [record.keys() for record in csv_data]
+        # fieldnames = list(itertools.chain.from_iterable(all_fieldnames))
+        # breakpoint()
+        fout = os.path.join(out_dir, f"{key}.csv")
+
+        with open(fout, "w") as fout:
+            writer = csv.DictWriter(fout, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(csv_data)
+        logging.debug(fout)
+        return True
+
+
+    def to_csv(self, client_keys: typing.Union[str, list] = None, out_dir: str = "") -> None:
+        if not client_keys:
+            client_keys = list(self.data.keys())
+
+        if type(client_keys) == str:
+            records = self.records(client_keys)
+            self.write_one(records=records, key=client_keys, out_dir=out_dir)
+        else:
+            for key in client_keys:
+                records = self.records(key)
+                self.write_one(records=records, key=key, out_dir=out_dir)
+        

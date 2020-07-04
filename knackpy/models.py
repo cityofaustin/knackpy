@@ -13,7 +13,6 @@ FIELD_SETTINGS = {
             "longitude",
         ]
     },
-    "file": {"subfields": ["filename", "url"]},
     "timer": {"use_knack_format": True},
 }
 

@@ -63,7 +63,12 @@ class Record:
             return {f"{key}_{subfield}": value.get(subfield) for subfield in subfields}
 
         except AttributeError:
-            return {key: value}
+            if value is None:
+                return {f"{key}_{subfield}": None for subfield in subfields}
+            else:
+                print("FUCK - why?")
+                breakpoint()
+                return {key: value}
 
     def _replace_empty_strings(self, record):
         return {key: None if val == "" else val for key, val in record.items()}
@@ -144,41 +149,3 @@ class Records:
     def records(self):
         for record in self.data:
             yield Record(record, self.field_defs, self.identifier, self.timezone)
-
-    # def to_csv(
-    #     self,
-    #     *obj_or_view_keys,
-    #     path="",
-    #     delimiter=",",
-    #     format_keys=False,
-    #     format_values=False,
-    # ):
-    #     print("NOT RE-IMPLEMTED!")
-    #     pass
-    #     obj_or_view_keys = obj_or_view_keys if obj_or_view_keys else list(self.keys())
-
-    #     for key in keys:
-    #         fieldnames = self._get_fieldnames(key, format_keys)
-
-    #         if not fieldnames:
-    #             warnings.warn(f"No records found in '{key}'")
-    #             continue
-
-    #         records = self.get(
-    #             key, format_keys=format_keys, format_values=format_values
-    #         )
-
-    #         fname = f"{key}.csv"
-
-    #         with open(fname, "w") as fout:
-    #             writer = csv.DictWriter(
-    #                 fout, fieldnames=fieldnames, delimiter=delimiter
-    #             )
-    #             writer.writeheader()
-    #             for record in records:
-    #                 writer.writerow(record)
-
-    # def _get_fieldnames(self, key, format_keys):
-    #     records = self.get(key, format_keys)
-    #     for record in records:
-    #         return record.keys()
