@@ -17,6 +17,7 @@ FILTERS = {
     ],
 }
 
+
 @pytest.fixture
 def app_data():
     with open("tests/_metadata.json", "r") as fin:
@@ -65,10 +66,12 @@ def test_get_by_key_static(app_static):
 def test_get_by_key_live(app_live):
     assert isinstance(app_live.records("object_3"), types.GeneratorType)
 
+
 def test_get_by_key_refresh(app_live):
     records = app_live.records("object_3")
     records = app_live.records("object_3", refresh=True)
     assert [record for record in records]
+
 
 def test_no_api_key_get(app_static):
     # our static app has been constructed w/o an API key, so object-based requests
@@ -76,9 +79,11 @@ def test_no_api_key_get(app_static):
     with pytest.raises(requests.exceptions.HTTPError):
         app_static.records("object_3", refresh=True)
 
+
 def test_get_with_filters(app_live):
     records = app_live.records("object_3", filters=FILTERS)
     assert len([record for record in records]) == 1
+
 
 def test_get_by_dupe_name_fail(app_static):
     # the "all_fields_test" container name exists in our app as both an object
