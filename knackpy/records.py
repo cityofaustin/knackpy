@@ -66,8 +66,6 @@ class Record:
             if value is None:
                 return {f"{key}_{subfield}": None for subfield in subfields}
             else:
-                print("FUCK - why?")
-                breakpoint()
                 return {key: value}
 
     def _replace_empty_strings(self, record):
