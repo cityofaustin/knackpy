@@ -5,6 +5,7 @@ import os
 import warnings
 import typing
 
+import requests
 import pytz
 
 from . import api, fields, records, utils
@@ -49,6 +50,9 @@ class App:
             warnings.warn(
                 "No API key has been supplied. Only public views will be accessible."
             )
+
+        # TODO: rename field_def.object to field_def.obj
+        # TODO: field_defs should be a list, not dict
 
         self.app_id = app_id
         self.api_key = api_key
@@ -236,6 +240,13 @@ class App:
             container_key, data, self.field_defs, self.timezone
         ).records()
 
+    def _find_field_def(self, client_key, obj):
+        return [
+            field_def
+            for key, field_def in self.field_defs.items()
+            if client_key.lower() in [field_def.name.lower(), field_def.key] and field_def.object == obj
+        ]
+
     def write_one(self, *, records: list, key: str, out_dir: str = ""):
         if not records:
             return False
@@ -243,9 +254,10 @@ class App:
         csv_data = [record.format() for record in records]
 
         fieldnames = csv_data[0].keys()
-        fout = os.path.join(out_dir, f"{key}.csv")
 
-        with open(fout, "w") as fout:
+        fname = os.path.join(out_dir, f"{key}.csv")
+
+        with open(fname, "w") as fout:
             writer = csv.DictWriter(fout, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(csv_data)
@@ -255,6 +267,10 @@ class App:
     def to_csv(
         self, client_keys: typing.Union[str, list] = None, out_dir: str = ""
     ) -> None:
+
+        if not os.path.exists(out_dir):
+            os.makedirs(out_dir)
+
         if not client_keys:
             client_keys = list(self.data.keys())
 
@@ -265,3 +281,101 @@ class App:
             for key in client_keys:
                 records = self.records(key)
                 self.write_one(records=records, key=key, out_dir=out_dir)
+
+    def _assemble_downloads(self, obj: str, field_key: str, label_keys: list, out_dir: str):
+        """
+        Extract file data from knack records and filename/path.
+        """
+        downloads = []
+
+        field_key_raw = f"{field_key}_raw"
+
+        downloads = []
+
+        for record in self.records(obj):
+            file_dict = record.raw.get(field_key_raw)
+
+            if not file_dict:
+                continue
+
+            filename = file_dict["filename"]
+
+            if label_keys:
+                # reverse traverse to ensure that field labels are prepended in
+                # sequence provided.
+                for field in reversed(label_keys):
+                    filename = f"{record.raw.get(field)}_{filename}"
+
+            file_dict["filename"] = os.path.join(out_dir, filename)
+
+            downloads.append(file_dict)
+
+        return downloads
+
+    def _download_files(self, downloads: list, overwrite: bool):
+        count = 0
+
+        for file_info in downloads:
+            filename = file_info["filename"]
+            filesize = utils.humanize_bytes(file_info["size"])
+            logging.debug(f"\nDownloading {file_info['url']} - size: {filesize}")
+
+            if not overwrite and os.path.exists(filename):
+                warnings.warn(f"{filename} already exist and will not be written.")
+                continue
+
+            res = requests.get(file_info["url"], allow_redirects=True)
+
+            res.raise_for_status()
+
+            with open(filename, "wb") as fout:
+                fout.write(res.content)
+                count += 1
+
+        return count
+
+    def download(
+        self,
+        obj: str,
+        *,
+        field: str,
+        out_dir: str = "_downloads",
+        label_keys: list = None,
+        overwrite: bool = True,
+    ):
+        """Download files and images from Knack records.
+
+        Args:
+            obj (str): The name or key of the object from which files will be
+                downloaded.
+            out_dir (str, optional): Relative path to the directory to which files
+                will be written. Defaults to "_downloads".
+            field (str): The key or name of file or image field to be downloaded.
+            label_keys (list, optional): Any field keys specificed here will be
+                prepended to the attachment filename, separated by an underscore.
+            overwrite (bool, optional): Indicates if existing files will be
+                overwritten. Defaults to True.
+
+        Returns:
+            [int]: Count of files downloaded.
+        """
+        # create output directory if it doesn't exist
+        if not os.path.exists(out_dir):
+            os.makedirs(out_dir)
+
+        container = self._find_container(obj)
+
+        field_defs = self._find_field_def(field, obj)
+
+        if not field_defs:
+            raise ValueError(f"Field not found: '{field}'")
+
+        downloads = self._assemble_downloads(
+            container.obj, field_defs[0].key, label_keys, out_dir
+        )
+
+        download_count = self._download_files(downloads, overwrite)
+
+        logging.debug(f"{download_count} files downloaded.")
+
+        return download_count
