@@ -257,7 +257,7 @@ class App:
             out_dir (str, optional): Relative path to the directory to which files
                 will be written. Defaults to "_csv".
             delimiter (str, optional): [description]. Defaults to ",".
-        """        
+        """
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
@@ -273,7 +273,6 @@ class App:
             writer = csv.DictWriter(fout, fieldnames=fieldnames, delimiter=delimiter)
             writer.writeheader()
             writer.writerows(csv_data)
-
 
     def _assemble_downloads(
         self, obj: str, field_key: str, label_keys: list, out_dir: str

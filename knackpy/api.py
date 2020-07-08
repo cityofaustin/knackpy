@@ -232,7 +232,8 @@ def _handle_method(method: str):
     else:
         raise TypeError(
             f"""Unknown record method requested: {method}. Choose from create, update,
-            or delete.""")
+            or delete."""
+        )
 
 
 def record(
