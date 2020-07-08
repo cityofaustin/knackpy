@@ -27,6 +27,6 @@ jobs:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        # note the use of `pypi-dev` to flag our dev package
+        # note the use of `pypi-dev` to flag our dev package deployment
         python setup.py pypi-dev sdist bdist_wheel
-        twine upload dist/* -r knackpy-dev
+        twine upload dist/*
