@@ -13,6 +13,13 @@ FIELD_SETTINGS = {
             "longitude",
         ]
     },
+    "name": {
+        "subfields": [
+            "first",
+            "middle",
+            "last",
+        ]
+    },
     "timer": {"use_knack_format": True},
 }
 

@@ -1,6 +1,6 @@
 import json
-import types
 import os
+import types
 
 import knackpy
 import requests
@@ -111,3 +111,15 @@ def test_invalid_tzinfo(app_data):
 
 def test_info(app_static):
     assert isinstance(app_static.info(), dict)
+
+
+def test_csv(app_static, tmpdir):
+    app_static.to_csv("object_3", out_dir=tmpdir)
+    assert os.path.exists(tmpdir / "object_3.csv")
+
+
+def test_downloads(app_live, tmpdir):
+    app_live.download(
+        "object_3", field="file", out_dir=tmpdir, label_keys=["field_125"]
+    )
+    assert True

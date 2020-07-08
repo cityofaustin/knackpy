@@ -17,15 +17,18 @@ FILTERS = {
     ],
 }
 
+
 @pytest.fixture
 def random_pause():
     seconds = random.randrange(1, 10, 1)
-    time.sleep(seconds/10)
+    time.sleep(seconds / 10)
+
 
 @pytest.fixture
 def records(random_pause):
     random_pause
     return knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, record_limit=1)
+
 
 def test_get_limit(records):
     assert len(records) == 1

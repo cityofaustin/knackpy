@@ -244,45 +244,40 @@ class App:
         return [
             field_def
             for key, field_def in self.field_defs.items()
-            if client_key.lower() in [field_def.name.lower(), field_def.key] and field_def.object == obj
+            if client_key.lower() in [field_def.name.lower(), field_def.key]
+            and field_def.object == obj
         ]
 
-    def write_one(self, *, records: list, key: str, out_dir: str = ""):
-        if not records:
-            return False
+    def to_csv(self, client_key: str, *, out_dir: str = "_csv", delimiter=",") -> None:
+        """Write Knack records to CSV.
+
+        Args:
+            client_key (str): an object or view key or name string that exists in the
+                app.
+            out_dir (str, optional): Relative path to the directory to which files
+                will be written. Defaults to "_csv".
+            delimiter (str, optional): [description]. Defaults to ",".
+        """        
+        if not os.path.exists(out_dir):
+            os.makedirs(out_dir)
+
+        records = self.records(client_key)
 
         csv_data = [record.format() for record in records]
 
         fieldnames = csv_data[0].keys()
 
-        fname = os.path.join(out_dir, f"{key}.csv")
+        fname = os.path.join(out_dir, f"{client_key}.csv")
 
         with open(fname, "w") as fout:
-            writer = csv.DictWriter(fout, fieldnames=fieldnames)
+            writer = csv.DictWriter(fout, fieldnames=fieldnames, delimiter=delimiter)
             writer.writeheader()
             writer.writerows(csv_data)
-        logging.debug(fout)
-        return True
 
-    def to_csv(
-        self, client_keys: typing.Union[str, list] = None, out_dir: str = ""
-    ) -> None:
 
-        if not os.path.exists(out_dir):
-            os.makedirs(out_dir)
-
-        if not client_keys:
-            client_keys = list(self.data.keys())
-
-        if type(client_keys) == str:
-            records = self.records(client_keys)
-            self.write_one(records=records, key=client_keys, out_dir=out_dir)
-        else:
-            for key in client_keys:
-                records = self.records(key)
-                self.write_one(records=records, key=key, out_dir=out_dir)
-
-    def _assemble_downloads(self, obj: str, field_key: str, label_keys: list, out_dir: str):
+    def _assemble_downloads(
+        self, obj: str, field_key: str, label_keys: list, out_dir: str
+    ):
         """
         Extract file data from knack records and filename/path.
         """
@@ -312,17 +307,13 @@ class App:
 
         return downloads
 
-    def _download_files(self, downloads: list, overwrite: bool):
+    def _download_files(self, downloads: list):
         count = 0
 
         for file_info in downloads:
             filename = file_info["filename"]
             filesize = utils.humanize_bytes(file_info["size"])
             logging.debug(f"\nDownloading {file_info['url']} - size: {filesize}")
-
-            if not overwrite and os.path.exists(filename):
-                warnings.warn(f"{filename} already exist and will not be written.")
-                continue
 
             res = requests.get(file_info["url"], allow_redirects=True)
 
@@ -341,7 +332,6 @@ class App:
         field: str,
         out_dir: str = "_downloads",
         label_keys: list = None,
-        overwrite: bool = True,
     ):
         """Download files and images from Knack records.
 
@@ -353,13 +343,10 @@ class App:
             field (str): The key or name of file or image field to be downloaded.
             label_keys (list, optional): Any field keys specificed here will be
                 prepended to the attachment filename, separated by an underscore.
-            overwrite (bool, optional): Indicates if existing files will be
-                overwritten. Defaults to True.
 
         Returns:
             [int]: Count of files downloaded.
         """
-        # create output directory if it doesn't exist
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
@@ -374,7 +361,7 @@ class App:
             container.obj, field_defs[0].key, label_keys, out_dir
         )
 
-        download_count = self._download_files(downloads, overwrite)
+        download_count = self._download_files(downloads)
 
         logging.debug(f"{download_count} files downloaded.")
 
