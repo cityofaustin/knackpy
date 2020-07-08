@@ -8,9 +8,10 @@
 
 ## Installation
 
-Knackpy requires Python v3.6+
+Knackpy requires Python v3.6+. To use the development version Knackpy v1.0, install with:
+
 ```bash
-$ pip install knackpy
+$ pip install knackpy-dev
 ```
 
 ## Quick Start
