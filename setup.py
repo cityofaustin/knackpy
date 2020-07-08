@@ -3,22 +3,12 @@ import setuptools
 
 
 def get_env(args):
-    # h/t https://stackoverflow.com/questions/677577/distutils-how-to-pass-a-user-defined-parameter-to-setup-py
-
-    if args[1] not in ["-e", "--env"]:
-        raise ValueError(
-            "Argument -e, --env is required and must be either 'dev' or 'prod'"
-        )
-    elif args[2] not in ["dev", "prod"]:
-        raise ValueError(
-            "Argument -e, --env is required and must be either 'dev' or 'prod'"
-        )
-
-    env = args[2]
-
+    if "pypi-dev" not in args:
+        return "prod"
+    
     # delete our custom args so that setuptools doesn't try to use them and throw an error
-    del args[1:3]
-    return env
+    args.pop("pypi-dev")
+    return "dev"
 
 
 def get_package_name(env):
@@ -57,7 +47,10 @@ def build_config(env, readme="README.md"):
     }
 
 
-if __name__ == "__main__":
-    env = get_env(sys.argv)
-    config = build_config("dev")
-    setuptools.setup(**config)
+import logging
+logging.info("HELLLLLLLo")
+print(sys.argv)
+print("$$$$$$$$$$$$$")
+env = get_env(sys.argv)
+config = build_config("dev")
+setuptools.setup(**config)
