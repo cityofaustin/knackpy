@@ -7,7 +7,11 @@ def get_env(args):
         return "prod"
     
     # delete our custom args so that setuptools doesn't try to use them and throw an error
-    args.pop("pypi-dev")
+    try:
+        args.remove("pypi-dev")
+    except ValueError:
+        pass
+    
     return "dev"
 
 
@@ -46,11 +50,6 @@ def build_config(env, readme="README.md"):
         "version": "1.0.1",
     }
 
-
-import logging
-logging.info("HELLLLLLLo")
-print(sys.argv)
-print("$$$$$$$$$$$$$")
 env = get_env(sys.argv)
 config = build_config("dev")
 setuptools.setup(**config)
