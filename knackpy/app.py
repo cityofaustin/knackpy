@@ -228,7 +228,7 @@ class App:
                 api_key=self.api_key,
                 obj=container.obj,
                 scene=container.scene,
-                view=container.scene,
+                view=container.view,
                 filters=filters,
                 **request_kwargs,
             )
