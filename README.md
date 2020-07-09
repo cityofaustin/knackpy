@@ -1,7 +1,7 @@
 # Knackpy
 
 ![Build](https://github.com/cityofaustin/knackpy/workflows/Build/badge.svg?branch=v1.0.0)
-![Coverage](https://raw.githubusercontent.com/cityofaustin/knackpy/v1.0.0/coverage.svg)
+![Coverage](https://raw.githubusercontent.com/cityofaustin/knackpy/dev/coverage.svg)
 ![Python](https://img.shields.io/badge/Python-v3.6+-blue)
 
 _Knackpy v1.0 is under development. Documented methods should work, but check the status badge ^^_
