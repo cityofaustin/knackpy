@@ -51,9 +51,6 @@ class App:
                 "No API key has been supplied. Only public views will be accessible."
             )
 
-        # TODO: rename field_def.object to field_def.obj
-        # TODO: field_defs should be a list, not dict
-
         self.app_id = app_id
         self.api_key = api_key
         self.timeout = timeout
@@ -160,8 +157,8 @@ class App:
 
         try:
             return matches[0]
-        except ValueError:
-            raise ValueError(
+        except IndexError:
+            raise IndexError(
                 f"Unknown container specified: {client_key}. Inspect App.containers for available containers."  # noqa
             )
 
@@ -244,7 +241,7 @@ class App:
             field_def
             for field_def in self.field_defs
             if client_key.lower() in [field_def.name.lower(), field_def.key]
-            and field_def.object == obj
+            and field_def.obj == obj
         ]
 
     def to_csv(self, client_key: str, *, out_dir: str = "_csv", delimiter=",") -> None:
