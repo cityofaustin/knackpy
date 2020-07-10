@@ -1,10 +1,10 @@
-from collections.abc import Mapping
+from collections.abc import MutableMapping
 
 from . import utils
 from . import fields as _fields
 
 
-class Record(Mapping):
+class Record(MutableMapping):
     """A dict-like object for storing record data."""
 
     def __init__(self, data, field_defs, identifier, timezone):
@@ -14,6 +14,7 @@ class Record(Mapping):
         self.timezone = timezone
         self.raw = self._handle_record()
         self.fields = self._handle_fields()
+        self.update(self.fields)
 
     def __repr__(self):
         identifier_value = self.data[self.identifier]
@@ -33,15 +34,25 @@ class Record(Mapping):
         """
         # first, try to match by field key
         # yes, there are better ways: https://stackoverflow.com/questions/2361426/get-the-first-item-from-an-iterable-that-matches-a-condition/2361899  # noqa
-        match_fields = [field for field in self.fields if field.key == client_key]
+        match_fields = [
+            field for key, field in self.fields.items() if field.key == client_key
+        ]
         if match_fields:
             # there can be only one
-            return match_fields[0].value
+            return match_fields[0]
         else:
             # try to match by field name
-            match_fields = [field for field in self.fields if field.name == client_key]
+            match_fields = [
+                field for key, field in self.fields.items() if field.name == client_key
+            ]
 
-        return match_fields[0].value if match_fields else None
+        return match_fields[0] if match_fields else None
+
+    def __setitem__(self, key, value):
+        self.fields[key] = value
+
+    def __delitem__(self, key):
+        del self.fields[key]
 
     def __iter__(self):
         return iter(self.fields)
@@ -49,8 +60,20 @@ class Record(Mapping):
     def __len__(self):
         return len(self.fields)
 
+    def items(self):
+        return self.fields.items()
+
+    def keys(self):
+        return [key for key in self.fields.keys()]
+
+    def values(self):
+        return [value for key, value in self.fields.items()]
+
+    def names(self):
+        return [field.name for key, field in self.fields.items()]
+
     def _handle_fields(self):
-        fields = []
+        fields = {}
 
         for field_def in self.field_defs:
             key = field_def.key
@@ -64,7 +87,7 @@ class Record(Mapping):
                 else self.raw[key]
             )
             field = _fields.Field(key, value, field_def, self.timezone)
-            fields.append(field)
+            fields[field.key] = field
 
         return fields
 
@@ -73,7 +96,7 @@ class Record(Mapping):
         record = self._correct_knack_timestamp(record, self.timezone)
         return record
 
-    def dumps(self, format_keys: bool = True, format_values: bool = True):
+    def format(self, format_keys: bool = True, format_values: bool = True):
         """Returns the record as a dict.
         Args:
             format_keys (bool, optional): Defaults to True.
@@ -84,11 +107,10 @@ class Record(Mapping):
         """
         record = {}
 
-        for field in self.fields:
-            formatted = field.format(
-                format_keys=format_keys, format_values=format_values
-            )
-            record.update(formatted)
+        for key, field in self.fields.items():
+            value = field.format() if format_values else field.value
+            key = field.name if format_keys else field.key
+            record.update({key: value})
 
         return record
 
@@ -141,7 +163,7 @@ class Records:
         return [
             field_def
             for field_def in field_defs
-            if self.container_key == field_def.object
+            if self.container_key == field_def.obj
             or self.container_key in field_def.views
         ]
 
