@@ -44,7 +44,9 @@ def field_defs_from_metadata(metadata: dict):
     for obj in metadata["objects"]:
         for field in obj["fields"]:
             field["name"] = utils.valid_name(field["name"])
-            field["object"] = obj["key"]
+            # the object is also available at field["object_key"], but
+            # this is not always available
+            field["obj"] = obj["key"]
 
             try:
                 if field["key"] == obj["identifier"]:
@@ -75,7 +77,7 @@ class FieldDef:
             "key",
             "name",
             "type",
-            "object",
+            "obj",
         ]:
             try:
                 setattr(self, attr, kwargs[attr])
@@ -88,7 +90,9 @@ class FieldDef:
         self.views = []
         self.settings = FIELD_SETTINGS.get(self.type)
         self.subfields = self.settings.get("subfields") if self.settings else None
-        self.use_knack_format = self.settings.get("use_knack_format") if self.settings else False  # noqa:E501
+        self.use_knack_format = (
+            self.settings.get("use_knack_format") if self.settings else False
+        )  # noqa:E501
 
         try:
             self.formatter = getattr(formatters, self.type)
@@ -105,13 +109,13 @@ class Field(Container):
         self.timezone = timezone
 
     def __repr__(self):
-        return f"<Field {{'{self.key}'}}>"
+        return f"{self.value}"
 
     def __contains__(self, item):
         if item in self.value:
             return True
 
-    def format(self, format_keys=True, format_values=True):
+    def format(self):
         """
         Knack applies it's own standard formatting to values, which are always
         available at the non-raw key. Knack includes the raw key in the dict
@@ -128,11 +132,6 @@ class Field(Container):
 
         See also: models.py, formatters.py.
         """
-        value = self._format_value() if format_values else self.value
-        key = self.field_def.name if format_keys else self.field_def.key
-        return {key: value}
-
-    def _format_value(self):
         kwargs = self._set_formatter_kwargs()
 
         try:
