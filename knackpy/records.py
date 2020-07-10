@@ -1,10 +1,14 @@
+from collections.abc import MutableMapping
+
 from . import utils
 from . import fields as _fields
 
-
+# class Record(MutableMapping):
 class Record:
     def __repr__(self):
-        return f"<Record '{self.data[self.identifier]}'>"
+        identifier_value = self.data[self.identifier]
+        identifier_value = identifier_value if identifier_value else ("undefined")
+        return f"<Record '{identifier_value}'>"
 
     def __init__(self, data, field_defs, identifier, timezone):
         self.data = data
@@ -102,7 +106,7 @@ class Records:
     def _filter_field_defs_by_container_key(self, field_defs):
         return [
             field_def
-            for field_ley, field_def in field_defs.items()
+            for field_def in field_defs
             if self.container_key == field_def.object
             or self.container_key in field_def.views
         ]

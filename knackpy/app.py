@@ -65,8 +65,7 @@ class App:
         )
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
         self.timezone = self.get_timezone(self.tzinfo)
-        field_defs = fields.generate_field_defs(self.metadata)
-        self.field_defs = fields.set_field_def_views(field_defs, self.metadata)
+        self.field_defs = fields.field_defs_from_metadata(self.metadata)
         self.containers = utils.generate_containers(self.metadata)
         self.data = {}
         logging.debug(self)
@@ -243,7 +242,7 @@ class App:
     def _find_field_def(self, client_key, obj):
         return [
             field_def
-            for key, field_def in self.field_defs.items()
+            for field_def in field_defs
             if client_key.lower() in [field_def.name.lower(), field_def.key]
             and field_def.object == obj
         ]

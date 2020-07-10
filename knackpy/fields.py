@@ -1,11 +1,12 @@
-import collections
+from collections.abc import Container
+
 from knackpy.models import FIELD_SETTINGS
 from . import utils, formatters
 
 
 def set_field_def_views(field_defs, metadata):
     """
-    Update FieldDef's  `views` property to include a list of all view keys that use
+    Update FieldDef's `views` property to include a list of all view keys that use
     this field.
     """
     for scene in metadata["scenes"]:
@@ -27,13 +28,21 @@ def set_field_def_views(field_defs, metadata):
     return field_defs
 
 
-def generate_field_defs(metadata):
-    field_defs = {}
+def field_defs_from_metadata(metadata: dict):
+    """Generate a list of FieldDef's from Knack metadata. Note the
+    "set_field_def_views()" side effect, which assigns to prop "views" a list of view
+    keys which use the field.
+
+    Args:
+        metadata (dict): Knack application metadata dict.
+
+    Returns:
+        list: A list of FieldDef instances.
+    """
+    field_defs = []
 
     for obj in metadata["objects"]:
         for field in obj["fields"]:
-            # drop reserved word `type` from knack field def
-            field["type_"] = field.pop("type")
             field["name"] = utils.valid_name(field["name"])
             field["object"] = obj["key"]
 
@@ -45,9 +54,10 @@ def generate_field_defs(metadata):
 
             except KeyError:
                 # built-in "Accounts" does not have an identifier
+                # also identifier may only be present if set manually in the builder?
                 field["identifier"] = False
 
-            field_defs[field["key"]] = FieldDef(**field)
+            field_defs.append(FieldDef(**field))
 
     return field_defs
 
@@ -60,13 +70,13 @@ class FieldDef:
         return f"<FieldDef '{name}'>"
 
     def __init__(self, **kwargs):
-
         for attr in [
+            # required definition attrs
             "key",
             "name",
-            "type_",
+            "type",
             "object",
-        ]:  # required definition attrs
+        ]:
             try:
                 setattr(self, attr, kwargs[attr])
             except KeyError:
@@ -75,22 +85,18 @@ class FieldDef:
                 )
 
         self.identifier = kwargs["identifier"] if kwargs.get("identifier") else False
-
         self.views = []
-
-        settings = FIELD_SETTINGS.get(self.type_)
-
-        self.subfields = settings.get("subfields") if settings else None
-
-        self.use_knack_format = settings.get("use_knack_format") if settings else False
+        self.settings = FIELD_SETTINGS.get(self.type)
+        self.subfields = self.settings.get("subfields") if self.settings else None
+        self.use_knack_format = self.settings.get("use_knack_format") if self.settings else False
 
         try:
-            self.formatter = getattr(formatters, self.type_)
+            self.formatter = getattr(formatters, self.type)
         except AttributeError:
             self.formatter = getattr(formatters, "default")
 
 
-class Field(collections.abc.Container):
+class Field(Container):
     def __init__(self, key, data, field_def, timezone):
         self.key = key
         self.data = data
@@ -142,7 +148,7 @@ class Field(collections.abc.Container):
         # TODO: these should probably be field_def properties set from config
         kwargs = {}
 
-        if self.field_def.type_ == "date_time":
+        if self.field_def.type == "date_time":
             kwargs["timezone"] = self.timezone
 
         return kwargs
