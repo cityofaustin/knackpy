@@ -242,7 +242,7 @@ class App:
     def _find_field_def(self, client_key, obj):
         return [
             field_def
-            for field_def in field_defs
+            for field_def in self.field_defs
             if client_key.lower() in [field_def.name.lower(), field_def.key]
             and field_def.object == obj
         ]
@@ -262,7 +262,7 @@ class App:
 
         records = self.records(client_key)
 
-        csv_data = [record.format() for record in records]
+        csv_data = [record.dumps() for record in records]
 
         fieldnames = csv_data[0].keys()
 

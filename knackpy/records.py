@@ -1,14 +1,11 @@
-from collections.abc import MutableMapping
+from collections.abc import Mapping
 
 from . import utils
 from . import fields as _fields
 
-# class Record(MutableMapping):
-class Record:
-    def __repr__(self):
-        identifier_value = self.data[self.identifier]
-        identifier_value = identifier_value if identifier_value else ("undefined")
-        return f"<Record '{identifier_value}'>"
+
+class Record(Mapping):
+    """A dict-like object for storing record data."""
 
     def __init__(self, data, field_defs, identifier, timezone):
         self.data = data
@@ -17,6 +14,40 @@ class Record:
         self.timezone = timezone
         self.raw = self._handle_record()
         self.fields = self._handle_fields()
+
+    def __repr__(self):
+        identifier_value = self.data[self.identifier]
+        # if the identifier field has no value, use the record ID
+        identifier_value = identifier_value if identifier_value else self.data["id"]
+        return f"<Record '{identifier_value}'>"
+
+    def __getitem__(self, client_key):
+        """Return the field whose key or name matches the client-provided value.
+
+        Args:
+            client_key (str): A field key (e.g., "field_99") or field name.
+
+        Returns:
+            object: The field's value (dict, list, str, int, whatever Knack has in
+            store for you.)
+        """
+        # first, try to match by field key
+        # yes, there are better ways: https://stackoverflow.com/questions/2361426/get-the-first-item-from-an-iterable-that-matches-a-condition/2361899  # noqa
+        match_fields = [field for field in self.fields if field.key == client_key]
+        if match_fields:
+            # there can be only one
+            return match_fields[0].value
+        else:
+            # try to match by field name
+            match_fields = [field for field in self.fields if field.name == client_key]
+
+        return match_fields[0].value if match_fields else None
+
+    def __iter__(self):
+        return iter(self.fields)
+
+    def __len__(self):
+        return len(self.fields)
 
     def _handle_fields(self):
         fields = []
@@ -42,12 +73,20 @@ class Record:
         record = self._correct_knack_timestamp(record, self.timezone)
         return record
 
-    def format(self, format_labels=True, format_values=True):
+    def dumps(self, format_keys: bool = True, format_values: bool = True):
+        """Returns the record as a dict.
+        Args:
+            format_keys (bool, optional): Defaults to True.
+            format_values (bool, optional): Defaults to True.
+
+        Returns:
+            dict: A dict of the record values with
+        """
         record = {}
 
         for field in self.fields:
             formatted = field.format(
-                format_labels=format_labels, format_values=format_values
+                format_keys=format_keys, format_values=format_values
             )
             record.update(formatted)
 
@@ -91,16 +130,11 @@ class Records:
         self.data = data
         self.timezone = timezone
         self.field_defs = self._filter_field_defs_by_container_key(field_defs)
-        try:
-            self.identifier = [
-                field_def.key for field_def in self.field_defs if field_def.identifier
-            ][0]
-        except IndexError:
-            # it seems that the object will not have an identifer in the
-            # metadata if it has not been manually set by the user knack
-            # presumably just uses the first field that was created with the
-            # object. we'll use the id
-            self.identifier = "id"
+        # find the identifier field
+        self.identifier = [
+            field_def.key for field_def in self.field_defs if field_def.identifier
+        ][0]
+
         return None
 
     def _filter_field_defs_by_container_key(self, field_defs):

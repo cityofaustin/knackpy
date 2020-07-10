@@ -9,7 +9,7 @@ def field_def_data():
         "_id": "abc123",
         "key": "field_99",
         "name": "Fake Field",
-        "type_": ("short_text"),
+        "type": ("short_text"),
         "object": "object_0",
     }
 

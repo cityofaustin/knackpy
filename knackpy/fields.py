@@ -88,7 +88,7 @@ class FieldDef:
         self.views = []
         self.settings = FIELD_SETTINGS.get(self.type)
         self.subfields = self.settings.get("subfields") if self.settings else None
-        self.use_knack_format = self.settings.get("use_knack_format") if self.settings else False
+        self.use_knack_format = self.settings.get("use_knack_format") if self.settings else False  # noqa:E501
 
         try:
             self.formatter = getattr(formatters, self.type)
@@ -97,24 +97,21 @@ class FieldDef:
 
 
 class Field(Container):
-    def __init__(self, key, data, field_def, timezone):
+    def __init__(self, key, value, field_def, timezone):
         self.key = key
-        self.data = data
+        self.name = field_def.name
+        self.value = value
         self.field_def = field_def
         self.timezone = timezone
 
     def __repr__(self):
-        if type(self.data) in [int, float]:
-            value_repr = self.data
-        else:
-            value_repr = f"'{self.data}'"
-        return f"<Field {{'{self.key}': {value_repr}}}>"
+        return f"<Field {{'{self.key}'}}>"
 
     def __contains__(self, item):
-        if item in self.data:
+        if item in self.value:
             return True
 
-    def format(self, format_labels=True, format_values=True):
+    def format(self, format_keys=True, format_values=True):
         """
         Knack applies it's own standard formatting to values, which are always
         available at the non-raw key. Knack includes the raw key in the dict
@@ -131,18 +128,18 @@ class Field(Container):
 
         See also: models.py, formatters.py.
         """
-        value = self._format_value() if format_values else self.data
-        key = self.field_def.name if format_labels else self.field_def.key
+        value = self._format_value() if format_values else self.value
+        key = self.field_def.name if format_keys else self.field_def.key
         return {key: value}
 
     def _format_value(self):
         kwargs = self._set_formatter_kwargs()
 
         try:
-            return self.field_def.formatter(self.data, **kwargs)
+            return self.field_def.formatter(self.value, **kwargs)
         except AttributeError:
             # thrown when value is None
-            return self.data
+            return self.value
 
     def _set_formatter_kwargs(self):
         # TODO: these should probably be field_def properties set from config
