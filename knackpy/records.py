@@ -14,7 +14,11 @@ class Record(MutableMapping):
         self.timezone = timezone
         self.raw = self._handle_record()
         self.fields = self._handle_fields()
+        self.immutable = False
         self.update(self.fields)
+        # we restrict re-assignment of field values after init
+        # see the __setitem__ docstring
+        self.immutable = True
 
     def __repr__(self):
         identifier_value = self.data[self.identifier]
@@ -46,9 +50,26 @@ class Record(MutableMapping):
                 field for key, field in self.fields.items() if field.name == client_key
             ]
 
-        return match_fields[0] if match_fields else None
+        if match_fields:
+            return match_fields[0]
+
+        raise KeyError(client_key)
 
     def __setitem__(self, key, value):
+        """Bad things will happen if you re-assign record values to anything other
+        than a field class. This is not immediately obvious, because you can assign
+        values to the record without issue, but some operations will fail after
+        assignment of a non-Field value. e.g., .format() and dict().
+
+        All that to we set immutable = True after init, and attempts to assign
+        will raise a TypeError.
+
+        Raises:
+            TypeError: 'Record' object does not support item assignment.
+        """
+        # if self.immutable and not force:
+        #     raise TypeError("'Record' object does not support item assignment")
+
         self.fields[key] = value
 
     def __delitem__(self, key):

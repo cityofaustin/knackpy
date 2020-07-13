@@ -1,5 +1,3 @@
-from collections.abc import Container
-
 from knackpy.models import FIELD_SETTINGS
 from . import utils, formatters
 
@@ -100,7 +98,7 @@ class FieldDef:
             self.formatter = getattr(formatters, "default")
 
 
-class Field(Container):
+class Field(object):
     def __init__(self, key, value, field_def, timezone):
         self.key = key
         self.name = field_def.name
@@ -141,7 +139,6 @@ class Field(Container):
             return self.value
 
     def _set_formatter_kwargs(self):
-        # TODO: these should probably be field_def properties set from config
         kwargs = {}
 
         if self.field_def.type == "date_time":

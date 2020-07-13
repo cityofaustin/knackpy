@@ -245,7 +245,7 @@ class App:
         ]
 
     def to_csv(self, client_key: str, *, out_dir: str = "_csv", delimiter=",") -> None:
-        """Write Knack records to CSV.
+        """Write formatted Knack records to CSV.
 
         Args:
             client_key (str): an object or view key or name string that exists in the
@@ -259,7 +259,7 @@ class App:
 
         records = self.records(client_key)
 
-        csv_data = [record.dumps() for record in records]
+        csv_data = [record.format() for record in records]
 
         fieldnames = csv_data[0].keys()
 

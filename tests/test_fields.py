@@ -10,7 +10,7 @@ def field_def_data():
         "key": "field_99",
         "name": "Fake Field",
         "type": ("short_text"),
-        "object": "object_0",
+        "obj": "object_0",
     }
 
 
@@ -42,7 +42,7 @@ def test_constructor_success(field_def_data):
 
 
 def test_constructor_fail_missing_required(field_def_data):
-    bad_data = drop_key_from_dict(field_def_data, "object")
+    bad_data = drop_key_from_dict(field_def_data, "obj")
     with pytest.raises(KeyError):
         assert knackpy.fields.FieldDef(**bad_data)
 

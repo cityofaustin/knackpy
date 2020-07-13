@@ -32,4 +32,4 @@ def test_basic_constructor(app, records):
 
 
 def test_format_record(app, records):
-    assert len([record.dumps() for record in records.records()]) == len(app.data[KEY])
+    assert len([record.format() for record in records.records()]) == len(app.data[KEY])
