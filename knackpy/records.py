@@ -61,14 +61,14 @@ class Record(MutableMapping):
         values to the record without issue, but some operations will fail after
         assignment of a non-Field value. e.g., .format() and dict().
 
-        All that to we set immutable = True after init, and attempts to assign
-        will raise a TypeError.
+        All that to say, we set immutable = True after init, and further attempts to
+        __setitem__ will raise a TypeError.
 
         Raises:
             TypeError: 'Record' object does not support item assignment.
         """
-        # if self.immutable and not force:
-        #     raise TypeError("'Record' object does not support item assignment")
+        if self.immutable:
+            raise TypeError("'Record' object does not support item assignment")
 
         self.fields[key] = value
 
