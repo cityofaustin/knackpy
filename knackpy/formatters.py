@@ -8,7 +8,6 @@ def default(value):
     - average
     - boolean
     - concatenation
-    - connection
     - count
     - currency
     - id  x
@@ -89,3 +88,16 @@ def timer(value):
     # we're handling somthing that looks like this:
     # '<span>09/11/19</span>&nbsp;4:14pm to 5:14pm = 1:00 hours'
     return value.replace("<span>", "").replace("</span>", "").replace("&nbsp;", "; ")
+
+
+def connection(value):
+    """
+    Return a string of comma-separated values
+    """
+    if not value:
+        return None
+    else:
+        # expecting a list of dicts like so:
+        # [{'id': '5e7b63a0c279e606c645be7d', 'identifier': 'Some String'}]
+        identifiers = [conn["identifier"] for conn in value]
+        return ", ".join(identifiers)

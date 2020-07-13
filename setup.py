@@ -5,13 +5,14 @@ import setuptools
 def get_env(args):
     if "pypi-dev" not in args:
         return "prod"
-    
-    # delete our custom args so that setuptools doesn't try to use them and throw an error
+
+    # delete our custom args so that setuptools doesn't try to use them and throw
+    # an error
     try:
         args.remove("pypi-dev")
     except ValueError:
         pass
-    
+
     return "dev"
 
 
@@ -47,8 +48,9 @@ def build_config(env, readme="README.md"):
         "packages": ["knackpy"],
         "tests_require": ["pytest"],
         "url": "http://github.com/cityofaustin/knackpy",
-        "version": "1.0.1",
+        "version": "1.0.2",
     }
+
 
 env = get_env(sys.argv)
 config = build_config("dev")

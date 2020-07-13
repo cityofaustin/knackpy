@@ -15,6 +15,7 @@ FIELD_SETTINGS = {
     },
     "name": {"subfields": ["first", "middle", "last", ]},
     "timer": {"use_knack_format": True},
+    "id": {"use_knack_format": True},  # because there is no "raw" format for this field
 }
 
 TIMEZONES = [

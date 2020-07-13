@@ -51,9 +51,6 @@ class App:
                 "No API key has been supplied. Only public views will be accessible."
             )
 
-        # TODO: rename field_def.object to field_def.obj
-        # TODO: field_defs should be a list, not dict
-
         self.app_id = app_id
         self.api_key = api_key
         self.timeout = timeout
@@ -65,8 +62,7 @@ class App:
         )
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
         self.timezone = self.get_timezone(self.tzinfo)
-        field_defs = fields.generate_field_defs(self.metadata)
-        self.field_defs = fields.set_field_def_views(field_defs, self.metadata)
+        self.field_defs = fields.field_defs_from_metadata(self.metadata)
         self.containers = utils.generate_containers(self.metadata)
         self.data = {}
         logging.debug(self)
@@ -161,8 +157,8 @@ class App:
 
         try:
             return matches[0]
-        except ValueError:
-            raise ValueError(
+        except IndexError:
+            raise IndexError(
                 f"Unknown container specified: {client_key}. Inspect App.containers for available containers."  # noqa
             )
 
@@ -228,7 +224,7 @@ class App:
                 api_key=self.api_key,
                 obj=container.obj,
                 scene=container.scene,
-                view=container.scene,
+                view=container.view,
                 filters=filters,
                 **request_kwargs,
             )
@@ -243,13 +239,13 @@ class App:
     def _find_field_def(self, client_key, obj):
         return [
             field_def
-            for key, field_def in self.field_defs.items()
+            for field_def in self.field_defs
             if client_key.lower() in [field_def.name.lower(), field_def.key]
-            and field_def.object == obj
+            and field_def.obj == obj
         ]
 
     def to_csv(self, client_key: str, *, out_dir: str = "_csv", delimiter=",") -> None:
-        """Write Knack records to CSV.
+        """Write formatted Knack records to CSV.
 
         Args:
             client_key (str): an object or view key or name string that exists in the

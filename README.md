@@ -1,21 +1,22 @@
-# Knackpy 
+# Knackpy
 
 ![Build](https://github.com/cityofaustin/knackpy/workflows/Build/badge.svg?branch=v1.0.0)
-![Coverage](https://raw.githubusercontent.com/cityofaustin/knackpy/v1.0.0/coverage.svg)
+![Coverage](https://raw.githubusercontent.com/cityofaustin/knackpy/dev/coverage.svg)
 ![Python](https://img.shields.io/badge/Python-v3.6+-blue)
 
-*Knackpy v1.0 is under development. Documented methods should work, but check the status badge ^^*
+_Knackpy v1.0 is under development. Documented methods should work, but check the status badge ^^_
 
 ## Installation
 
-Knackpy requires Python v3.6+
+Knackpy requires Python v3.6+. To use the development version Knackpy v1.0, install with:
+
 ```bash
-$ pip install knackpy
+$ pip install knackpy-dev
 ```
 
 ## Quick Start
 
-You can use `knackpy.get()` to fetch "raw" data from your Knack app. Be aware that raw Knack timestamps [are problematic](). 
+You can use `knackpy.get()` to fetch "raw" data from your Knack app. Be aware that raw Knack timestamps [are problematic]().
 
 ```python
 # This is equivalent to exporting records in JSON format from the Knack Builder
@@ -47,10 +48,10 @@ Container identifiers can be supplied as Knack keys (`object_1`, `view_1`) or na
 `App.get()` returns a generator function. You'll need to re-intialize it with `App.get(<container:str>)` each time you iterate on your records.
 
 ```python
->>> records = app.get("my_exciting_object") 
+>>> records = app.get("my_exciting_object")
 >>> records_formatted = [record.format() for record in records]
 # re-intialize the records generator
->>> records = app.get("my_exciting_object") 
+>>> records = app.get("my_exciting_object")
 # these records are raw, but the timestamps have been corrected
 >>> records_raw = [record.raw for record in records]
 ```
@@ -58,7 +59,7 @@ Container identifiers can be supplied as Knack keys (`object_1`, `view_1`) or na
 Once you've constructed an `App` instance, you can resuse it to fetch records from other objects and views. This cuts down on calls to Knack's metadata API.
 
 ```python
->>> app.get("my_exciting_object") 
+>>> app.get("my_exciting_object")
 >>> app.get("my_boring_object")
 >>> app.get("view_1")
 ```
@@ -66,7 +67,7 @@ Once you've constructed an `App` instance, you can resuse it to fetch records fr
 By default, an `App` instance will only fetch records for a container once. Use `refresh=True` to force a new fetch from the Knack API.
 
 ```python
->>> records = app.get("my_exciting_object", refresh=True) 
+>>> records = app.get("my_exciting_object", refresh=True)
 ```
 
 You can check the available data in your App instance like so:
@@ -89,6 +90,7 @@ References to all available data endpoints are stored at `App.containers`. This 
 ```
 
 You can cut down on API calls by providing your own Knack metadata when creating an `App` instance:
+
 ```python
 >>> import json
 # you can find your app's metadata at: https://loader.knack.com/v1/applications/<app_id:str>"
@@ -108,23 +110,52 @@ You can side-load record data into your your app as well. Note that you must ass
 
 ## What's New in v1.0
 
-* The `Knack` class is now `App`, and it's API is more intuitive.
-* Fetch records using object/view names
-* No more rows-per-page or page count limiting; just set a `record_limit`.
-* `App` summary stats:
+- The `Knack` class is now `App`, and it's API is more intuitive.
+- Fetch records using object/view names
+- No more rows-per-page or page count limiting; just set a `record_limit`.
+- `App` summary stats:
 
 ```python
 >>> app.info()
 {'objects': 10, 'scenes': 4, 'records': 6786, 'size': '25.47mb'}
 ```
 
-* Pythonic use of `exceptions`, `warnings`, and `logging`.
-* Automatic localization (no need to set TZ info)
-* "Raw" data is available with timestamp corrections
-* Reduce API calls with metadata and/or record side-loading
+- Pythonic use of `exceptions`, `warnings`, and `logging`.
+- Automatic localization (no need to set TZ info)
+- "Raw" data is available with timestamp corrections
+- Reduce API calls with metadata and/or record side-loading
+
 ```python
 >>> data = knackpy.get("my_app_id", api_key="myverysecretapikey", obj="object_3", record_limit=10)
 ```
-* Null values are consistently returned as `NoneType`s
-- `knackpy.record`: param `obj_key` >> `obj`.
-- the id key of a `record` create/update/detele object must be "id"
+
+- Null values are consistently returned as `NoneType`s
+
+* `knackpy.record`: param `obj_key` >> `obj`.
+* the id key of a `record` create/update/detele object must be "id"
+
+## Issues and Contributions
+
+Issues and pull requests are welcome. Know that your contributions are donated to the [public domain](https://github.com/cityofaustin/knackpy/blob/master/LICENSE.md).
+
+## Timestamps and Localization
+
+Although the Knack API returns timestamp values as Unix timestamps in millesconds these raw values represent millisecond timestamps _in your localized timezone_. For example a Knack timestamp value of `1578254700000` represents Sunday, January 5, 2020 8:05:00 PM _local time_.
+
+To address this, the `App` class handles the conversion of Knack timestamps into _real_ millisecond unix timestamps which are timezone naive. Timestamps are corrected by referencing the timezone info in your apps metadata. You can manually override your app's timezone information by passing an [IANA-compliant](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) timezone string to your `App` instance, like so:
+
+```python
+>>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey", tzinfo="US/Eastern")
+```
+
+If you'd like to access your raw, uncorrected records, they can be found at `app.data[<container_name:str>]`.
+
+Note also that `Record` objects return corrected timestamps via `Record.raw` and `Record.format()`. So,
+
+```python
+>>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey", tzinfo="US/Eastern")
+# yields raw records with corrected millisecond timestamps
+>>> records_raw = [record.raw for record in app.records("object_3")]
+# yields corrected timestamps as ISO-8601 strings
+>>> records_formatted = [record.format() for record in app.records("object_3")]
+```
