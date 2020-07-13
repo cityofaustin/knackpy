@@ -112,7 +112,7 @@ class Field(object):
         - field.value: the unformatted input value
         - field.key: the knack field key
         - field.name: the knack field name
-    
+
     And the method of interest here is .format(), which returns the humanized value.
 
     Args:

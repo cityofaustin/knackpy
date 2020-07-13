@@ -187,11 +187,11 @@ class Records:
             if self.container_key == field_def.obj
             or self.container_key in field_def.views
         ]
-    
+
     def __iter__(self):
         for record in self.data:
             yield Record(record, self.field_defs, self.identifier, self.timezone)
-    
+
     def records(self):
         for record in self.data:
             yield Record(record, self.field_defs, self.identifier, self.timezone)

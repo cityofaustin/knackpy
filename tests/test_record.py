@@ -34,10 +34,12 @@ def test_basic_constructor(app, records):
 def test_format_record(app, records):
     assert len([record.format() for record in records.records()]) == len(app.data[KEY])
 
+
 def test_names(records):
     record = next(records.records())
     field_names = record.names()
     assert len(field_names) > 0
+
 
 def test_keys(records):
     # this is a custom .keys() method; hence the test
@@ -45,10 +47,12 @@ def test_keys(records):
     keys = record.keys()
     assert len(keys) > 0
 
+
 def get_by_name(records):
     record = next(records.records())
     field_name = record.names()[0]
     assert record[field_name]
+
 
 def get_by_key(records):
     # this is a custom __getitem__; hence the test
