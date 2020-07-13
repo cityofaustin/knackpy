@@ -4,8 +4,8 @@ from . import utils, formatters
 
 def set_field_def_views(field_defs, metadata):
     """
-    Update FieldDef's `views` property to include a list of all view keys that use
-    this field.
+    Update FieldDef's `views` property to include a list of all view keys that use this
+    field.
     """
     for scene in metadata["scenes"]:
         for view in scene["views"]:
@@ -99,8 +99,30 @@ class FieldDef:
 
 
 class Field(object):
-    def __init__(self, key, value, field_def, timezone):
-        self.key = key
+    """A container for a single column of Knack data. This is the lowest-level
+    container in the API. The hieracrchy being: App > Records > Record > Field.
+    Typically you would not construct this class directly, but instead an App, which
+    will generate Fields via App.records().
+
+    More specifically, the API is designed so that you would typically interface with a
+    Field instance through the records.Record class. That class operates on Fields by
+    returning their values through Record[<field name>] or Record[<field key>].
+
+    But it's fine to work directly with fields:
+        - field.value: the unformatted input value
+        - field.key: the knack field key
+        - field.name: the knack field name
+    
+    And the method of interest here is .format(), which returns the humanized value.
+
+    Args:
+        field_def (knackpy.fields.FieldDef): A knackpy FieldDef class object
+        value (object): Anything, really.
+        timezone ([pytz.timezone]): A pytz timezone object.
+    """
+
+    def __init__(self, field_def: FieldDef, value: object, timezone):
+        self.key = field_def.key
         self.name = field_def.name
         self.value = value
         self.field_def = field_def
@@ -116,17 +138,15 @@ class Field(object):
     def format(self):
         """
         Knack applies it's own standard formatting to values, which are always
-        available at the non-raw key. Knack includes the raw key in the dict
-        when formatting is applied, allowing access to the unformatted data.
+        available at the non-raw key. Knack includes the raw key in the dict when
+        formatting is applied, allowing access to the unformatted data.
 
-        Generally, the Knack formatting, where it exists, is fine. However there
-        are cases where we want to apply our own formatters, such datestamps,
-        (where the formatted value does not include a timezone offset), or
-        address fields, where we want to parse out the lat/lon properties as
-        subfields.
+        Generally, the Knack formatting, where it exists, is fine. However there are
+        cases where we want to apply our own formatters, such datestamps, (where the
+        formatted value does not include a timezone offset).
 
-        And there are still more cases, where we want to apply additional
-        formatting to the knack-formatted value, e.g. Timers.
+        And there are other cases where we want to apply additional formatting to the
+        knack-formatted value, e.g. Timers.
 
         See also: models.py, formatters.py.
         """

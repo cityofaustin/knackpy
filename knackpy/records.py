@@ -107,7 +107,7 @@ class Record(MutableMapping):
                 if not field_def.use_knack_format and self.raw[key] is not None
                 else self.raw[key]
             )
-            field = _fields.Field(key, value, field_def, self.timezone)
+            field = _fields.Field(field_def, value, self.timezone)
             fields[field.key] = field
 
         return fields
@@ -187,7 +187,11 @@ class Records:
             if self.container_key == field_def.obj
             or self.container_key in field_def.views
         ]
-
+    
+    def __iter__(self):
+        for record in self.data:
+            yield Record(record, self.field_defs, self.identifier, self.timezone)
+    
     def records(self):
         for record in self.data:
             yield Record(record, self.field_defs, self.identifier, self.timezone)

@@ -15,20 +15,10 @@ def field_def_data():
 
 
 @pytest.fixture
-def record_data():
-    return {
-        "date_time": {
-            "am_pm": "PM",
-            "date": "09/11/2019",
-            "date_formatted": "09/11/2019",
-            "hours": "04",
-            "iso_timestamp": "2019-09-11T16:14:00.000Z",
-            "minutes": "14",
-            "time": 974,
-            "timestamp": "09/11/2019 04:14 pm",
-            "unix_timestamp": 1568218440000,
-        }
-    }
+def records(app):
+    return knackpy.records.Records(
+        "object_3", app.data[KEY], app.field_defs, app.timezone
+    )
 
 
 def drop_key_from_dict(d, key):
@@ -37,11 +27,11 @@ def drop_key_from_dict(d, key):
     return d
 
 
-def test_constructor_success(field_def_data):
+def test_fielddef_constructor_success(field_def_data):
     assert knackpy.fields.FieldDef(**field_def_data)
 
 
-def test_constructor_fail_missing_required(field_def_data):
+def test_fielddef_constructor_fail_missing_required(field_def_data):
     bad_data = drop_key_from_dict(field_def_data, "obj")
     with pytest.raises(KeyError):
         assert knackpy.fields.FieldDef(**bad_data)
