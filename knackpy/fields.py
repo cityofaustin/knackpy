@@ -2,14 +2,26 @@ from knackpy.models import FIELD_SETTINGS
 from . import utils, formatters
 
 
-def set_field_def_views(field_defs, metadata):
+def get_id_field_args():
+    """TODO
+    - id field is a global field def. weird, right?
+    - field_defs should be immutable for this reason
+    """
+    return {"key": "id", "name": "id", "type": "id", "obj": None}
+
+
+def set_field_def_views(key: str, scenes: list):
     """
     Update FieldDef's `views` property to include a list of all view keys that use this
     field.
+
+    TODO: make side effect of FieldDef...and document
     """
-    for scene in metadata["scenes"]:
+    views = []
+    for scene in scenes:
         for view in scene["views"]:
             if view["type"] == "table":
+
                 # must ignore "link" columns, etc
                 field_keys = [
                     column["field"]["key"]
@@ -17,49 +29,18 @@ def set_field_def_views(field_defs, metadata):
                     if column.get("field")
                 ]
 
-                for key in field_keys:
-                    field_defs[key].views.append(view["key"])
+                if key in field_keys:
+                    views.append(view["key"])
+
+                # associate the id field every view
+                elif key == "id":
+                    views.append(view["key"])
+
             else:
                 # todo: should we handle non-table views?
                 continue
 
-    return field_defs
-
-
-def field_defs_from_metadata(metadata: dict):
-    """Generate a list of FieldDef's from Knack metadata. Note the
-    "set_field_def_views()" side effect, which assigns to prop "views" a list of view
-    keys which use the field.
-
-    Args:
-        metadata (dict): Knack application metadata dict.
-
-    Returns:
-        list: A list of FieldDef instances.
-    """
-    field_defs = []
-
-    for obj in metadata["objects"]:
-        for field in obj["fields"]:
-            field["name"] = utils.valid_name(field["name"])
-            # the object is also available at field["object_key"], but
-            # this is not always available
-            field["obj"] = obj["key"]
-
-            try:
-                if field["key"] == obj["identifier"]:
-                    field["identifier"] = True
-                else:
-                    field["identifier"] = False
-
-            except KeyError:
-                # built-in "Accounts" does not have an identifier
-                # also identifier may only be present if set manually in the builder?
-                field["identifier"] = False
-
-            field_defs.append(FieldDef(**field))
-
-    return field_defs
+    return views
 
 
 class FieldDef:
@@ -96,6 +77,50 @@ class FieldDef:
             self.formatter = getattr(formatters, self.type)
         except AttributeError:
             self.formatter = getattr(formatters, "default")
+
+
+def field_defs_from_metadata(metadata: dict):
+    """Generate a list of FieldDef's from Knack metadata. Note the
+    "set_field_def_views()" side effect, which assigns to prop "views" a list of view
+    keys which use the field.
+
+    Args:
+        metadata (dict): Knack application metadata dict.
+
+    Returns:
+        list: A list of FieldDef instances.
+    """
+    field_defs = []
+
+    for obj in metadata["objects"]:
+        id_field_args = get_id_field_args()
+        id_field_args["obj"] = obj["key"]
+
+        field_defs.append(FieldDef(**id_field_args))
+
+        for field in obj["fields"]:
+            field["name"] = utils.valid_name(field["name"])
+            # the object is also available at field["object_key"], but
+            # this is not always available
+            field["obj"] = obj["key"]
+
+            try:
+                if field["key"] == obj["identifier"]:
+                    field["identifier"] = True
+                else:
+                    field["identifier"] = False
+
+            except KeyError:
+                # built-in "Accounts" does not have an identifier
+                # also identifier may only be present if set manually in the builder?
+                field["identifier"] = False
+
+            field_defs.append(FieldDef(**field))
+
+    for field_def in field_defs:
+        field_def.views = set_field_def_views(field_def.key, metadata["scenes"])
+
+    return field_defs
 
 
 class Field(object):

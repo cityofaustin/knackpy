@@ -174,9 +174,12 @@ class Records:
         self.timezone = timezone
         self.field_defs = self._filter_field_defs_by_container_key(field_defs)
         # find the identifier field
-        self.identifier = [
-            field_def.key for field_def in self.field_defs if field_def.identifier
-        ][0]
+        try:
+            self.identifier = [
+                field_def.key for field_def in self.field_defs if field_def.identifier
+            ][0]
+        except IndexError:
+            self.identifier = None
 
         return None
 
