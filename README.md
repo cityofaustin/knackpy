@@ -48,18 +48,18 @@ If you construct an `App` instance without also providing an API key, you will o
 Note that fetching data from public views is a smart way to avoid hitting your [API limit](https://www.knack.com/developer-documentation/#api-limits).
 
 ```python
-# Basic app construction with API key
+# basic app construction with api key
 >>> import knackpy
->>> app = knackpy.App(app_id="myappid", api_key="myverysecretapikey")
+>>> my_app = knackpy.App(app_id="myappid", api_key="myverysecretapikey")
 ```
 
 ### Accessing Records
 
-To fetch records, use the `.records(<container_name:str>)` method.
+To fetch records, use `App.records(<container_name:str>)`.
 
 ```python
 # fetch all records from object_1
->>> records = app.records("object_1")
+>>> records = my_app.records("object_1")
 ```
 
 Container identifiers can be supplied as an object or view key (`object_1`, `view_1`) or name (`my_exciting_object`, `My Exciting View`).
@@ -67,27 +67,26 @@ Container identifiers can be supplied as an object or view key (`object_1`, `vie
 Note that namespace conflicts are highly likely when fetching by name, because Knack uses object names as the default name for views. If you attempt to query your application by a name that exists as both an object and a view, Knackpy will raise a `ValueError`.
 
 ```python
-# fetch all records from object named "my_exciting_object"
->>> records = app.records("my_exciting_object")
+# fetch all records from view named "My Exciting View"
+>>> records = my_app.records("My Exciting View")
 ```
 
 `App.records()` returns a generator. You'll need to re-intialize it with `App.records(<container:str>)` each time you iterate on your records.
 
 ```python
->>> records = app.records("my_exciting_object")
->>> records_formatted = [record.format() for record in records]
+>>> records_formatted = [
+...    record.format() for record in my_app.record("my_exciting_object")
+... ]
 # re-intialize the records generator
->>> records = app.records("my_exciting_object")
-# these records are raw, but the timestamps have been corrected
->>> records_raw = [record.raw for record in records]
+>>> records_raw = [record.raw for record in my_app.records("my_exciting_object")]
 ```
 
 Once you've constructed an `App` instance, you can resuse it to fetch records from other objects and views. This cuts down on calls to Knack's metadata API.
 
 ```python
->>> app.records("my_exciting_object")
->>> app.records("my_boring_object")
->>> app.records("view_1")
+>>> my_app.records("my_exciting_object")
+>>> my_app.records("my_boring_object")
+>>> my_app.records("view_1")
 ```
 
 By default, an `App` instance will only fetch records for a container once. Use `refresh=True` to force a new fetch from the Knack API.
