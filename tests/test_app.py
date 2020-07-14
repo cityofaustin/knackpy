@@ -34,7 +34,9 @@ def app_data():
 def app_static(app_data):
     # app with side-loaded metadata and records
     knackpy_app = knackpy.app.App(
-        app_id=app_data["metadata"]["application"]["id"], metadata=app_data["metadata"]
+        app_id=app_data["metadata"]["application"]["id"],
+        api_key=API_KEY,
+        metadata=app_data["metadata"],
     )
     knackpy_app.data = {"object_3": app_data["data"]}
     return knackpy_app
@@ -59,12 +61,24 @@ def test_constructor_fail_missing_app_id(app_static):
         knackpy.app.App()
 
 
-def test_get_by_key_static(app_static):
+def test_object_get_by_key_static(app_static):
     assert isinstance(app_static.records("object_3"), types.GeneratorType)
 
 
-def test_get_by_key_live(app_live):
+def test_get_object_by_key_live(app_live):
     assert isinstance(app_live.records("object_3"), types.GeneratorType)
+
+
+def test_view_by_key_static(app_static):
+    assert isinstance(app_static.records("view_11"), types.GeneratorType)
+
+
+def test_get_view_by_key_live(app_live):
+    assert isinstance(app_live.records("view_11"), types.GeneratorType)
+
+
+def test_get_view_by_name(app_live):
+    assert isinstance(app_live.records("view_11"), types.GeneratorType)
 
 
 def test_get_by_key_refresh(app_live):
@@ -74,15 +88,27 @@ def test_get_by_key_refresh(app_live):
 
 
 def test_no_api_key_get(app_static):
-    # our static app has been constructed w/o an API key, so object-based requests
-    # should fail with an HTTPError
     with pytest.raises(requests.exceptions.HTTPError):
+        app_static.api_key = None
         app_static.records("object_3", refresh=True)
 
 
-def test_get_with_filters(app_live):
+def test_get_object_records_with_filters(app_live):
     records = app_live.records("object_3", filters=FILTERS)
     assert len([record for record in records]) == 1
+
+
+def test_get_view_records_with_filters(app_live):
+    records = app_live.records("view_11", filters=FILTERS)
+    assert len([record for record in records]) == 1
+
+
+def test_get_records_by_object_name(app_static):
+    assert app_static.records("orders")
+
+
+def test_get_records_by_view_name(app_static):
+    assert app_static.records("all fields")
 
 
 def test_get_by_dupe_name_fail(app_static):
