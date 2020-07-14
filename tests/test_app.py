@@ -111,6 +111,22 @@ def test_get_records_by_view_name(app_static):
     assert app_static.records("all fields")
 
 
+def test_no_key_or_name_param(app_static):
+    # the API allows you to use App.reords() (without any key or view name) if only
+    # one container has been retrieved. in this case, it's the sideloaded records in
+    # object_3.
+    assert app_static.records()
+
+def test_no_key_or_name_param_fail(app_static):
+    # the API allows you to use App.reords() (without any key or view name) if only
+    # one container has been retrieved. in this case, we side-load additional data
+    # such that the app is holding data for two containers, and so the user must
+    # specifiy the container name or key
+    data = app_static.data["object_3"]
+    app_static.data["fake_data_holder"] = data
+    with pytest.raises(TypeError):
+        assert app_static.records()
+
 def test_get_by_dupe_name_fail(app_static):
     # the "all_fields_test" container name exists in our app as both an object
     # and as a view. so trying to query by that name results in a KeyError.

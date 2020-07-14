@@ -142,24 +142,24 @@ class App:
             """
         )
 
-    def _find_container(self, client_key):
+    def _find_container(self, name_or_key):
 
         matches = [
             container
             for container in self.containers
-            if client_key in [container.obj, container.view, container.name]
+            if name_or_key in [container.obj, container.view, container.name]
         ]
 
         if len(matches) > 1:
             raise ValueError(
-                f"Multiple containers use name {client_key}. Try using a view or object key."  # noqa
+                f"Multiple containers use name {name_or_key}. Try using a view or object key."  # noqa
             )
 
         try:
             return matches[0]
         except IndexError:
             raise IndexError(
-                f"Unknown container specified: {client_key}. Inspect App.containers for available containers."  # noqa
+                f"Unknown container specified: {name_or_key}. Inspect App.containers for available containers."  # noqa
             )
 
     def _build_request_kwargs(
@@ -184,7 +184,7 @@ class App:
 
     def records(
         self,
-        client_key: str,
+        name_or_key: str = None,
         refresh: bool = False,
         record_limit: int = None,
         filters: typing.Union[dict, list] = None,
@@ -198,8 +198,9 @@ class App:
             `timtout` are set on App construction and persist in `App` state.
 
             Args:
-                client_key (str): an object or view key or name string that
-                    exists in the app.
+                name_or_key (str, optional*): an object or view key or name string that
+                    exists in the app. If None is provided and only one container has
+                    been fetched, will return records from that container.
                 refresh (bool, optional): Force the re-querying of data from Knack
                     API. Defaults to False.
                 record_limit (int): the maximum number of records to retrieve.
@@ -210,7 +211,12 @@ class App:
             Returns:
                 [generator]: A generator which yields Knack record data.
         """
-        container = self._find_container(client_key)
+        if not name_or_key and len(self.data) == 1:
+            name_or_key = list(self.data.keys())[0]
+        elif not name_or_key:
+            raise TypeError("Missing 1 required argument: name_or_key")
+
+        container = self._find_container(name_or_key)
 
         container_key = container.obj or container.view
 
@@ -236,19 +242,19 @@ class App:
             container_key, data, self.field_defs, self.timezone
         ).records()
 
-    def _find_field_def(self, client_key, obj):
+    def _find_field_def(self, name_or_key, obj):
         return [
             field_def
             for field_def in self.field_defs
-            if client_key.lower() in [field_def.name.lower(), field_def.key]
+            if name_or_key.lower() in [field_def.name.lower(), field_def.key]
             and field_def.obj == obj
         ]
 
-    def to_csv(self, client_key: str, *, out_dir: str = "_csv", delimiter=",") -> None:
+    def to_csv(self, name_or_key: str, *, out_dir: str = "_csv", delimiter=",") -> None:
         """Write formatted Knack records to CSV.
 
         Args:
-            client_key (str): an object or view key or name string that exists in the
+            name_or_key (str): an object or view key or name string that exists in the
                 app.
             out_dir (str, optional): Relative path to the directory to which files
                 will be written. Defaults to "_csv".
@@ -257,13 +263,13 @@ class App:
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        records = self.records(client_key)
+        records = self.records(name_or_key)
 
         csv_data = [record.format() for record in records]
 
         fieldnames = csv_data[0].keys()
 
-        fname = os.path.join(out_dir, f"{client_key}.csv")
+        fname = os.path.join(out_dir, f"{name_or_key}.csv")
 
         with open(fname, "w") as fout:
             writer = csv.DictWriter(fout, fieldnames=fieldnames, delimiter=delimiter)
