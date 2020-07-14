@@ -117,6 +117,7 @@ def test_no_key_or_name_param(app_static):
     # object_3.
     assert app_static.records()
 
+
 def test_no_key_or_name_param_fail(app_static):
     # the API allows you to use App.reords() (without any key or view name) if only
     # one container has been retrieved. in this case, we side-load additional data
@@ -126,6 +127,7 @@ def test_no_key_or_name_param_fail(app_static):
     app_static.data["fake_data_holder"] = data
     with pytest.raises(TypeError):
         assert app_static.records()
+
 
 def test_get_by_dupe_name_fail(app_static):
     # the "all_fields_test" container name exists in our app as both an object
