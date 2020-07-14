@@ -6,6 +6,20 @@
 
 _Knackpy v1.0 is under development. Documented methods should work, but check the status badge ^^_
 
+## Table of Contents
+
+- Installation
+- Quick Start
+- The `App` Class
+- Working with Records and Fields
+- CRUD Operations
+- File Uploads and Downloads
+- Advanced Methods
+- Timestamps and Localization
+- Logging and Exceptions
+- Migrating from Knackpy `v0.1`
+- Contributing
+
 ## Installation
 
 Knackpy requires Python v3.6+. To use the development version Knackpy v1.0, install with:
@@ -16,31 +30,44 @@ $ pip install knackpy-dev
 
 ## Quick Start
 
-You can use `knackpy.records()` to fetch "raw" data from your Knack app. Be aware that raw Knack timestamps [are problematic](#timestamps-and-localization).
-
 ```python
-# This is equivalent to exporting records in JSON format from the Knack Builder
 >>> import knackpy
->>> data = knackpy.records(
-...     app_id="myappid",
-...     api_key="myverysecretapikey",
-...     obj="object_1",
-...     record_limit=None,
-...     timeout=30
-... )
-```
-
-More likely, you'll want to use the `App` class to correct and format your data.
-
-```python
 >>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey")
 >>> records = app.records("object_1")
 >>> records_formatted = [record.format() for record in records]
 ```
 
-Container identifiers can be supplied as Knack keys (`object_1`, `view_1`) or names (`my_exciting_object`, `My Exciting View`)
+## The `App` Class
+
+The Knackpy API is designed around the `App()` class, which provides helpers for query and manipulating data from a Knack application.
+
+To create an `App` instance, the bare minimum you need to provide is your [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id). 
+
+If you construct an `App` instance without also providing an API key, you will only be able to fetch records from publicly-availble views.
+
+Note that fetching data from public views is a smart way to avoid hitting your [API limit](https://www.knack.com/developer-documentation/#api-limits).
 
 ```python
+# Basic app construction with API key
+>>> import knackpy
+>>> app = knackpy.App(app_id="myappid", api_key="myverysecretapikey")
+```
+
+### Accessing Records
+
+To fetch records, use the `.records(<container_name:str>)` method.
+
+```python
+# fetch all records from object_1
+>>> records = app.records("object_1")
+```
+
+Container identifiers can be supplied as an object or view key (`object_1`, `view_1`) or name (`my_exciting_object`, `My Exciting View`).
+
+Note that namespace conflicts are highly likely when fetching by name, because Knack uses object names as the default name for views. If you attempt to query your application by a name that exists as both an object and a view, Knackpy will raise a `ValueError`.
+
+```python
+# fetch all records from object named "my_exciting_object"
 >>> records = app.records("my_exciting_object")
 ```
 
@@ -87,6 +114,26 @@ References to all available endpoints are stored at `App.containers`. This is ha
     Container(obj=None, view='view_1', scene='scene_1', name='My Exciting View'),
 ]
 ```
+
+
+You can use `knackpy.records()` to fetch "raw" data from your Knack app. Be aware that raw Knack timestamps [are problematic](#timestamps-and-localization).
+
+
+## Advanced Methods
+
+```python
+# This is equivalent to exporting records in JSON format from the Knack Builder
+>>> import knackpy
+>>> data = knackpy.get(
+...     app_id="myappid",
+...     api_key="myverysecretapikey",
+...     obj="object_1",
+...     record_limit=None,
+...     timeout=30
+... )
+```
+
+
 
 You can cut down on API calls by providing your own Knack metadata when creating an `App` instance:
 
