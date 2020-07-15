@@ -22,7 +22,7 @@ class App:
 
         Args:
             app_id (str): Knack application ID string.
-            metadata (str, optional): [description]. Defaults to None.
+            metadata (dict, optional): [description]. Defaults to None.
             api_key (str, optional): [description]. Defaults to None.
             tzinfo (pytz.Timezone, optional): [description]. Defaults to None.
             max_attempts (int): the maximum number of attempts to make if a request
