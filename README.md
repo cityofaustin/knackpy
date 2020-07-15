@@ -37,9 +37,25 @@ $ pip install knackpy-dev
 >>> records_formatted = [record.format() for record in records]
 ```
 
-## The `App` Class
+## The `App` Class (`knackpy.App()`)
 
 The Knackpy API is designed around the `App()` class, which provides helpers for query and manipulating data from a Knack application.
+
+### Args:
+
+- `app_id` (`str`): Knack [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id) string.
+
+- `api_key` (`str`, optional, default=`None`): Knack [API key](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
+
+- `metadata` (`dict`, optional, default=`None`): The Knack app's metadata as a `dict`. If `None` it will be fetched on init. You can find your apps metadata at [here](https://loader.knack.com/v1/applications/5d79512148c4af00106d1507).
+
+- `tzinfo` (`pytz.Timezone`, optional): A [pytz.Timezone](https://pythonhosted.org/pytz/) object. Defaults to None. When None, is set automatically based on the app's `metadadata`.
+
+- `max_attempts` (`int`): The maximum number of attempts to make if a request times out. Default values that are set in `knackpy.api.request`.
+
+- `timeout` (`int`, optional, default=`30`): Number of seconds to wait before a Knack API request times out.
+
+### Usage
 
 To create an `App` instance, the bare minimum you need to provide is your [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
 
@@ -134,8 +150,8 @@ Write formatted Knack records to CSV. Be aware that destination will be overwrit
 Args:
 
 - `name_or_key` (`str`): an object or view key or name string that exists in the app.
-- `out_dir` (`str`, *optional*): Relative path to the directory to which files will be written. Defaults to "\_csv"
-- `delimiter` (`str`, *optional*): The delimiter characte(s). Defaults to comma (`,`).
+- `out_dir` (`str`, optional): Relative path to the directory to which files will be written. Defaults to "\_csv"
+- `delimiter` (`str`, optional): The delimiter characte(s). Defaults to comma (`,`).
 
 -
 
