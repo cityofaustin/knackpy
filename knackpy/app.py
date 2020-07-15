@@ -61,7 +61,7 @@ class App:
             else metadata["application"]
         )
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
-        self.timezone = self.get_timezone(self.tzinfo)
+        self.timezone = self._get_timezone(self.tzinfo)
         self.field_defs = fields.field_defs_from_metadata(self.metadata)
         self.containers = utils.generate_containers(self.metadata)
         self.data = {}
@@ -84,7 +84,7 @@ class App:
         }
 
     @staticmethod
-    def get_timezone(tzinfo):
+    def _get_timezone(tzinfo):
         # TODO: move to utils
         """
         Knack stores timezone information in the app metadata, but it does not
