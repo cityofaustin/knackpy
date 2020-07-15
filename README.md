@@ -44,7 +44,12 @@ $ pip install knackpy-dev
 
 ### `App`
 
-Knackpy is designed around the `App` class, which provides helpers for querying and manipulating Knack application data. `App` also takes care of [localization issues](#timestamps-and-localization), so you don't have to worry about them.
+Knackpy is designed around the `App` class. It provides helpers for querying and manipulating Knack application data. You should use the `App` class because:
+
+- It allows you to query obejcts and views by key or name
+- It takes care of [localization issues](#timestamps-and-localization)
+- It let's you download and upload files from your app.
+- It does other things, too
 
 ##### Args
 
@@ -132,18 +137,11 @@ Once you've constructed an `App` instance, you can resuse it to fetch records fr
 >>> my_app.records("view_1")
 ```
 
-By default, an `App` instance will only fetch records for a container once. Use `refresh=True` to force a new fetch from the Knack API.
-
-```python
->>> records = app.records("my_exciting_object", refresh=True)
-```
-
-You can check the readily available data in your App instance like so:
+Raw record data is available at `App.data`. You can also use this to cehck the readily available data in your App instance, like so:
 
 ```python
 >>> app.data.keys()
 ["object_1", "object_2", "view_1"]
->>> view_1_records = [record.format() for record in app.records("view_22")]
 ```
 
 References to all available endpoints are stored at `App.containers`. This is handy if you want to check the name of a container, or its key:
@@ -178,9 +176,6 @@ You can side-load record data into your your app as well. Note that you must ass
 
 You can use `knackpy.records()` to fetch "raw" data from your Knack app. Be aware that raw Knack timestamps [are problematic](#timestamps-and-localization). See the [Records](#records) documentation.
 
-
-### Other `App` Methods
-
 #### `App.info()`
 
 Display summary metrics about the app.
@@ -198,7 +193,7 @@ Write formatted Knack records to CSV. Be aware that destination will be overwrit
 
 - `name_or_key` (`str`): an object or view key or name string that exists in the app.
 - `out_dir` (`str`, optional): Relative path to the directory to which files will be written. Defaults to "\_csv"
-- `delimiter` (`str`, optional): The delimiter characte(s). Defaults to comma (`,`).
+- `delimiter` (`str`, optional): The delimiter string. Defaults to comma (`,`).
 
 -
 
