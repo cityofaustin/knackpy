@@ -41,7 +41,7 @@ $ pip install knackpy-dev
 
 The Knackpy API is designed around the `App()` class, which provides helpers for query and manipulating data from a Knack application.
 
-To create an `App` instance, the bare minimum you need to provide is your [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id). 
+To create an `App` instance, the bare minimum you need to provide is your [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
 
 If you construct an `App` instance without also providing an API key, you will only be able to fetch records from publicly-availble views.
 
@@ -114,9 +114,30 @@ References to all available endpoints are stored at `App.containers`. This is ha
 ]
 ```
 
-
 You can use `knackpy.records()` to fetch "raw" data from your Knack app. Be aware that raw Knack timestamps [are problematic](#timestamps-and-localization).
 
+### Other `App` Methods
+
+#### `App.info()`
+
+Display summary metrics about the app.
+
+```python
+>>> app.info()
+{'objects': 10, 'scenes': 4, 'records': 6786, 'size': '25.47mb'}
+```
+
+#### `App.to_csv()`
+
+Write formatted Knack records to CSV. Be aware that destination will be overwritten, if they exist.
+
+Args:
+
+- `name_or_key` (`str`): an object or view key or name string that exists in the app.
+- `out_dir` (`str`, *optional*): Relative path to the directory to which files will be written. Defaults to "\_csv"
+- `delimiter` (`str`, *optional*): The delimiter characte(s). Defaults to comma (`,`).
+
+-
 
 ## Advanced Methods
 
@@ -131,8 +152,6 @@ You can use `knackpy.records()` to fetch "raw" data from your Knack app. Be awar
 ...     timeout=30
 ... )
 ```
-
-
 
 You can cut down on API calls by providing your own Knack metadata when creating an `App` instance:
 
