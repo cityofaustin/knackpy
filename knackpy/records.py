@@ -61,14 +61,14 @@ class Record(MutableMapping):
         values to the record without issue, but some operations will fail after
         assignment of a non-Field value. e.g., .format() and dict().
 
-        All that to we set immutable = True after init, and attempts to assign
-        will raise a TypeError.
+        All that to say, we set immutable = True after init, and further attempts to
+        __setitem__ will raise a TypeError.
 
         Raises:
             TypeError: 'Record' object does not support item assignment.
         """
-        # if self.immutable and not force:
-        #     raise TypeError("'Record' object does not support item assignment")
+        if self.immutable:
+            raise TypeError("'Record' object does not support item assignment")
 
         self.fields[key] = value
 
@@ -174,9 +174,12 @@ class Records:
         self.timezone = timezone
         self.field_defs = self._filter_field_defs_by_container_key(field_defs)
         # find the identifier field
-        self.identifier = [
-            field_def.key for field_def in self.field_defs if field_def.identifier
-        ][0]
+        try:
+            self.identifier = [
+                field_def.key for field_def in self.field_defs if field_def.identifier
+            ][0]
+        except IndexError:
+            self.identifier = None
 
         return None
 
