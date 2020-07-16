@@ -336,7 +336,7 @@ class App(object):
             file_dict["filename"] = os.path.join(out_dir, filename)
 
             downloads.append(file_dict)
-        breakpoint()
+
         return downloads
 
     def _download_files(self, downloads: list):
