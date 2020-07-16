@@ -284,18 +284,43 @@ class App(object):
             writer.writerows(csv_data)
 
     def _assemble_downloads(
-        self, obj: str, field_key: str, label_keys: list, out_dir: str
+        self, identifier: str, field_key: str, label_keys: list, out_dir: str
     ):
+        """Extract file download paths and custom filenames/output paths.
+
+        Args:
+            identifier (str): The name or key of the object from which files will be
+                downloaded.
+           field_key (str): The knack field key to be downloaded (must be a "file" or
+            "image" field type)
+            label_keys (list, optional): A list of field keys whose *values* will be
+                prepended to the attachment filename, separated by an underscore.
+            out_dir (str, optional): Relative path to the directory to which files
+                will be written. Defaults to "_downloads".
+
+        Returns:
+            list: A list of dictionaries with file properties that will be passed to
+                the HTTP request. Dict's look like this:
+            {
+                "id": "5d7967132be2bb0010892ce7",
+                "application_id": "abc123xzy456",
+                "s3": true,
+                "type": "file",
+                "filename": "_data/my_file.pdf",
+                "url": "https://api.knack.com/v1/applications/abc123xzy456/download/asset/5d7967132be2bb0010892ce7/my_file.pdf",
+                "thumb_url": "",
+                "size": 305741,
+                "field_key": "field_17"
+            }
         """
-        Extract file data from knack records and filename/path.
-        """
+        # TODO: support
         downloads = []
 
         field_key_raw = f"{field_key}_raw"
 
         downloads = []
 
-        for record in self.records(obj):
+        for record in self.records(identifier):
             file_dict = record.raw.get(field_key_raw)
 
             if not file_dict:
@@ -312,7 +337,7 @@ class App(object):
             file_dict["filename"] = os.path.join(out_dir, filename)
 
             downloads.append(file_dict)
-
+        breakpoint()
         return downloads
 
     def _download_files(self, downloads: list):
@@ -335,7 +360,7 @@ class App(object):
 
     def download(
         self,
-        obj: str,
+        identifier: str,
         *,
         field: str,
         out_dir: str = "_downloads",
@@ -344,12 +369,14 @@ class App(object):
         """Download files and images from Knack records.
 
         Args:
-            obj (str): The name or key of the object from which files will be
+
+        Args:
+            identifier (str): The name or key of the object from which files will be
                 downloaded.
             out_dir (str, optional): Relative path to the directory to which files
                 will be written. Defaults to "_downloads".
-            field (str): The key or name of file or image field to be downloaded.
-            label_keys (list, optional): Any field keys specificed here will be
+            field (str): The Knack field key of the file or image field to be downloaded.
+            label_keys (list, optional): A list of field keys whose *values* will be
                 prepended to the attachment filename, separated by an underscore.
 
         Returns:
@@ -358,9 +385,9 @@ class App(object):
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        container = self._find_container(obj)
+        container = self._find_container(identifier)
 
-        field_defs = self._find_field_def(field, obj)
+        field_defs = self._find_field_def(field, identifier)
 
         if not field_defs:
             raise ValueError(f"Field not found: '{field}'")
