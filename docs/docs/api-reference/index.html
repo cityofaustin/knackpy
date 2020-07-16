@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en" dir=>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="knackpy #  knackpy.formatters #  default #  default(value: object) Formatter functions handle Knack values by returning a formatted (aka, humanized) value.
+The default() formatter handles any field type for which another formatter function has not been defined. It simply returns the input value without additional formatting.
+You&rsquo;ll notice that each formatter function&rsquo;s name matches its field type. If you want to write a custom formatter, do that.
+See also: knackpy.">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="API Reference" />
+<meta property="og:description" content="knackpy #  knackpy.formatters #  default #  default(value: object) Formatter functions handle Knack values by returning a formatted (aka, humanized) value.
+The default() formatter handles any field type for which another formatter function has not been defined. It simply returns the input value without additional formatting.
+You&rsquo;ll notice that each formatter function&rsquo;s name matches its field type. If you want to write a custom formatter, do that.
+See also: knackpy." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/docs/api-reference/" />
+
+<title>API Reference | Knackpy</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
+<script defer src="/en.search.min.83d5551ddd7ed647a6ebecbe40341509109cb89b5bc04f61423a1b4dc2b840b8.js" integrity="sha256-g9VVHd1&#43;1kem6&#43;y&#43;QDQVCRCcuJtbwE9hQjobTcK4QLg="></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body dir=>
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/"><span>Knackpy</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/docs/api-reference/" class="active">API Reference</a>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>API Reference</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#fielddef-objects">FieldDef Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#field-objects">Field Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#record-objects">Record Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#records-objects">Records Objects</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#app-objects">App Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="knackpy">
+  knackpy
+  <a class="anchor" href="#knackpy">#</a>
+</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="knackpyformatters">
+  knackpy.formatters
+  <a class="anchor" href="#knackpyformatters">#</a>
+</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="default">
+  default
+  <a class="anchor" href="#default">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">default(value: object)
+</code></pre></div><p>Formatter functions handle Knack values by returning a formatted
+(aka, humanized) value.</p>
+<p>The <code>default()</code> formatter handles any field type for which another formatter
+function has not been defined. It simply returns the input value without additional
+formatting.</p>
+<p>You&rsquo;ll notice that each formatter function&rsquo;s name matches its field type. If you
+want to write a custom formatter, do that.</p>
+<p>See also: knackpy.Fields</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="date_time">
+  date_time
+  <a class="anchor" href="#date_time">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">date_time(value, timezone<span style="color:#f92672">=</span>datetime<span style="color:#f92672">.</span>timezone<span style="color:#f92672">.</span>utc)
+</code></pre></div><p>Given a unix timestamp and a timezone, return the timestamp in ISO format in local
+time with TZ offset str.</p>
+<p>Expecting a Knack datetime field value like so:
+```
+&ldquo;date_time&rdquo;: {
+&ldquo;am_pm&rdquo;: &ldquo;PM&rdquo;,
+&ldquo;date&rdquo;: &ldquo;09/11/2019&rdquo;,
+&ldquo;date_formatted&rdquo;: &ldquo;09/11/2019&rdquo;,
+&ldquo;hours&rdquo;: &ldquo;04&rdquo;,
+&ldquo;iso_timestamp&rdquo;: &ldquo;2019-09-11T16:14:00.000Z&rdquo;,
+&ldquo;minutes&rdquo;: &ldquo;14&rdquo;,
+&ldquo;time&rdquo;: 974,
+&ldquo;timestamp&rdquo;: &ldquo;09/11/2019 04:14 pm&rdquo;,
+&ldquo;unix_timestamp&rdquo;: 1568218440000,
+}</p>
+<pre><code>
+&lt;a name=&quot;knackpy.formatters.connection&quot;&gt;&lt;/a&gt;
+#### connection
+
+```python
+connection(value)
+</code></pre><p>Return a string of comma-separated values</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="knackpymodels">
+  knackpy.models
+  <a class="anchor" href="#knackpymodels">#</a>
+</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="knackpyfields">
+  knackpy.fields
+  <a class="anchor" href="#knackpyfields">#</a>
+</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="get_id_field_args">
+  get_id_field_args
+  <a class="anchor" href="#get_id_field_args">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">get_id_field_args()
+</code></pre></div><p>TODO</p>
+<ul>
+<li>id field is a global field def. weird, right?</li>
+<li>field_defs should be immutable for this reason</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="set_field_def_views">
+  set_field_def_views
+  <a class="anchor" href="#set_field_def_views">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">set_field_def_views(key: str, scenes: list)
+</code></pre></div><p>Update FieldDef&rsquo;s <code>views</code> property to include a list of all view keys that use this
+field.</p>
+<p>TODO: make side effect of FieldDef&hellip;and document</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="fielddef-objects">
+  FieldDef Objects
+  <a class="anchor" href="#fielddef-objects">#</a>
+</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FieldDef</span>()
+</code></pre></div><p>Knack field defintion wrapper</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="field_defs_from_metadata">
+  field_defs_from_metadata
+  <a class="anchor" href="#field_defs_from_metadata">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">field_defs_from_metadata(metadata: dict)
+</code></pre></div><p>Generate a list of FieldDef&rsquo;s from Knack metadata. Note the
+&ldquo;set_field_def_views()&rdquo; side effect, which assigns to prop &ldquo;views&rdquo; a list of view
+keys which use the field.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>metadata</code> <em>dict</em> - Knack application metadata dict.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>list</code> - A list of FieldDef instances.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="field-objects">
+  Field Objects
+  <a class="anchor" href="#field-objects">#</a>
+</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Field</span>(object)
+</code></pre></div><p>A container for a single column of Knack data. This is the lowest-level
+container in the API. The hieracrchy being: App &gt; Records &gt; Record &gt; Field.
+Typically you would not construct this class directly, but instead an App, which
+will generate Fields via App.records().</p>
+<p>More specifically, the API is designed so that you would typically interface with a
+Field instance through the records.Record class. That class operates on Fields by
+returning their values through Record[<!-- raw HTML omitted -->] or Record[<!-- raw HTML omitted -->].</p>
+<p>But it&rsquo;s fine to work directly with fields:</p>
+<ul>
+<li>field.value: the unformatted input value</li>
+<li>field.key: the knack field key</li>
+<li>field.name: the knack field name</li>
+</ul>
+<p>And the method of interest here is .format(), which returns the humanized value.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>field_def</code> <em>knackpy.fields.FieldDef</em> - A knackpy FieldDef class object</li>
+<li><code>value</code> <em>object</em> - Anything, really.</li>
+<li><code>timezone</code> <em>[pytz.timezone]</em> - A pytz timezone object.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="format">
+  format
+  <a class="anchor" href="#format">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> format()
+</code></pre></div><p>Knack applies it&rsquo;s own standard formatting to values, which are always
+available at the non-raw key. Knack includes the raw key in the dict when
+formatting is applied, allowing access to the unformatted data.</p>
+<p>Generally, the Knack formatting, where it exists, is fine. However there are
+cases where we want to apply our own formatters, such datestamps, (where the
+formatted value does not include a timezone offset).</p>
+<p>And there are other cases where we want to apply additional formatting to the
+knack-formatted value, e.g. Timers.</p>
+<p>See also: models.py, formatters.py.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="knackpyrecords">
+  knackpy.records
+  <a class="anchor" href="#knackpyrecords">#</a>
+</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="record-objects">
+  Record Objects
+  <a class="anchor" href="#record-objects">#</a>
+</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Record</span>(MutableMapping)
+</code></pre></div><p>A dict-like object for storing record data.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="__getitem__">
+  __getitem__
+  <a class="anchor" href="#__getitem__">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> __getitem__(client_key)
+</code></pre></div><p>Return the field whose key or name matches the client-provided value.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>client_key</code> <em>str</em> - A field key (e.g., &ldquo;field_99&rdquo;) or field name.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>object</code> - The field&rsquo;s value (dict, list, str, int, whatever Knack has in
+store for you.)</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="__setitem__">
+  __setitem__
+  <a class="anchor" href="#__setitem__">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> __setitem__(key, value)
+</code></pre></div><p>Bad things will happen if you re-assign record values to anything other
+than a field class. This is not immediately obvious, because you can assign
+values to the record without issue, but some operations will fail after
+assignment of a non-Field value. e.g., .format() and dict().</p>
+<p>All that to say, we set immutable = True after init, and further attempts to
+<strong>setitem</strong> will raise a TypeError.</p>
+<p><strong>Raises</strong>:</p>
+<ul>
+<li><code>TypeError</code> - &lsquo;Record&rsquo; object does not support item assignment.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="format-1">
+  format
+  <a class="anchor" href="#format-1">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> format(format_keys: bool <span style="color:#f92672">=</span> True, format_values: bool <span style="color:#f92672">=</span> True)
+</code></pre></div><p>Returns the record as a dict.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>format_keys</code> <em>bool, optional</em> - Defaults to True.</li>
+<li><code>format_values</code> <em>bool, optional</em> - Defaults to True.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>dict</code> - A dict of the record values with</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="records-objects">
+  Records Objects
+  <a class="anchor" href="#records-objects">#</a>
+</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Records</span>()
+</code></pre></div><p>A wrapper for Knack record data. At initialization, the class is readied to
+yield records from Records.records().</p>
+<p>When Records.records() is called, a generator is returned. With each <code>yield</code>
+the generator handles the raw Knack record by updating any empty string
+values to NoneTypes, corrects Knack&rsquo;s &ldquo;local&rdquo; timestamps, and applies the
+client-specified formatting.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="knackpyapi">
+  knackpy.api
+  <a class="anchor" href="#knackpyapi">#</a>
+</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="get">
+  get
+  <a class="anchor" href="#get">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">get(<span style="color:#f92672">*</span>, app_id: str, api_key: str <span style="color:#f92672">=</span> None, obj: str <span style="color:#f92672">=</span> None, scene: str <span style="color:#f92672">=</span> None, view: str <span style="color:#f92672">=</span> None, record_limit: int <span style="color:#f92672">=</span> None, filters: dict <span style="color:#f92672">=</span> None, max_attempts: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>, timeout: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>) <span style="color:#f92672">-&gt;</span> [list, requests<span style="color:#f92672">.</span>Response]
+</code></pre></div><p>Get records from a knack object or view. This is the raw stuff with
+incorrect timestamps!</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>app_id</code> <em>str</em> - [description]</li>
+<li><code>api_key</code> <em>str, optional</em> - [description]. Defaults to None.</li>
+<li><code>obj</code> <em>str, optional</em> - [description]. Defaults to None.</li>
+<li><code>scene</code> <em>str, optional</em> - [description]. Defaults to None.</li>
+<li><code>view</code> <em>str, optional</em> - [description]. Defaults to None.</li>
+<li><code>max_attempts</code> <em>int, optional</em> - [description]. Defaults to 5.</li>
+<li><code>record_limit</code> <em>int, optional</em> - [description]. Defaults to None (which is
+handled as infinity).</li>
+<li><code>timeout</code> <em>int, optional</em> - [description]. Defaults to 30.</li>
+<li><code>filters</code> <em>[list, dict], optional</em> - Knack record filter dict or list. Defaults
+to None.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>list</code> - Knack records.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="get_metadata">
+  get_metadata
+  <a class="anchor" href="#get_metadata">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">get_metadata(<span style="color:#f92672">*</span>, app_id: str, timeout: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>) <span style="color:#f92672">-&gt;</span> dict
+</code></pre></div><p>Fetch Knack application metadata. You can find your app&rsquo;s metadata at:
+<code>https://{subdomain}.knack.com/v1/applications/&lt;app_id:str&gt;</code>.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>app_id</code> <em>str</em> - A Knack application ID.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>dict</code> - A dictionary of Knack application metadata.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="knackpyutils">
+  knackpy.utils
+  <a class="anchor" href="#knackpyutils">#</a>
+</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="generate_containers">
+  generate_containers
+  <a class="anchor" href="#generate_containers">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">generate_containers(metadata)
+</code></pre></div><p>Returns a dict of knack object keys, object names, view keys, and view names,
+that serves as lookup for finding Knack app record containers (objects
+or views) by name or key.</p>
+<p>Note that namespace conflicts are highlighly likely, especially with
+views, whose default name in Knack is their parent object!</p>
+<p>If an app has object names that conflict with view names, a <code>ValidationError</code>
+will raise when attempting to query data by that name.</p>
+<p>As such, the best practice is to use keys (object_xx or view_xx) as
+much as possible, especially when fetching data from views.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="correct_knack_timestamp">
+  correct_knack_timestamp
+  <a class="anchor" href="#correct_knack_timestamp">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">correct_knack_timestamp(mills_timestamp, timezone)
+</code></pre></div><p>You may be wondering why timezone settings are concern, given that
+Knackpy, like the Knack API, returns timestamp values as Unix timestamps in
+millesconds (thus, there is no timezone encoding at all). However, the Knack
+API confusingly returns millisecond timestamps in your localized timezone!</p>
+<p>For example, if you inspect a timezone value in Knack, e.g., 1578254700000,
+this value represents Sunday, January 5, 2020 8:05:00 PM <strong>local time</strong>.</p>
+<p>Args: mills_timestamp ([int]): the Knack &ldquo;local&rdquo; timestamp, in milliseonds
+timezone ([pytz.timezone]): pytz timezone object</p>
+<p>Returns: [int]: a real UTC timestamp</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="knackpyapp">
+  knackpy.app
+  <a class="anchor" href="#knackpyapp">#</a>
+</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="app-objects">
+  App Objects
+  <a class="anchor" href="#app-objects">#</a>
+</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">App</span>(object)
+</code></pre></div><p>Knackpy is designed around the <code>App</code> class. It provides helpers for querying
+and manipulating Knack application data. You should use the <code>App</code> class
+because:</p>
+<ul>
+<li>It allows you to query obejcts and views by key or name</li>
+<li>It takes care of <a href="%60timestamps%60-and-localization">localization issues</a></li>
+<li>It let&rsquo;s you download and upload files from your app.</li>
+<li>It does other things, too.</li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>app_id</code> <em>str</em> - Knack <a href="https://www.knack.com/developer-documentation/%60find%60-your-api-key-amp-application-id">application ID</a>  # noqa:E501
+string.</li>
+<li><code>api_key</code> <em>str, optional, default=<code>None</code></em> - <a href="https://www.knack.com/developer-documentation/%60find%60-your-api-key-amp-application-id">Knack API key</a>.</li>
+<li><code>metadata</code> <em>dict, optional</em> - The Knack app&rsquo;s metadata as a <code>dict</code>. If <code>None</code>
+it will be fetched on init. You can find your apps metadata
+<a href="https://loader.knack.com/v1/applications/5d79512148c4af00106d1507">here</a>.</li>
+<li><code>tzinfo</code> <em><code>pytz.Timezone</code>, optional</em> - [description].  A
+<a href="https://pythonhosted.org/pytz/">pytz.Timezone</a> object. When <code>None</code>, is set
+automatically based on the app&rsquo;s <code>metadadata</code>.</li>
+<li><code>max_attempts</code> <em>int</em> - The maximum number of attempts to make if a request times
+out. Default values that are set in <code>knackpy.api.request</code>.</li>
+<li><code>timeout</code> <em>int, optional</em> - Number of seconds to wait before a Knack API request
+times out. Further reading:
+<a href="https://requests.readthedocs.io/en/master/user/quickstart/">Requests docs</a>.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="records">
+  records
+  <a class="anchor" href="#records">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> records(identifier: str <span style="color:#f92672">=</span> None, refresh: bool <span style="color:#f92672">=</span> False, record_limit: int <span style="color:#f92672">=</span> None, filters: typing<span style="color:#f92672">.</span>Union[dict, list] <span style="color:#f92672">=</span> None)
+</code></pre></div><p>Get records from a knack object or view. Supported kwargs are record_limit
+(type: int), max_attempts (type: int), and filters (type: dict).</p>
+<p>Note that we accept the request params <code>record_limit</code> and <code>filters</code> here
+because the user would presumably want to set these on a per-object/view
+basis. They are not stored in state. Whereas <code>max_attempts</code> and
+<code>timtout</code> are set on App construction and persist in <code>App</code> state.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>identifier</code> _str, optional*_ - an object or view key or name string that
+exists in the app. If None is provided and only one container has
+been fetched, will return records from that container.</li>
+<li><code>refresh</code> <em>bool, optional</em> - Force the re-querying of data from Knack
+API. Defaults to False.</li>
+<li><code>record_limit</code> <em>int</em> - the maximum number of records to retrieve.
+Default value is set in <code>knackpy.api.request</code>.</li>
+<li><code>filters</code> <em>dict or list, optional</em> - A dict or of Knack API filiters.</li>
+<li><code>See</code> - <a href="https://www.knack.com/developer-documentation/%60filters%60">https://www.knack.com/developer-documentation/`filters`</a>.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>[generator]</code> - A generator which yields Knack record data.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="to_csv">
+  to_csv
+  <a class="anchor" href="#to_csv">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> to_csv(identifier: str, <span style="color:#f92672">*</span>, out_dir: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;_csv&#34;</span>, delimiter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;,&#34;</span>) <span style="color:#f92672">-&gt;</span> None
+</code></pre></div><p>Write formatted Knack records to CSV.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>identifier</code> <em>str</em> - an object or view key or name string that exists in the
+app.</li>
+<li><code>out_dir</code> <em>str, optional</em> - Relative path to the directory to which files
+will be written. Defaults to &ldquo;_csv&rdquo;.</li>
+<li><code>delimiter</code> <em>str, optional</em> - [description]. Defaults to &ldquo;,&rdquo;.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="download">
+  download
+  <a class="anchor" href="#download">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> download(identifier: str, <span style="color:#f92672">*</span>, field: str, out_dir: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;_downloads&#34;</span>, label_keys: list <span style="color:#f92672">=</span> None)
+</code></pre></div><p>Download files and images from Knack records.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>identifier</code> <em>str</em> - The name or key of the object from which files will be
+downloaded.</li>
+<li><code>out_dir</code> <em>str, optional</em> - Relative path to the directory to which files
+will be written. Defaults to &ldquo;_downloads&rdquo;.</li>
+<li><code>field</code> <em>str</em> - The Knack field key of the file or image field to be
+downloaded.</li>
+<li><code>label_keys</code> <em>list, optional</em> - A list of field keys whose <em>values</em> will be
+prepended to the attachment filename, separated by an underscore.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>[int]</code> - Count of files downloaded.</li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#fielddef-objects">FieldDef Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#field-objects">Field Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#record-objects">Record Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#records-objects">Records Objects</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#app-objects">App Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
