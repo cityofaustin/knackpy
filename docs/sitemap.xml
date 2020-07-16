@@ -3,23 +3,23 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/docs/api-reference/</loc>
+    <loc>https://cityofaustin.github.io/knackpy/docs/api-reference/</loc>
   </url>
   
   <url>
-    <loc>/categories/</loc>
+    <loc>https://cityofaustin.github.io/knackpy/categories/</loc>
   </url>
   
   <url>
-    <loc>/docs/</loc>
+    <loc>https://cityofaustin.github.io/knackpy/docs/</loc>
   </url>
   
   <url>
-    <loc>/</loc>
+    <loc>https://cityofaustin.github.io/knackpy/</loc>
   </url>
   
   <url>
-    <loc>/tags/</loc>
+    <loc>https://cityofaustin.github.io/knackpy/tags/</loc>
   </url>
   
 </urlset>
