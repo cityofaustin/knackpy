@@ -23,8 +23,9 @@ class App(object):
     - It does other things, too.
 
     Args:
-        app_id (str): Knack [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id)
-            string. api_key (str, optional, default=`None`): [Knack API key](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
+        app_id (str): Knack [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id)  # noqa:E501
+            string.
+        api_key (str, optional, default=`None`): [Knack API key](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
         metadata (dict, optional): The Knack app's metadata as a `dict`. If `None`
             it will be fetched on init. You can find your apps metadata
             [here](https://loader.knack.com/v1/applications/5d79512148c4af00106d1507).
@@ -169,11 +170,9 @@ class App(object):
             )
 
     def _build_request_kwargs(self, **kwargs) -> dict:
-        """
-        Compile the keyword arguments to be passed to `knackpy.api`. We drop params
+        """Compile the keyword arguments to be passed to `knackpy.api`. We drop params
         that are NoneType because we don't want to override the default values for
         these params that are define in the api methods.
-        max_attempts: int, timeout: int, record_limit: int
 
         Args:
             record_limit (int): the maximum number of records to retrieve.
@@ -181,7 +180,7 @@ class App(object):
                 times out.
             timeout (int, optional): Number of seconds to wait before a Knack API
                 request times out. Further reading:
-                [Requests docs](https://requests.readthedocs.io/en/master/user/quickstart/).
+                [Requests docs](https://requests.readthedocs.io/en/master/user/quickstart/).  # noqa:E501
         """
         supported_kwargs = ["record_limit", "max_attempts", "timeout"]
 
@@ -307,7 +306,7 @@ class App(object):
                 "s3": true,
                 "type": "file",
                 "filename": "_data/my_file.pdf",
-                "url": "https://api.knack.com/v1/applications/abc123xzy456/download/asset/5d7967132be2bb0010892ce7/my_file.pdf",
+                "url": "https://api.knack.com/v1/applications/abc123xzy456/download/asset/5d7967132be2bb0010892ce7/my_file.pdf",   # noqa:E501
                 "thumb_url": "",
                 "size": 305741,
                 "field_key": "field_17"
@@ -341,6 +340,28 @@ class App(object):
         return downloads
 
     def _download_files(self, downloads: list):
+        """Download files from Knack and write them locally.
+
+        Args:
+            downloads (list): A list of dictionaries with file properties that will be
+            passed to the HTTP request. Dict's look like this:
+
+            {
+                "id": "5d7967132be2bb0010892ce7",
+                "application_id": "abc123xzy456",
+                "s3": true,
+                "type": "file",
+                "filename": "_data/my_file.pdf",
+                "url": "https://api.knack.com/v1/applications/abc123xzy456/download/asset/5d7967132be2bb0010892ce7/my_file.pdf",  # noqa:E501
+                "thumb_url": "",
+                "size": 305741,
+                "field_key": "field_17"
+            }
+
+        Returns:
+            int: A count of the number of files downloaded.
+
+        """
         count = 0
 
         for file_info in downloads:
@@ -369,13 +390,12 @@ class App(object):
         """Download files and images from Knack records.
 
         Args:
-
-        Args:
             identifier (str): The name or key of the object from which files will be
                 downloaded.
             out_dir (str, optional): Relative path to the directory to which files
                 will be written. Defaults to "_downloads".
-            field (str): The Knack field key of the file or image field to be downloaded.
+            field (str): The Knack field key of the file or image field to be
+                downloaded.
             label_keys (list, optional): A list of field keys whose *values* will be
                 prepended to the attachment filename, separated by an underscore.
 
