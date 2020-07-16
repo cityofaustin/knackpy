@@ -1,25 +1,18 @@
 import datetime
 
 
-def default(value):
-    """ Handles types:
-    - address x
-    - auto_increment
-    - average
-    - boolean
-    - concatenation
-    - count
-    - currency
-    - id  x
-    - multiple_choice  x
-    - name  x
-    - number
-    - password
-    - rating
-    - rich_text
-    - short_text  x
-    - sum
-    - user_roles
+def default(value: object):
+    """Formatter functions handle Knack values by returning a formatted
+    (aka, humanized) value.
+
+    The `default()` formatter handles any field type for which another formatter
+    function has not been defined. It simply returns the input value without additional
+    formatting.
+
+    You'll notice that each formatter function's name matches its field type. If you
+    want to write a custom formatter, do that.
+
+    See also: knackpy.Fields
     """
     return value
 
