@@ -12,25 +12,31 @@ from . import api, fields, records, utils
 from .models import TIMEZONES
 
 
-class App:
-    """Knack application wrapper. This thing does it all, folks!
+class App(object):
+    """Knackpy is designed around the `App` class. It provides helpers for querying
+    and manipulating Knack application data. You should use the `App` class
+    because:
 
-    Note that requet params `timeout` and `max_attempts` are defined here at
-    construction, while `record_limit` and `filters` are defined in `App.records()`.
-    The thinking being that the user will want to specifiy these params differently
-    based on the container being queried.
+    - It allows you to query obejcts and views by key or name
+    - It takes care of [localization issues](#timestamps-and-localization)
+    - It let's you download and upload files from your app.
+    - It does other things, too.
 
-        Args:
-            app_id (str): Knack application ID string.
-            metadata (dict, optional): [description]. Defaults to None.
-            api_key (str, optional): [description]. Defaults to None.
-            tzinfo (pytz.Timezone, optional): [description]. Defaults to None.
-            max_attempts (int): the maximum number of attempts to make if a request
-                times out. Default values that are set in `knackpy.api.request`.
-            timeout (int, optional): Number of seconds to wait before a Knack API
-                request times out. Default values that are set in
-                `knackpy.api.request`.
-        """
+    Args:
+        app_id (str): Knack [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id)
+            string. api_key (str, optional, default=`None`): [Knack API key](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
+        metadata (dict, optional): The Knack app's metadata as a `dict`. If `None`
+            it will be fetched on init. You can find your apps metadata
+            [here](https://loader.knack.com/v1/applications/5d79512148c4af00106d1507).
+        tzinfo (`pytz.Timezone`, optional): [description].  A
+            [pytz.Timezone](https://pythonhosted.org/pytz/) object. When `None`, is set
+            automatically based on the app's `metadadata`.
+        max_attempts (int): The maximum number of attempts to make if a request times
+            out. Default values that are set in `knackpy.api.request`.
+        timeout (int, optional): Number of seconds to wait before a Knack API request
+            times out. Further reading:
+            [Requests docs](https://requests.readthedocs.io/en/master/user/quickstart/).
+    """
 
     def __repr__(self):
         return f"""<App [{self.metadata["name"]}]>"""
@@ -84,9 +90,10 @@ class App:
         }
 
     @staticmethod
-    def _get_timezone(tzinfo):
+    def _get_timezone(tzinfo: str):
         # TODO: move to utils
-        """
+        """Create a pytz.Timezone instance from a timezone string.
+
         Knack stores timezone information in the app metadata, but it does not
         use IANA timezone database names. Instead it uses common names e.g.,
         "Eastern Time (US & Canada)" instead of "US/Eastern".
@@ -142,49 +149,47 @@ class App:
             """
         )
 
-    def _find_container(self, name_or_key):
-
+    def _find_container(self, identifier: str):
         matches = [
             container
             for container in self.containers
-            if name_or_key in [container.obj, container.view, container.name]
+            if identifier in [container.obj, container.view, container.name]
         ]
 
         if len(matches) > 1:
             raise ValueError(
-                f"Multiple containers use name {name_or_key}. Try using a view or object key."  # noqa
+                f"Multiple containers use name {identifier}. Try using a view or object key."  # noqa
             )
 
         try:
             return matches[0]
         except IndexError:
             raise IndexError(
-                f"Unknown container specified: {name_or_key}. Inspect App.containers for available containers."  # noqa
+                f"Unknown container specified: {identifier}. Inspect App.containers for available containers."  # noqa
             )
 
-    def _build_request_kwargs(
-        self, max_attempts: int, timeout: int, record_limit: int
-    ) -> dict:
+    def _build_request_kwargs(self, **kwargs) -> dict:
         """
         Compile the keyword arguments to be passed to `knackpy.api`. We drop params
         that are NoneType because we don't want to override the default values for
         these params that are define in the api methods.
+        max_attempts: int, timeout: int, record_limit: int
 
-        TODO: a more pythonic approach would be...?
+        Args:
+            record_limit (int): the maximum number of records to retrieve.
+            max_attempts (int): The maximum number of attempts to make if a request
+                times out.
+            timeout (int, optional): Number of seconds to wait before a Knack API
+                request times out. Further reading:
+                [Requests docs](https://requests.readthedocs.io/en/master/user/quickstart/).
         """
-        request_kwargs = {}
-        if record_limit:
-            request_kwargs["record_limit"] = record_limit
-        if max_attempts:
-            request_kwargs["max_attempts"] = max_attempts
-        if timeout:
-            request_kwargs["timeout"] = timeout
+        supported_kwargs = ["record_limit", "max_attempts", "timeout"]
 
-        return request_kwargs
+        return {key: kwargs[key] for key in supported_kwargs if kwargs.get(key)}
 
     def records(
         self,
-        name_or_key: str = None,
+        identifier: str = None,
         refresh: bool = False,
         record_limit: int = None,
         filters: typing.Union[dict, list] = None,
@@ -198,7 +203,7 @@ class App:
             `timtout` are set on App construction and persist in `App` state.
 
             Args:
-                name_or_key (str, optional*): an object or view key or name string that
+                identifier (str, optional*): an object or view key or name string that
                     exists in the app. If None is provided and only one container has
                     been fetched, will return records from that container.
                 refresh (bool, optional): Force the re-querying of data from Knack
@@ -211,18 +216,20 @@ class App:
             Returns:
                 [generator]: A generator which yields Knack record data.
         """
-        if not name_or_key and len(self.data) == 1:
-            name_or_key = list(self.data.keys())[0]
-        elif not name_or_key:
-            raise TypeError("Missing 1 required argument: name_or_key")
+        if not identifier and len(self.data) == 1:
+            identifier = list(self.data.keys())[0]
+        elif not identifier:
+            raise TypeError("Missing 1 required argument: identifier")
 
-        container = self._find_container(name_or_key)
+        container = self._find_container(identifier)
 
         container_key = container.obj or container.view
 
         if not self.data.get(container_key) or refresh:
             request_kwargs = self._build_request_kwargs(
-                self.max_attempts, self.timeout, record_limit
+                max_attempts=self.max_attempts,
+                timeout=self.timeout,
+                record_limit=record_limit,
             )
 
             self.data[container_key] = api.get(
@@ -242,19 +249,19 @@ class App:
             container_key, data, self.field_defs, self.timezone
         ).records()
 
-    def _find_field_def(self, name_or_key, obj):
+    def _find_field_def(self, identifier, obj):
         return [
             field_def
             for field_def in self.field_defs
-            if name_or_key.lower() in [field_def.name.lower(), field_def.key]
+            if identifier.lower() in [field_def.name.lower(), field_def.key]
             and field_def.obj == obj
         ]
 
-    def to_csv(self, name_or_key: str, *, out_dir: str = "_csv", delimiter=",") -> None:
+    def to_csv(self, identifier: str, *, out_dir: str = "_csv", delimiter=",") -> None:
         """Write formatted Knack records to CSV.
 
         Args:
-            name_or_key (str): an object or view key or name string that exists in the
+            identifier (str): an object or view key or name string that exists in the
                 app.
             out_dir (str, optional): Relative path to the directory to which files
                 will be written. Defaults to "_csv".
@@ -263,13 +270,13 @@ class App:
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        records = self.records(name_or_key)
+        records = self.records(identifier)
 
         csv_data = [record.format() for record in records]
 
         fieldnames = csv_data[0].keys()
 
-        fname = os.path.join(out_dir, f"{name_or_key}.csv")
+        fname = os.path.join(out_dir, f"{identifier}.csv")
 
         with open(fname, "w") as fout:
             writer = csv.DictWriter(fout, fieldnames=fieldnames, delimiter=delimiter)
