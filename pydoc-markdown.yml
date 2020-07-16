@@ -1,0 +1,22 @@
+loaders:
+  - type: python
+processors:
+  - type: filter
+  - type: smart
+  - type: crossref
+renderer:
+  type: hugo
+  config:
+    title: Knackpy
+    theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
+  # The "book" theme only renders pages in "content/docs" into the nav.
+  content_directory: content/docs
+  default_preamble: {menu: main}
+  pages:
+    - title: Index
+      name: index
+      source: README.md
+      directory: '..'  # Put it directly into the content directory.
+    - title: API Reference
+      contents:
+        - '*'
