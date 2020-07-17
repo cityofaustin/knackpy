@@ -1,12 +1,21 @@
+from _io import BufferedReader
 import json
 import logging
 import math
+import random
+import time
 import typing
 import warnings
 
 import requests
 
 from .models import MAX_ROWS_PER_PAGE
+
+
+def _random_pause(min_wait_seconds=0.5, max_wait_seconds=3):
+    """pause for min_wait_seconds up to max_wait_seconds"""
+    seconds = random.randrange(0.5, max_wait_seconds, 0.5)
+    time.sleep(seconds)
 
 
 def _url(*, route: str, slug: str = None) -> str:
@@ -93,9 +102,12 @@ def _request(
     timeout: int = 30,
     params: dict = None,
     data: dict = None,
+    files: BufferedReader = None,
 ) -> requests.Response:
     session = requests.Session()
-    req = requests.Request(method, url, headers=headers, params=params, json=data)
+    req = requests.Request(
+        method, url, headers=headers, params=params, json=data, files=files
+    )
     prepped = req.prepare()
     res = session.send(prepped, timeout=timeout)
     res.raise_for_status()
@@ -152,6 +164,7 @@ def _get_paginated_records(
                 )
                 if attempts < max_attempts:
                     attempts += 1
+                    _random_pause()
                     continue
                 else:
                     raise e
@@ -303,20 +316,33 @@ def upload(
     app_id: str,
     api_key: str,
     obj: str,
+    field: str,
     path: str,
+    asset_type: str,
+    record_id: str = None,
     slug: str = None,
     max_attempts: int = 5,
     timeout: int = 30,
 ):
-    """[summary]
+    """Upload a file or image to Knack. This is a two-step process:
 
-    Args:
+    1) Upload file asset to Knack storage
+    2) Create/update a record that links to the file in storage
+
+    Knack docs: https://www.knack.com/developer-documentation/#file-image-uploads
+
     Args:
         app_id (str): Knack [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id)  # noqa:E501
             string.
         api_key (str): [Knack API key](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
-        path: (str): The path to the file to be uploaded.
         obj (str): The Knack object key which holds the record data.
+        field (str): The knack field key of the field you're uploading into.
+        path: (str): The path to the file to be uploaded.
+        asset_type (str): The type of Knack field you're uploading to. Must be `file` or
+            `image`.
+        record_id (str, optional): The knack record ID to which the upload will be
+            attached. If `None`, will create a new record. Otherwise will update an
+            existing record.
         slug (str, optional): Your organization's slug (aka, subdomain). As found in
             your app metadata under accounts/slug.
         max_attempts (int): The maximum number of attempts to make if a request times
@@ -325,4 +351,19 @@ def upload(
             times out. Further reading:
             [Requests docs](https://requests.readthedocs.io/en/master/user/quickstart/).
     """
-    pass
+    headers = _headers(app_id, api_key)
+    route = _route(app_id=app_id, asset_type=asset_type)
+    url = _url(route=route, slug=slug)
+    method = "create" if not record_id else "update"
+
+    with open(path, "rb") as file:
+        files = {"files": file}
+        res = _request(method="POST", url=url, headers=headers, files=files)
+
+    file_id = res.json()["id"]
+
+    data = {f"{field}": f"{file_id}", "id": record_id}
+
+    return record(
+        app_id=app_id, api_key=api_key, method=method, data=data, slug=slug, obj=obj
+    )
