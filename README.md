@@ -28,6 +28,8 @@ $ pip install knackpy-dev
 >>> records_formatted = [record.format() for record in records]
 # access a record property by name
 >>> customer_address =  records[0]["Customer Address"]
+# create a record
+>>> knackpy.record()
 ```
 
 ## Working with Apps
