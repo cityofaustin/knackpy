@@ -1,0 +1,6 @@
+[pytest]
+env =
+    KNACK_APP_ID=abc123
+    KNACK_API_KEY=abc-123-xyz-456
+testpaths =
+    tests

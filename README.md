@@ -18,17 +18,18 @@ $ pip install knackpy-dev
 
 ## Quick Start
 
-
 ```python
 >>> import knackpy
+# basic app construction
 >>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey")
->>> records = my_app.records("object_1")
-```
-
-```python
->>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey")
->>> records = my_app.records("object_1")
+# fetch all records from 'object_1'
+>>> records = [record for record in app.records("object_1")]
+# get the formatted keys/values of each record
 >>> records_formatted = [record.format() for record in records]
+# access a record property by name
+>>> customer_address =  records[0]["Customer Address"]
+# create a record
+>>> knackpy.record()
 ```
 
 ## Working with Apps
@@ -51,37 +52,40 @@ Note that fetching data from public views is a smart way to avoid hitting your [
 ```python
 # basic app construction with api key
 >>> import knackpy
->>> my_app = knackpy.App(app_id="myappid", api_key="myverysecretapikey")
+>>> app = knackpy.App(app_id="myappid", api_key="myverysecretapikey")
 ```
 
 ### Getting Records
 
-Use `App.records()` to fetch records from a Knack application. To get records, you just need to proivde a container name or key. Container identifiers can be supplied as a key (`object_1`, `view_1`) or a name (`my_exciting_object`, `My Exciting View`).
+Use `App.records()` to fetch records from a Knack application. Container identifiers can be supplied as a key (`object_1`, `view_1`) or a name (`my_exciting_object`, `My Exciting View`).
 
 ```python
 # fetch all records from object_1
->>> records = my_app.records("object_1")
+>>> records = app.records("object_1")
 # or
 # fetch all records from view named "My Exciting View"
->>> records = my_app.records("My Exciting View")
+>>> records = app.records("My Exciting View")
 ```
 
+{{< hint danger >}}
+#### Be Careful When Using Named References
 Namespace conflicts are highly likely when fetching by name, because Knack uses object names as the default name for views. If you attempt to query your application by a name that exists as both an object and a view, Knackpy will raise a `ValueError`.
+{{< /hint >}}
 
 You can resuse the same `App` instance to fetch records from other objects and views.
 
 ```python
->>> my_app.records("my_exciting_object")
->>> my_app.records("my_boring_object")
->>> my_app.records("view_1")
+>>> app.records("my_exciting_object")
+>>> app.records("my_boring_object")
+>>> app.records("view_1")
 ```
 
 If you've only fetched one container, you can omit the container name when accessing your records. This is helpful during development, but for readability we suggest you avoid this practice in production code.
 
 ```python
->>> records = [record for record in my_app.records("My Exciting View")]
+>>> records = [record for record in app.records("My Exciting View")]
 # you can omit the container name if you want to access your records again
->>> same_records_without_accessor = [record for record in my_app.records()]
+>>> same_records_without_accessor = [record for record in app.records()]
 ```
 
 You can refine your record requests by specifify a `record_limit`, `filters`, and `timeout`. See the [module documentaiton]() for details.
@@ -94,7 +98,7 @@ You can refine your record requests by specifify a `record_limit`, `filters`, an
         {"field": "field_2", "operator": "is", "value": "Pizza"},
     ],
 }
->>> records = my_app.records("object_1", record_limit=10, filters=filters)
+>>> records = app.records("object_1", record_limit=10, filters=filters)
 ```
 
 ### Advanced `App.records()` Usage
@@ -102,14 +106,14 @@ You can refine your record requests by specifify a `record_limit`, `filters`, an
 Raw record data is available at `App.data`. You can use this property to check the readily available data in your App instance.
 
 ```python
->>> my_app.data.keys()
+>>> app.data.keys()
 ["object_1", "object_2", "view_1"]
 ```
 
 References to all available endpoints are stored at `App.containers`. This is handy if you want to check the name of a container, or its key:
 
 ```python
->>> my_app.containers
+>>> app.containers
 [
     Container(obj='object_1', view=None, scene=None, name='my_boring_object'),
     Container(obj='object_2', view=None, scene=None, name='my_exciting_object'),
@@ -132,8 +136,8 @@ You can side-load record data into your your app as well. Note that you must ass
 ```python
 >>> with open("my_knack_data.json", "r") as fin:
 ...     data = { "object_3": json.loads(fin.read()) }
->> my_app.data = data
->> records = [record.format() for record in my_app.records("object_3")]
+>> app.data = data
+>> records = [record.format() for record in app.records("object_3")]
 ```
 
 You can use `knackpy.records()` to fetch "raw" data from your Knack app. Be aware that raw Knack timestamps [are problematic](#timestamps-and-localization). See the [Records](#records) documentation.
@@ -143,7 +147,7 @@ You can use `knackpy.records()` to fetch "raw" data from your Knack app. Be awar
 Display summary metrics about the app.
 
 ```python
->>> my_app.info()
+>>> app.info()
 {'objects': 10, 'scenes': 4, 'records': 6786, 'size': '25.47mb'}
 ```
 
@@ -155,12 +159,12 @@ Write a container to CSV. Be aware that destination will be overwritten, if they
 
 ## Working with `Record` Objects
 
-`Record` objects are `dict`-like containers for Knack record data. Note that all timestamps have been [correctly set to unxi time]().
+`Record` objects are `dict`-like containers for Knack record data. Note that all timestamps have been [correctly set to unix time]().
 
 You can access a record value like you would a `dict`, using the field key or field name:
 
 ```python
->>> record = next(my_app.records("object_1")
+>>> record = next(app.records("object_1")
 # access a value via field key
 {"city": "Austin", "state": "TX", "street": "8700 Cameron Rd", "street2": "Suite 1", "zip": "78754"}
 >>> record["field_22"]
@@ -168,7 +172,6 @@ You can access a record value like you would a `dict`, using the field key or fi
 >>> record["Customer Address"]
 {"city": "Austin", "state": "TX", "street": "8700 Cameron Rd", "street2": "Suite 1", "zip": "78754"}
 ```
-
 
 ### Api
 
@@ -221,9 +224,9 @@ If you'd like to access your raw, uncorrected records, they can be found at `App
 Note also that `Record` objects return corrected timestamps via `Record.raw` and `Record.format()`. So,
 
 ```python
->>> my_app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey", tzinfo="US/Eastern")
+>>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey", tzinfo="US/Eastern")
 # yields raw records with corrected millisecond timestamps
->>> records_raw = [record.raw for record in my_app.records("object_3")]
+>>> records_raw = [record.raw for record in app.records("object_3")]
 # yields corrected timestamps as ISO-8601 strings
 >>> records_formatted = [record.format() for record in app.records("object_3")]
 ```
@@ -235,10 +238,10 @@ Knackpy uses Python's built-in exceptions, as well as Requests's [exceptions](ht
 If you need to inspect an API exception (for example to see the text content of the response), you can access the `Response` object by handling the exception like so:
 
 ```python
->>> my_app = knackpy.App(api_key="myappid")
+>>> app = knackpy.App(api_key="myappid")
 # raises HTTPError. You cannot request object records without supplying an API key
 >>> try:
-...       records = my_app.records("object_1")
+...       records = app.records("object_1")
 ... except HTTPError as e:
 ...     print(e.response.text)
 ...     raise e

@@ -41,6 +41,11 @@ def test_fielddef_constructor_success(field_def_data):
     assert knackpy.fields.FieldDef(**field_def_data)
 
 
+def test_field_def_repr(field_def_data):
+    field_def = knackpy.fields.FieldDef(**field_def_data)
+    assert repr(field_def)
+
+
 def test_fielddef_constructor_fail_missing_required(field_def_data):
     bad_data = drop_key_from_dict(field_def_data, "obj")
     with pytest.raises(KeyError):

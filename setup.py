@@ -48,7 +48,7 @@ def build_config(env, readme="README.md"):
         "packages": ["knackpy"],
         "tests_require": ["pytest"],
         "url": "http://github.com/cityofaustin/knackpy",
-        "version": "1.0.4",
+        "version": "1.0.5",
     }
 
 
