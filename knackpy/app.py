@@ -78,11 +78,11 @@ class App:
         return api.get_metadata(app_id=self.app_id, timeout=self.timeout)
 
     def info(self):
-        """Returns a `dict` of basic app information: 
-            - \# of objects
-            - \# number of scenes
-            - \# of records
-            - \# total file size
+        """Returns a `dict` of basic app information:
+            - Number of objects
+            - Number of scenes
+            - Number of records
+            - Number total file size
         """
         total_obj = len(self.metadata.get("objects"))
         total_scenes = len(self.metadata.get("scenes"))
@@ -212,8 +212,8 @@ class App:
                     been fetched, will return records from that container.
                 refresh (bool, optional): Force the re-querying of data from Knack
                     API. Defaults to False.
-                record_limit (int): the maximum number of records to retrieve. If `None`,
-                    will return all records.
+                record_limit (int): the maximum number of records to retrieve. If
+                    `None`, will return all records.
                 filters (dict or list, optional): A dict or of Knack API filiters.
                     See: https://www.knack.com/developer-documentation/#filters.
 
