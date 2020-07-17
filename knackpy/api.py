@@ -88,24 +88,6 @@ def _get_paginated_records(
     timeout: int = None,
     filters: typing.Union[dict, list] = None,
 ) -> list:
-    """[summary]
-
-    Args:
-        app_id (str): [description]
-        url (str): [description]
-        max_attempts (int): [description]
-        record_limit (int): [description]
-        timeout (int): [description]
-        rows_per_page (int): [description]
-        filters ([type], optional): [description]. Defaults to None.
-        api_key (str, optional): [description]. Defaults to None.
-
-    Raises:
-        e: [description]
-
-    Returns:
-        list: Knack records.
-    """
     headers = _headers(app_id, api_key)
     records = []
     total_records = None
@@ -242,10 +224,28 @@ def record(
     api_key: str,
     data: dict,
     method: str,
-    obj: str = None,
+    obj: str,
     max_attempts: int = 5,
     timeout: int = 30,
 ):
+    """Create, update, or delete a Knack record.
+
+    Args:
+        app_id (str): Knack [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id)  # noqa:E501
+            string.
+        api_key (str): [Knack API key](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
+        data (dict): The Knack record data payload.
+        method (str): Choose from `create`, `update`, or `delete`.
+        obj (str, optional): The Knack object key which holds the record data.
+        max_attempts (int): The maximum number of attempts to make if a request times
+            out. Default values that are set in `knackpy.api.request`. Defaults to 5.
+        timeout (int, optional): Number of seconds to wait before a Knack API request
+            times out. Further reading:
+            [Requests docs](https://requests.readthedocs.io/en/master/user/quickstart/).
+
+    Returns:
+        dict: The updated or newly created Knack record data, or, if deleting a record: `{"delete": true}`
+    """
     record_id = data["id"] if method != "create" else ""
     headers = _headers(app_id, api_key)
     route = _record_route(obj=obj, record_id=record_id)

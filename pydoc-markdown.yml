@@ -14,7 +14,7 @@ renderer:
   content_directory: content/docs
   default_preamble: {menu: main}
   pages:
-    - title: Index
+    - title: Home
       name: index
       source: README.md
       directory: '..'  # Put it directly into the content directory.

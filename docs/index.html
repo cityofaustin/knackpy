@@ -9,12 +9,12 @@
 Knackpy v1.0 is under development. Documented methods should work, but check the status badge
 Installation #  Knackpy requires Python v3.6&#43;. To use the development version Knackpy v1.0, install with:
 $ pip install knackpy-dev Quick Start #  &gt;&gt;&gt; import knackpy &gt;&gt;&gt; app = knackpy.App(app_id=&#34;myappid&#34;, api_key=&#34;myverysecretapikey&#34;) &gt;&gt;&gt; records = my_app.records(&#34;object_1&#34;) &gt;&gt;&gt; app = knackpy.App(app_id=&#34;myappid&#34;, api_key=&#34;myverysecretapikey&#34;) &gt;&gt;&gt; records = my_app.records(&#34;object_1&#34;) &gt;&gt;&gt; records_formatted = [record.format() for record in records] Working with Apps #  Knackpy is designed around the App class.">
-<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="Index" />
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="Home" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://cityofaustin.github.io/knackpy/" />
 
-<title>Index | Knackpy</title>
+<title>Home | Knackpy</title>
 <link rel="manifest" href="/knackpy/manifest.json">
 <link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/knackpy/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
@@ -115,7 +115,7 @@ https://github.com/alex-shpak/hugo-book
     <img src="/knackpy/svg/menu.svg" class="book-icon" alt="Menu" />
   </label>
 
-  <strong>Index</strong>
+  <strong>Home</strong>
 
   <label for="toc-control">
     
@@ -207,13 +207,16 @@ because:</p>
   Getting Records
   <a class="anchor" href="#getting-records">#</a>
 </h3>
-<p>Use <code>App.records()</code> to fetch records from a Knack application. To get records, you just need to proivde a container name or key. Container identifiers can be supplied as a key (<code>object_1</code>, <code>view_1</code>) or a name (<code>my_exciting_object</code>, <code>My Exciting View</code>).</p>
+<p>Use <code>App.records()</code> to fetch records from a Knack application. Container identifiers can be supplied as a key (<code>object_1</code>, <code>view_1</code>) or a name (<code>my_exciting_object</code>, <code>My Exciting View</code>).</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># fetch all records from object_1</span>
 <span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> my_app<span style="color:#f92672">.</span>records(<span style="color:#e6db74">&#34;object_1&#34;</span>)
 <span style="color:#75715e"># or</span>
 <span style="color:#75715e"># fetch all records from view named &#34;My Exciting View&#34;</span>
 <span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> my_app<span style="color:#f92672">.</span>records(<span style="color:#e6db74">&#34;My Exciting View&#34;</span>)
-</code></pre></div><p>Namespace conflicts are highly likely when fetching by name, because Knack uses object names as the default name for views. If you attempt to query your application by a name that exists as both an object and a view, Knackpy will raise a <code>ValueError</code>.</p>
+</code></pre></div><blockquote class="book-hint warning">
+  Namespace conflicts are highly likely when fetching by name, because Knack uses object names as the default name for views. If you attempt to query your application by a name that exists as both an object and a view, Knackpy will raise a <code>ValueError</code>.
+</blockquote>
+
 <p>You can resuse the same <code>App</code> instance to fetch records from other objects and views.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> my_app<span style="color:#f92672">.</span>records(<span style="color:#e6db74">&#34;my_exciting_object&#34;</span>)
 <span style="color:#f92672">&gt;&gt;&gt;</span> my_app<span style="color:#f92672">.</span>records(<span style="color:#e6db74">&#34;my_boring_object&#34;</span>)
@@ -270,7 +273,7 @@ because:</p>
   Working with <code>Record</code> Objects
   <a class="anchor" href="#working-with-record-objects">#</a>
 </h2>
-<p><code>Record</code> objects are <code>dict</code>-like containers for Knack record data. Note that all timestamps have been <a href="">correctly set to unxi time</a>.</p>
+<p><code>Record</code> objects are <code>dict</code>-like containers for Knack record data. Note that all timestamps have been <a href="">correctly set to unix time</a>.</p>
 <p>You can access a record value like you would a <code>dict</code>, using the field key or field name:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> next(my_app<span style="color:#f92672">.</span>records(<span style="color:#e6db74">&#34;object_1&#34;</span>)
 <span style="color:#75715e"># access a value via field key</span>

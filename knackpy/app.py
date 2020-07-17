@@ -12,7 +12,7 @@ from . import api, fields, records, utils
 from .models import TIMEZONES
 
 
-class App(object):
+class App:
     """Knackpy is designed around the `App` class. It provides helpers for querying
     and manipulating Knack application data. You should use the `App` class
     because:
@@ -78,6 +78,12 @@ class App(object):
         return api.get_metadata(app_id=self.app_id, timeout=self.timeout)
 
     def info(self):
+        """Returns a `dict` of basic app information: 
+            - \# of objects
+            - \# number of scenes
+            - \# of records
+            - \# total file size
+        """
         total_obj = len(self.metadata.get("objects"))
         total_scenes = len(self.metadata.get("scenes"))
         total_records = self.metadata.get("counts").get("total_entries")
@@ -193,13 +199,12 @@ class App(object):
         record_limit: int = None,
         filters: typing.Union[dict, list] = None,
     ):
-        """Get records from a knack object or view. Supported kwargs are record_limit
-            (type: int), max_attempts (type: int), and filters (type: dict).
+        """Get records from a knack object or view.
 
             Note that we accept the request params `record_limit` and `filters` here
             because the user would presumably want to set these on a per-object/view
             basis. They are not stored in state. Whereas `max_attempts` and
-            `timtout` are set on App construction and persist in `App` state.
+            `timeout` are set on App construction and persist in `App` state.
 
             Args:
                 identifier (str, optional*): an object or view key or name string that
@@ -207,13 +212,13 @@ class App(object):
                     been fetched, will return records from that container.
                 refresh (bool, optional): Force the re-querying of data from Knack
                     API. Defaults to False.
-                record_limit (int): the maximum number of records to retrieve.
-                    Default value is set in `knackpy.api.request`.
+                record_limit (int): the maximum number of records to retrieve. If `None`,
+                    will return all records.
                 filters (dict or list, optional): A dict or of Knack API filiters.
                     See: https://www.knack.com/developer-documentation/#filters.
 
             Returns:
-                [generator]: A generator which yields Knack record data.
+                A `generator` which yields knackpy Record objects.
         """
         if not identifier and len(self.data) == 1:
             identifier = list(self.data.keys())[0]
@@ -312,7 +317,6 @@ class App(object):
                 "field_key": "field_17"
             }
         """
-        # TODO: support
         downloads = []
 
         field_key_raw = f"{field_key}_raw"
