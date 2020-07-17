@@ -60,6 +60,10 @@ def test_basic_static_app_construction(app_static):
     assert app_static
 
 
+def test_app_repr(app_static):
+    assert repr(app_static)
+
+
 def test_constructor_fail_missing_app_id(app_static):
     with pytest.raises(TypeError):
         knackpy.app.App()

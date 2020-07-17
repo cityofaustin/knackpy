@@ -31,6 +31,14 @@ def test_basic_constructor(app, records):
     assert len([record for record in records.records()]) == len(app.data[KEY])
 
 
+def test_record_repr(records):
+    assert [repr(record) for record in records.records()]
+
+
+def test_records_repr(records):
+    assert repr(records)
+
+
 def test_format_record(app, records):
     assert len([record.format() for record in records.records()]) == len(app.data[KEY])
 
