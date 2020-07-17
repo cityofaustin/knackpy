@@ -81,3 +81,7 @@ def test_record_update(records):
 def test_get_metadata():
     metadata = knackpy.api.get_metadata(app_id=APP_ID)
     assert metadata["application"]
+
+def test_slug_param(random_pause):
+    random_pause
+    metadata = knackpy.api.get_metadata(app_id=APP_ID, slug="atd")

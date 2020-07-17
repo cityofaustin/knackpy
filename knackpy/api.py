@@ -9,36 +9,71 @@ import requests
 from .models import MAX_ROWS_PER_PAGE
 
 
-def _url(*, subdomain: str, route: str) -> str:
-    return f"https://{subdomain}.knack.com/v1{route}"
+def _url(*, route: str, slug: str = None) -> str:
+    """Format the API endpoint URL. This does not appear to be documented anywhere,
+    but as discussed [here](https://github.com/cityofaustin/knackpy/pull/36), HIPAA
+    accounts use a prefixed subdomain that includes their application's slug. E.g.:
+    "my_org_name-api.com/v1/records/....".
+
+    It turns out that non-HIPAA accounts can also use this prefix. So we'll just
+    support this convention for all apps.
+
+    Args:
+        route (str): [description]
+        slug (str, optional): [description]. Defaults to None.
+
+    Returns:
+        str: [description]
+    """
+    return (
+        f"https://{slug}-api.knack.com/v1{route}"
+        if slug
+        else f"https://api.knack.com/v1{route}"
+    )
 
 
-def _record_route(
-    obj: str = None, scene: str = None, view: str = None, record_id: str = ""
+def _route(
+    *,
+    obj: str = None,
+    scene: str = None,
+    view: str = None,
+    record_id: str = "",
+    app_id: str = None,
+    asset_type: str = None,
 ) -> str:
-    """Construct a Knack API route. Reqires either an object key or a scene key
-    and a view key.
+    """Construct a Knack API route. Returns routes for:
+        - metadata
+        - object or view interactions
+        - file/image uploads
 
     Args:
         obj (str, optional): A Knack object key. Defaults to None.
         scene (str, optional): A Knack scene key. Defaults to None.
         view (str, optional): A Knack view key. Defaults to None.
         record_id (str, optional): A knack record ID. Defaults to empty string.
+        app_id (str): Knack [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id)  # noqa:E501
+            string.
+        asset_type (str, optional*): Required for file/image uploads and must be either
+            `file` or `image`.
 
     Raises:
         KeyError: When an object key or both a scene and view key have
         not been supplied.
 
     Returns:
-        object: `requests` response object.
+        `requests.Response`: A `requests` response object.
     """
     if scene and view:
         return f"/pages/{scene}/views/{view}/records"
     elif obj:
         return f"/objects/{obj}/records/{record_id}"
+    elif app_id and asset_type:
+        return f"/applications/{app_id}/assets/{asset_type}/upload"
+    elif app_id and not asset_type:
+        return f"/applications/{app_id}"
 
     raise KeyError(
-        "Insufficient knack keys provided. Knack Requests requires an obj key or a scene and view key"  # noqa
+        "Insufficient knack keys provided. Knack Requests requires an obj key or a scene and view key"  # noqa:E501
     )
 
 
@@ -137,6 +172,7 @@ def get(
     *,
     app_id: str,
     api_key: str = None,
+    slug: str = None,
     obj: str = None,
     scene: str = None,
     view: str = None,
@@ -151,6 +187,8 @@ def get(
     Args:
         app_id (str): [description]
         api_key (str, optional): [description]. Defaults to None.
+        slug (str, optional): Your organization's slug (aka, subdomain). As found in
+            your app metadata under accounts/slug.
         obj (str, optional): [description]. Defaults to None.
         scene (str, optional): [description]. Defaults to None.
         view (str, optional): [description]. Defaults to None.
@@ -164,9 +202,9 @@ def get(
     Returns:
         list: Knack records.
     """
-    route = _record_route(obj=obj, scene=scene, view=view)
+    route = _route(obj=obj, scene=scene, view=view)
 
-    url = _url(subdomain="api", route=route)
+    url = _url(slug=slug, route=route)
 
     record_limit = record_limit if record_limit else math.inf
 
@@ -187,17 +225,20 @@ def get(
     )
 
 
-def get_metadata(*, app_id: str, timeout: int = 30) -> dict:
+def get_metadata(*, app_id: str, slug: str = None, timeout: int = 30) -> dict:
     """Fetch Knack application metadata. You can find your app's metadata at:
-    `https://{subdomain}.knack.com/v1/applications/<app_id:str>`.
+    `https://api.knack.com/v1/applications/<app_id:str>`.
 
     Args:
         app_id (str): A Knack application ID.
+        slug (str, optional): Your organization's slug (aka, subdomain). As found in
+            your app metadata under accounts/slug.
 
     Returns:
         dict: A dictionary of Knack application metadata.
     """
-    url = _url(subdomain="loader", route=f"/applications/{app_id}")
+    route = _route(app_id=app_id)
+    url = _url(slug=slug, route=route)
     return _request(method="GET", url=url, headers=None).json()
 
 
@@ -225,6 +266,7 @@ def record(
     data: dict,
     method: str,
     obj: str,
+    slug: str = None,
     max_attempts: int = 5,
     timeout: int = 30,
 ):
@@ -234,6 +276,8 @@ def record(
         app_id (str): Knack [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id)  # noqa:E501
             string.
         api_key (str): [Knack API key](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
+        slug (str, optional): Your organization's slug (aka, subdomain). As found in
+            your app metadata under accounts/slug.
         data (dict): The Knack record data payload.
         method (str): Choose from `create`, `update`, or `delete`.
         obj (str, optional): The Knack object key which holds the record data.
@@ -248,7 +292,37 @@ def record(
     """
     record_id = data["id"] if method != "create" else ""
     headers = _headers(app_id, api_key)
-    route = _record_route(obj=obj, record_id=record_id)
+    route = _route(obj=obj, record_id=record_id)
     method = _handle_method(method)
-    url = _url(subdomain="api", route=route)
+    url = _url(slug=slug, route=route)
     return _request(method=method, url=url, headers=headers, data=data).json()
+
+
+def upload(
+    *,
+    app_id: str,
+    api_key: str,
+    obj: str,
+    path: str,
+    slug: str = None,
+    max_attempts: int = 5,
+    timeout: int = 30,
+):
+    """[summary]
+
+    Args:
+    Args:
+        app_id (str): Knack [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id)  # noqa:E501
+            string.
+        api_key (str): [Knack API key](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
+        path: (str): The path to the file to be uploaded.
+        obj (str): The Knack object key which holds the record data.
+        slug (str, optional): Your organization's slug (aka, subdomain). As found in
+            your app metadata under accounts/slug.
+        max_attempts (int): The maximum number of attempts to make if a request times
+            out. Default values that are set in `knackpy.api.request`. Defaults to 5.
+        timeout (int, optional): Number of seconds to wait before a Knack API request
+            times out. Further reading:
+            [Requests docs](https://requests.readthedocs.io/en/master/user/quickstart/).
+    """
+    pass

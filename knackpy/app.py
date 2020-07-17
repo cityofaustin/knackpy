@@ -47,6 +47,7 @@ class App:
         *,
         app_id: str,
         api_key: str = None,
+        slug: str = None,
         metadata: str = None,
         tzinfo: datetime.tzinfo = None,
         max_attempts: int = None,
@@ -63,10 +64,13 @@ class App:
         self.timeout = timeout
         self.max_attempts = max_attempts
         self.metadata = (
-            self._get_metadata()["application"]
+            api.get_metadata(app_id=self.app_id, timeout=self.timeout, slug=slug)[
+                "application"
+            ]
             if not metadata
             else metadata["application"]
         )
+        self.slug = self.metadata["account"]["slug"]
         self.tzinfo = tzinfo if tzinfo else self.metadata["settings"]["timezone"]
         self.timezone = self._get_timezone(self.tzinfo)
         self.field_defs = fields.field_defs_from_metadata(self.metadata)
@@ -243,6 +247,7 @@ class App:
                 scene=container.scene,
                 view=container.view,
                 filters=filters,
+                slug=self.slug,
                 **request_kwargs,
             )
 

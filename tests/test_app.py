@@ -52,6 +52,10 @@ def test_basic_over_the_wire_construction(app_live):
     assert app_live
 
 
+def test_over_the_wire_construction_with_slug(app_live):
+    assert knackpy.app.App(app_id=APP_ID, api_key=API_KEY, slug="atd")
+
+
 def test_basic_static_app_construction(app_static):
     assert app_static
 
