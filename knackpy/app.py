@@ -224,7 +224,7 @@ class App:
                 filters (dict or list, optional): A dict or of Knack API filiters.
                     See: https://www.knack.com/developer-documentation/#filters.
                 generate (bool, optional): If True, will return a generator which
-                    yields knacky.Record objects instead of return a list of of them. 
+                    yields knacky.Record objects instead of return a list of of them.
 
             Returns:
                 A `generator` which yields knackpy Record objects.
@@ -305,7 +305,7 @@ class App:
 
     def _generate_records(self, data, field_defs, identifier):
         for record in data:
-            yield Record(record, field_defs, identifier, self.timezone)
+            yield knackpy_record.Record(record, field_defs, identifier, self.timezone)
 
     def _find_field_def(self, identifier, obj):
         return [
@@ -479,3 +479,34 @@ class App:
         logging.debug(f"{download_count} files downloaded.")
 
         return download_count
+
+    def record(
+        self, *, data: dict, method: str, obj: str,
+    ):
+        """Create, update, or delete a Knack record.
+
+        Args:
+            data (dict): The Knack record data payload.
+            method (str): Choose from `create`, `update`, or `delete`.
+            obj (str, optional): The Knack object key or name which holds the record
+                data.
+
+        Returns:
+            dict: The updated or newly created Knack record data, or, if deleting a
+                record: `{"delete": true}`
+        """
+
+        # if the client provides a view identifier, it will raise no error until the
+        # Knack API raises an HTTPError
+        container = self._find_container(obj)
+
+        return api.record(
+            app_id=self.app_id,
+            api_key=self.api_key,
+            data=data,
+            method=method,
+            obj=container.obj,
+            slug=self.slug,
+            max_attempts=self.max_attempts,
+            timeout=self.timeout,
+        )

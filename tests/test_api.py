@@ -27,7 +27,8 @@ UPLOAD_CONFIG = {
 
 @pytest.fixture
 def random_pause():
-    seconds = random.randrange(1, 10, 1)
+    """sleep for at least .333 seconds"""
+    seconds = random.randrange(3, 10, 1)
     time.sleep(seconds / 10)
 
 
@@ -35,6 +36,11 @@ def random_pause():
 def records(random_pause):
     random_pause
     return knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, record_limit=1)
+
+
+def test_random_pause():
+    knackpy.api._random_pause()
+    assert True
 
 
 def test_upload_file_create_update_delete_record(random_pause):

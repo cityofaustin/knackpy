@@ -1,5 +1,7 @@
 import json
 import os
+import random
+import time
 import types
 
 import knackpy
@@ -16,7 +18,9 @@ FILTERS = {
         {"field": "field_125", "operator": "is", "value": "1"},
     ],
 }
-OBJ_KEY = "object_3"
+
+OBJ = "object_3"
+UPDATE_KEY = "field_25"  # rating field type
 
 
 @pytest.fixture
@@ -39,7 +43,7 @@ def app_static(app_data):
         api_key=API_KEY,
         metadata=app_data["metadata"],
     )
-    knackpy_app.data = {OBJ_KEY: app_data["data"]}
+    knackpy_app.data = {OBJ: app_data["data"]}
     return knackpy_app
 
 
@@ -47,6 +51,35 @@ def app_static(app_data):
 def app_live():
     # testing on live app (as in over-the-wire data fetch, not side-loaded)
     return knackpy.app.App(app_id=APP_ID, api_key=API_KEY)
+
+
+@pytest.fixture
+def random_pause():
+    """sleep for at least .333 seconds"""
+    seconds = random.randrange(3, 10, 1)
+    time.sleep(seconds / 10)
+
+
+def test_record_update(app_static, app_live):
+    """
+    Given the first record in our static data, update one value and validate the
+    updated data returned in the response.
+    """
+    record = dict(app_static.get(OBJ)[0])
+    update_value = "0.00" if record[UPDATE_KEY] != "0.00" else "1.00"
+    data = {"id": record["id"], UPDATE_KEY: update_value}
+    record_updated = app_live.record(method="update", data=data, obj=OBJ)
+    assert record_updated[UPDATE_KEY] == update_value
+
+
+def test_record_create_delete(app_live, random_pause):
+    # yes, two tests in one :/
+    random_pause
+    new_record = app_live.record(method="create", data={}, obj=OBJ)
+    assert new_record
+    random_pause
+    response = app_live.record(method="delete", data={"id": new_record["id"]}, obj=OBJ,)
+    assert response["delete"]
 
 
 def test_basic_over_the_wire_construction(app_live):
@@ -71,11 +104,11 @@ def test_constructor_fail_missing_app_id(app_static):
 
 
 def test_object_get_by_key_static(app_static):
-    assert app_static.get(OBJ_KEY)
+    assert app_static.get(OBJ)
 
 
 def test_get_object_by_key_live(app_live):
-    assert app_live.get(OBJ_KEY)
+    assert app_live.get(OBJ)
 
 
 def test_view_by_key_static(app_static):
@@ -91,22 +124,26 @@ def test_get_view_by_name(app_live):
 
 
 def test_get_by_key_refresh(app_live):
-    records = app_live.get(OBJ_KEY, refresh=True)
+    records = app_live.get(OBJ, refresh=True)
     assert records
 
 
+def test_generate_records_is_generator(app_static):
+    assert isinstance(app_static.get(OBJ, generate=True), types.GeneratorType)
+
+
 def test_generate_records(app_static):
-    assert isinstance(app_static.get(OBJ_KEY, generate=True), types.GeneratorType)
+    assert len([record for record in app_static.get(OBJ, generate=True)]) > 0
 
 
 def test_get_obj_records_no_api_key_get(app_static):
     with pytest.raises(requests.exceptions.HTTPError):
         app_static.api_key = None
-        app_static.get(OBJ_KEY, refresh=True)
+        app_static.get(OBJ, refresh=True)
 
 
 def test_get_object_records_with_filters(app_live):
-    records = app_live.get(OBJ_KEY, filters=FILTERS)
+    records = app_live.get(OBJ, filters=FILTERS)
     assert len(records) == 1
 
 

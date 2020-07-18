@@ -12,10 +12,10 @@ import requests
 from .models import MAX_ROWS_PER_PAGE
 
 
-def _random_pause(min_wait_seconds=0.5, max_wait_seconds=3):
-    """pause for min_wait_seconds up to max_wait_seconds"""
-    seconds = random.randrange(0.5, max_wait_seconds, 0.5)
-    time.sleep(seconds)
+def _random_pause():
+    """sleep for at least .333 seconds"""
+    seconds = random.randrange(3, 10, 1)
+    time.sleep(seconds / 10)
 
 
 def _url(*, route: str, slug: str = None) -> str:
