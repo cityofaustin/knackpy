@@ -22,7 +22,7 @@ def app():
 
 @pytest.fixture
 def records(app):
-    return app.records(OBJ_KEY)
+    return app.get(OBJ_KEY)
 
 
 def test_basic_constructor(app, records):

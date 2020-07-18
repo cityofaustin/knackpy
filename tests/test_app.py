@@ -18,6 +18,7 @@ FILTERS = {
 }
 OBJ_KEY = "object_3"
 
+
 @pytest.fixture
 def app_data():
     with open("tests/_metadata.json", "r") as fin:
@@ -70,63 +71,63 @@ def test_constructor_fail_missing_app_id(app_static):
 
 
 def test_object_get_by_key_static(app_static):
-    assert app_static.records(OBJ_KEY)
+    assert app_static.get(OBJ_KEY)
 
 
 def test_get_object_by_key_live(app_live):
-    assert app_live.records(OBJ_KEY)
+    assert app_live.get(OBJ_KEY)
 
 
 def test_view_by_key_static(app_static):
-    assert app_static.records("view_11")
+    assert app_static.get("view_11")
 
 
 def test_get_view_by_key_live(app_live):
-    assert app_live.records("view_11")
+    assert app_live.get("view_11")
 
 
 def test_get_view_by_name(app_live):
-    assert app_live.records("view_11")
+    assert app_live.get("view_11")
 
 
 def test_get_by_key_refresh(app_live):
-    records = app_live.records(OBJ_KEY, refresh=True)
+    records = app_live.get(OBJ_KEY, refresh=True)
     assert records
 
 
 def test_generate_records(app_static):
-    assert isinstance(app_static.records(OBJ_KEY, generate=True), types.GeneratorType)
+    assert isinstance(app_static.get(OBJ_KEY, generate=True), types.GeneratorType)
 
 
 def test_get_obj_records_no_api_key_get(app_static):
     with pytest.raises(requests.exceptions.HTTPError):
         app_static.api_key = None
-        app_static.records(OBJ_KEY, refresh=True)
+        app_static.get(OBJ_KEY, refresh=True)
 
 
 def test_get_object_records_with_filters(app_live):
-    records = app_live.records(OBJ_KEY, filters=FILTERS)
+    records = app_live.get(OBJ_KEY, filters=FILTERS)
     assert len(records) == 1
 
 
 def test_get_view_records_with_filters(app_live):
-    records = app_live.records("view_11", filters=FILTERS)
+    records = app_live.get("view_11", filters=FILTERS)
     assert len(records) == 1
 
 
 def test_get_records_by_object_name(app_static):
-    assert app_static.records("orders")
+    assert app_static.get("orders")
 
 
 def test_get_records_by_view_name(app_static):
-    assert app_static.records("all fields")
+    assert app_static.get("all fields")
 
 
 def test_no_key_or_name_param(app_static):
     # the API allows you to use App.reords() (without any key or view name) if only
     # one container has been retrieved. in this case, it's the sideloaded records in
     # object_3.
-    assert app_static.records()
+    assert app_static.get()
 
 
 def test_no_key_or_name_param_fail(app_static):
@@ -137,14 +138,14 @@ def test_no_key_or_name_param_fail(app_static):
     data = app_static.data["object_3"]
     app_static.data["fake_data_holder"] = data
     with pytest.raises(TypeError):
-        assert app_static.records()
+        assert app_static.get()
 
 
 def test_get_by_dupe_name_fail(app_static):
     # the "all_fields_test" container name exists in our app as both an object
     # and as a view. so trying to query by that name results in a KeyError.
     with pytest.raises(ValueError):
-        assert isinstance(app_static.records("all_fields_test"), types.GeneratorType)
+        assert isinstance(app_static.get("all_fields_test"), types.GeneratorType)
 
 
 def test_valid_tzinfo(app_data):

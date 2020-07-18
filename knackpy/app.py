@@ -8,7 +8,8 @@ import typing
 import requests
 import pytz
 
-from . import api, fields, records, utils
+from . import api, fields, utils
+from . import record as knackpy_record
 from .models import TIMEZONES
 
 
@@ -76,6 +77,7 @@ class App:
         self.field_defs = fields.field_defs_from_metadata(self.metadata)
         self.containers = utils.generate_containers(self.metadata)
         self.data = {}
+        self.records = {}
         logging.debug(self)
 
     def _get_metadata(self):
@@ -196,7 +198,7 @@ class App:
 
         return {key: kwargs[key] for key in supported_kwargs if kwargs.get(key)}
 
-    def records(
+    def get(
         self,
         identifier: str = None,
         refresh: bool = False,
@@ -234,9 +236,18 @@ class App:
 
         container = self._find_container(identifier)
 
+        # note that data is always assigned to an object or view key, regardless of
+        # whether or not the client provides an object or view *name*
         container_key = container.obj or container.view
 
+        if self.records.get(container_key) and not refresh:
+            # if the data has already been retrieved we do not fetch it again or convert
+            # the data into knackpy.record.Record's again, unless refresh.
+            return self.records[container_key]
+
         if not self.data.get(container_key) or refresh:
+            # to support side-loading of data, we may have a situation where data is
+            # present, but records have not never been generated
             request_kwargs = self._build_request_kwargs(
                 max_attempts=self.max_attempts,
                 timeout=self.timeout,
@@ -254,9 +265,22 @@ class App:
                 **request_kwargs,
             )
 
-        return self._generate_records(container_key, self.data[container_key], generate)
+        self.records[container_key] = self._records(container_key, generate)
+        return self.records[container_key]
 
-    def _generate_records(self, container_key, data, generate=False):
+    def _records(self, container_key, generate=False):
+        """Return a list or generator of knackpy.record.Record objects.
+
+        Args:
+            container_key (str): An Knack object or view key.
+            generate (bool, optional): If true, will return a Record generator function
+                instead of a list of Record's.
+
+        Returns:
+            list or generator: A list or generator of knackpy.record.Record's.
+        """
+        data = self.data[container_key]
+
         # filter field defs by requested container
         field_defs = [
             field_def
@@ -264,11 +288,24 @@ class App:
             if container_key == field_def.obj or container_key in field_def.views
         ]
 
-        return (
-            records.generate_records(data, field_defs, self.timezone)
-            if generate
-            else records.records(data, field_defs, self.timezone)
-        )
+        try:
+            identifier = [
+                field_def.key for field_def in field_defs if field_def.identifier
+            ][0]
+        except IndexError:
+            identifier = None
+
+        if generate:
+            return self._generate_records(data, field_defs, identifier)
+
+        return [
+            knackpy_record.Record(record, field_defs, identifier, self.timezone)
+            for record in data
+        ]
+
+    def _generate_records(self, data, field_defs, identifier):
+        for record in data:
+            yield Record(record, field_defs, identifier, self.timezone)
 
     def _find_field_def(self, identifier, obj):
         return [
@@ -291,7 +328,7 @@ class App:
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        records = self.records(identifier)
+        records = self.get(identifier)
 
         csv_data = [record.format() for record in records]
 
@@ -340,7 +377,7 @@ class App:
 
         downloads = []
 
-        for record in self.records(identifier):
+        for record in self.get(identifier):
             file_dict = record.raw.get(field_key_raw)
 
             if not file_dict:
