@@ -4,7 +4,7 @@ import types
 import knackpy
 import pytest
 
-KEY = "all_fields_test"
+OBJ_KEY = "object_3"
 
 
 @pytest.fixture
@@ -17,28 +17,26 @@ def app():
         data = data["records"]
 
     app = knackpy.App(app_id=metadata["application"]["id"], metadata=metadata)
-    app.data = {KEY: data}
+    app.data = {OBJ_KEY: data}
     return app
 
 
 @pytest.fixture
 def records(app):
-    return knackpy.records.Records(
-        "object_3", app.data[KEY], app.field_defs, app.timezone
-    )
+    field_defs = [field_def for field_def in app.field_defs if field_def.obj == OBJ_KEY]
+    return knackpy.records.records(app.data[OBJ_KEY], field_defs, app.timezone)
 
 
-def test_constructor_success(app):
-    assert knackpy.records.Records(
-        "object_3", app.data[KEY], app.field_defs, app.timezone
-    )
+@pytest.fixture
+def generate_records(app):
+    field_defs = [field_def for field_def in app.field_defs if field_def.obj == OBJ_KEY]
+    return knackpy.records.generate_records(app.data[OBJ_KEY], field_defs, app.timezone)
 
 
-def test_constructor_fail(app):
-    with pytest.raises(TypeError):
-        knackpy.records.Records()
+def test_records(records):
+    assert records
 
 
-def test_get(records):
-    recs = records.records()
-    assert isinstance(recs, types.GeneratorType)
+def test_generate_records(generate_records):
+    assert isinstance(generate_records, types.GeneratorType)
+

@@ -152,49 +152,31 @@ class Record(MutableMapping):
         return record
 
 
-class Records:
+def generate_records(data, field_defs, timezone):
     """
-    A wrapper for Knack record data. At initialization, the class is readied to
-    yield records from Records.records().
-
-    When Records.records() is called, a generator is returned. With each `yield`
-    the generator handles the raw Knack record by updating any empty string
-    values to NoneTypes, corrects Knack's "local" timestamps, and applies the
-    client-specified formatting.
+    A generator function for Knack record data. With each `yield` the generator returns
+    a knackpy.Record class.
     """
+    try:
+        identifier = [
+            field_def.key for field_def in field_defs if field_def.identifier
+        ][0]
+    except IndexError:
+        identifier = None
 
-    def __repr__(self):
-        return f"<Records [{len(self.data)} records]>"
+    for record in data:
+        yield Record(record, field_defs, identifier, timezone)
 
-    def __init__(
-        self, container_key, data, field_defs, timezone,
-    ):
-        self.container_key = container_key
-        self.data = data
-        self.timezone = timezone
-        self.field_defs = self._filter_field_defs_by_container_key(field_defs)
-        # find the identifier field
-        try:
-            self.identifier = [
-                field_def.key for field_def in self.field_defs if field_def.identifier
-            ][0]
-        except IndexError:
-            self.identifier = None
 
-        return None
+def records(data, field_defs, timezone):
+    """
+    Returns a list of knackpy.Records.
+    """
+    try:
+        identifier = [
+            field_def.key for field_def in field_defs if field_def.identifier
+        ][0]
+    except IndexError:
+        identifier = None
 
-    def _filter_field_defs_by_container_key(self, field_defs):
-        return [
-            field_def
-            for field_def in field_defs
-            if self.container_key == field_def.obj
-            or self.container_key in field_def.views
-        ]
-
-    def __iter__(self):
-        for record in self.data:
-            yield Record(record, self.field_defs, self.identifier, self.timezone)
-
-    def records(self):
-        for record in self.data:
-            yield Record(record, self.field_defs, self.identifier, self.timezone)
+    return [Record(record, field_defs, identifier, timezone) for record in data]

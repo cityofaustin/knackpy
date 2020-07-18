@@ -16,7 +16,7 @@ FILTERS = {
         {"field": "field_125", "operator": "is", "value": "1"},
     ],
 }
-
+OBJ_KEY = "object_3"
 
 @pytest.fixture
 def app_data():
@@ -38,7 +38,7 @@ def app_static(app_data):
         api_key=API_KEY,
         metadata=app_data["metadata"],
     )
-    knackpy_app.data = {"object_3": app_data["data"]}
+    knackpy_app.data = {OBJ_KEY: app_data["data"]}
     return knackpy_app
 
 
@@ -70,45 +70,48 @@ def test_constructor_fail_missing_app_id(app_static):
 
 
 def test_object_get_by_key_static(app_static):
-    assert isinstance(app_static.records("object_3"), types.GeneratorType)
+    assert app_static.records(OBJ_KEY)
 
 
 def test_get_object_by_key_live(app_live):
-    assert isinstance(app_live.records("object_3"), types.GeneratorType)
+    assert app_live.records(OBJ_KEY)
 
 
 def test_view_by_key_static(app_static):
-    assert isinstance(app_static.records("view_11"), types.GeneratorType)
+    assert app_static.records("view_11")
 
 
 def test_get_view_by_key_live(app_live):
-    assert isinstance(app_live.records("view_11"), types.GeneratorType)
+    assert app_live.records("view_11")
 
 
 def test_get_view_by_name(app_live):
-    assert isinstance(app_live.records("view_11"), types.GeneratorType)
+    assert app_live.records("view_11")
 
 
 def test_get_by_key_refresh(app_live):
-    records = app_live.records("object_3")
-    records = app_live.records("object_3", refresh=True)
-    assert [record for record in records]
+    records = app_live.records(OBJ_KEY, refresh=True)
+    assert records
 
 
-def test_no_api_key_get(app_static):
+def test_generate_records(app_static):
+    assert isinstance(app_static.records(OBJ_KEY, generate=True), types.GeneratorType)
+
+
+def test_get_obj_records_no_api_key_get(app_static):
     with pytest.raises(requests.exceptions.HTTPError):
         app_static.api_key = None
-        app_static.records("object_3", refresh=True)
+        app_static.records(OBJ_KEY, refresh=True)
 
 
 def test_get_object_records_with_filters(app_live):
-    records = app_live.records("object_3", filters=FILTERS)
-    assert len([record for record in records]) == 1
+    records = app_live.records(OBJ_KEY, filters=FILTERS)
+    assert len(records) == 1
 
 
 def test_get_view_records_with_filters(app_live):
     records = app_live.records("view_11", filters=FILTERS)
-    assert len([record for record in records]) == 1
+    assert len(records) == 1
 
 
 def test_get_records_by_object_name(app_static):

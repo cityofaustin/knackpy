@@ -202,6 +202,7 @@ class App:
         refresh: bool = False,
         record_limit: int = None,
         filters: typing.Union[dict, list] = None,
+        generate=False,
     ):
         """Get records from a knack object or view.
 
@@ -220,6 +221,8 @@ class App:
                     `None`, will return all records.
                 filters (dict or list, optional): A dict or of Knack API filiters.
                     See: https://www.knack.com/developer-documentation/#filters.
+                generate (bool, optional): If True, will return a generator which
+                    yields knacky.Record objects instead of return a list of of them. 
 
             Returns:
                 A `generator` which yields knackpy Record objects.
@@ -251,12 +254,21 @@ class App:
                 **request_kwargs,
             )
 
-        return self._generate_records(container_key, self.data[container_key])
+        return self._generate_records(container_key, self.data[container_key], generate)
 
-    def _generate_records(self, container_key, data):
-        return records.Records(
-            container_key, data, self.field_defs, self.timezone
-        ).records()
+    def _generate_records(self, container_key, data, generate=False):
+        # filter field defs by requested container
+        field_defs = [
+            field_def
+            for field_def in self.field_defs
+            if container_key == field_def.obj or container_key in field_def.views
+        ]
+
+        return (
+            records.generate_records(data, field_defs, self.timezone)
+            if generate
+            else records.records(data, field_defs, self.timezone)
+        )
 
     def _find_field_def(self, identifier, obj):
         return [

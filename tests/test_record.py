@@ -3,7 +3,7 @@ import json
 import knackpy
 import pytest
 
-KEY = "all_fields_test"
+OBJ_KEY = "object_3"
 
 
 @pytest.fixture
@@ -16,54 +16,48 @@ def app():
         data = data["records"]
 
     app = knackpy.App(app_id=metadata["application"]["id"], metadata=metadata)
-    app.data = {KEY: data}
+    app.data = {OBJ_KEY: data}
     return app
 
 
 @pytest.fixture
 def records(app):
-    return knackpy.records.Records(
-        "object_3", app.data[KEY], app.field_defs, app.timezone
-    )
+    return app.records(OBJ_KEY)
 
 
 def test_basic_constructor(app, records):
-    assert len([record for record in records.records()]) == len(app.data[KEY])
+    assert len(records) == len(app.data[OBJ_KEY])
 
 
 def test_record_repr(records):
-    assert [repr(record) for record in records.records()]
-
-
-def test_records_repr(records):
-    assert repr(records)
+    assert [repr(record) for record in records]
 
 
 def test_format_record(app, records):
-    assert len([record.format() for record in records.records()]) == len(app.data[KEY])
+    assert len([record.format() for record in records]) == len(app.data[OBJ_KEY])
 
 
 def test_names(records):
-    record = next(records.records())
+    record = records[0]
     field_names = record.names()
     assert len(field_names) > 0
 
 
 def test_keys(records):
     # this is a custom .keys() method; hence the test
-    record = next(records.records())
+    record = records[0]
     keys = record.keys()
     assert len(keys) > 0
 
 
 def get_by_name(records):
-    record = next(records.records())
+    record = records[0]
     field_name = record.names()[0]
     assert record[field_name]
 
 
 def get_by_key(records):
     # this is a custom __getitem__; hence the test
-    record = next(records.records())
+    record = records[0]
     key = record.keys()[0]
     assert record[key]
