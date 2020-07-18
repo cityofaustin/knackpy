@@ -43,15 +43,15 @@ class Record(MutableMapping):
         ]
         if match_fields:
             # there can be only one
-            return match_fields[0]
+            return match_fields[0].value
         else:
             # try to match by field name
             match_fields = [
                 field for key, field in self.fields.items() if field.name == client_key
             ]
-
         if match_fields:
-            return match_fields[0]
+            # there can be only one
+            return match_fields[0].value
 
         raise KeyError(client_key)
 
