@@ -66,8 +66,10 @@ Use `App.get()` to fetch records from a Knack application. Container identifiers
 >>> records = app.get("My Exciting View")
 ```
 
-{{< hint danger >}}
+{{< hint warning >}}
+
 #### Be Careful When Using Named References
+
 Namespace conflicts are highly likely when fetching by name, because Knack uses object names as the default name for views. If you attempt to query your application by a name that exists as both an object and a view, Knackpy will raise a `ValueError`.
 {{< /hint >}}
 
@@ -79,7 +81,13 @@ You can resuse the same `App` instance to fetch records from other objects and v
 >>> app.get("view_1")
 ```
 
+{{< hint info >}}
+
+#### Omitting the Container Name
+
 If you've only fetched one container, you can omit the container name when accessing your records. This is helpful during development, but for readability we suggest you avoid this practice in production code.
+
+{{< /hint >}}
 
 ```python
 >>> records = app.get("My Exciting View")
@@ -87,7 +95,7 @@ If you've only fetched one container, you can omit the container name when acces
 >>> same_records_without_accessor = app.get()
 ```
 
-You can refine your record requests by specifify a `record_limit`, `filters`, and `timeout`. See the [module documentaiton]() for details.
+You can refine your record requests by specififying a `record_limit`, `filters`, and `timeout`. See the [module documentaiton]() for details.
 
 ```python
 >>> filters = {
@@ -100,7 +108,59 @@ You can refine your record requests by specifify a `record_limit`, `filters`, an
 >>> records = app.get("object_1", record_limit=10, filters=filters)
 ```
 
-### Advanced `App.get()` Usage
+### Creating, Updating, and Deleting Records
+
+Create a record.
+
+```python
+>>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey")
+>>> data = {"field_1": "pizza"}
+>>> record = app.record(method="create", data=data, obj="object_1")
+```
+
+Update a record.
+
+```python
+>>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey")
+>>> record = app.get("object_1")[0]
+>>> data = dict(record)
+>>> data["field_1"] = "new value"
+>>> record = app.record(method="update", data=data, obj="object_1")
+```
+
+Delete a record.
+
+```python
+>>> response = app.record(method="delete", data={"id": "abc123xyz789"}, obj="object_1")
+# response == {"delete": True}
+```
+
+### Downloading Files
+
+Download files from an object or view.
+
+- `container` (`str`): The name or key of the object or view from which files will be
+  downloaded.
+
+- `field` (`str`): The field key of the file or image field to be downloaded.
+
+- `out_dir` (`str`, optional): Relative path to the directory to which files
+  will be written. Defaults to "\_downloads".
+
+- `label_keys` (`list`, optional): A list of field keys whose _values_ will be prepended to the attachment filename, separated by an underscore.
+
+```python
+>>> app.download(
+...     container="object_1",
+...     field="field_1",
+...     out_dir="_downloads",
+...     label_keys="field_2"
+... )
+```
+
+### Uploading Files
+
+### Advanced `App` Usage
 
 Raw record data is available at `App.data`. You can use this property to check the readily available data in your App instance.
 
@@ -120,7 +180,7 @@ References to all available endpoints are stored at `App.containers`. This is ha
 ]
 ```
 
-You can cut down on API calls by providing your own Knack metadata when creating an `App` instance:
+You can avoid an API call by providing your own Knack metadata when creating an `App` instance (unclear if metadata requests count against [API limits](https://www.knack.com/developer-documentation/#api-limits))
 
 ```python
 >>> import json
@@ -130,7 +190,7 @@ You can cut down on API calls by providing your own Knack metadata when creating
 >> app = knackpy.App(app_id,  metadata=metadata)
 ```
 
-You can side-load record data into your your app as well. Note that you must assign your data to a valid key that exists in your app:
+You can side-load record data into your your app as well. Note that you must assign your data to a valid key that exists in your app.
 
 ```python
 >>> with open("my_knack_data.json", "r") as fin:
@@ -150,7 +210,7 @@ Display summary metrics about the app.
 {'objects': 10, 'scenes': 4, 'records': 6786, 'size': '25.47mb'}
 ```
 
-Write a container to CSV. Be aware that destination will be overwritten, if they exist.
+Write a container to CSV. Be aware that destination files will be overwritten, if they exist.
 
 ```python
 >>> app.to_csv("my exciting view", out_dir="data")
@@ -158,21 +218,56 @@ Write a container to CSV. Be aware that destination will be overwritten, if they
 
 ## Working with `Record` Objects
 
-`Record` objects are `dict`-like containers for Knack record data. Note that all timestamps have been [correctly set to unix time]().
+`Record` objects are `dict`-like containers for Knack record data. Note that all timestamps have been [correctly set to unix time](#timestamps-and-localization).
 
-You can access a record value like you would a `dict`, using the field key or field name:
+You can access a record value like you would a `dict`, using the field key or field name.
 
 ```python
->>> record = next(app.get("object_1")
+>>> record = app.get("object_1")[0]
 # access a value via field key
-{"city": "Austin", "state": "TX", "street": "8700 Cameron Rd", "street2": "Suite 1", "zip": "78754"}
 >>> record["field_22"]
+{"city": "Austin", "state": "TX", "street": "8700 Cameron Rd", "street2": "Suite 1", "zip": "78754"}
 # access a value via field name
 >>> record["Customer Address"]
 {"city": "Austin", "state": "TX", "street": "8700 Cameron Rd", "street2": "Suite 1", "zip": "78754"}
 ```
 
-### Api
+### Formatting Records
+
+Format the keys and/or values of a record.
+
+```python
+# format keys and values
+>>> formatted_record = record.format()
+{ "id": "abc123xyz789", "Customer Address": "8700 Cameron Rd, Austin, TX, 78754" }
+# only format the keys
+>>> formatted_keys = record.format(values=False)
+{ "id": "abc123xyz789", "Customer Address": {"city": "Austin", "state": "TX", "street": "8700 Cameron Rd", "street2": "Suite 1", "zip": "78754"}}
+# only format the values
+>>> formatted_values = record.format(keys=False)
+{ "id": "abc123xyz789", "field_22": "8700 Cameron Rd, Austin, TX, 78754" }
+```
+
+Although a `Record` object looks like a `dict`, it contains `Field` objects (TODO: link to docs). If you want to convert a `Record` object into a plain-old `dict`, use the `dict()` built-in.
+
+```python
+>>> record = app.get("object_1")[0]
+>>> data = dict(record)
+```
+
+### Dict-like `Record` methods (Items, Keys, and Names)
+
+- `Record.items()`: returns a list of the knackpy `Field` objects contained within the `Record`.
+- `Record.keys()`: returns a list (not a [`view`](https://docs.python.org/3/glossary.html#term-dictionary-view)) of the record's field keys.
+- `Record.names()`: returns a list of the record's field names.
+
+{{< hint warning >}}
+
+Records may look raw, but any timestamps have been [corrected to real unix time](#timestamps-and-localization). If you want the raw, untouched data, use the `Record.raw` property.
+
+{{ < /hint > }}
+
+## Accessing the API Directly
 
 ```python
 # This is equivalent to exporting records in JSON format from the Knack Builder
@@ -185,6 +280,8 @@ You can access a record value like you would a `dict`, using the field key or fi
 ...     timeout=30
 ... )
 ```
+
+## Crud Operations
 
 ## What's New in v1.0
 
