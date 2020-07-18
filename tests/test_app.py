@@ -213,6 +213,6 @@ def test_csv(app_static, tmpdir):
 
 def test_downloads(app_live, tmpdir):
     app_live.download(
-        "object_3", field="file", out_dir=tmpdir, label_keys=["field_125"]
+        container="object_3", field="file", out_dir=tmpdir, label_keys=["field_125"]
     )
     assert True

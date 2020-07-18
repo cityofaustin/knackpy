@@ -439,8 +439,8 @@ class App:
 
     def download(
         self,
-        identifier: str,
         *,
+        container: str,
         field: str,
         out_dir: str = "_downloads",
         label_keys: list = None,
@@ -448,7 +448,7 @@ class App:
         """Download files and images from Knack records.
 
         Args:
-            identifier (str): The name or key of the object from which files will be
+            container (str): The name or key of the object from which files will be
                 downloaded.
             out_dir (str, optional): Relative path to the directory to which files
                 will be written. Defaults to "_downloads".
@@ -463,15 +463,15 @@ class App:
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        container = self._find_container(identifier)
+        download_container = self._find_container(container)
 
-        field_defs = self._find_field_def(field, identifier)
+        field_defs = self._find_field_def(field, container)
 
         if not field_defs:
             raise ValueError(f"Field not found: '{field}'")
 
         downloads = self._assemble_downloads(
-            container.obj, field_defs[0].key, label_keys, out_dir
+            download_container.obj, field_defs[0].key, label_keys, out_dir
         )
 
         download_count = self._download_files(downloads)
