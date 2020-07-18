@@ -117,20 +117,21 @@ class Record(MutableMapping):
         record = self._correct_knack_timestamp(record, self.timezone)
         return record
 
-    def format(self, format_keys: bool = True, format_values: bool = True):
+    def format(self, keys: bool = True, values: bool = True):
         """Returns the record as a dict.
         Args:
-            format_keys (bool, optional): Defaults to True.
-            format_values (bool, optional): Defaults to True.
+            keys (bool, optional): If keys should be formatted.
+            values (bool, optional): If values should be formatted.
 
         Returns:
-            dict: A dict of the record values with
+            dict: A dict of the record values with formatted (aka, humaized) keys
+            and/or values.
         """
         record = {}
 
         for key, field in self.fields.items():
-            value = field.format() if format_values else field.value
-            key = field.name if format_keys else field.key
+            value = field.format() if values else field.value
+            key = field.name if keys else field.key
             record.update({key: value})
 
         return record
