@@ -201,7 +201,7 @@ def get(
         app_id (str): [description]
         api_key (str, optional): [description]. Defaults to None.
         slug (str, optional): Your organization's slug (aka, subdomain). As found in
-            your app metadata under accounts/slug.
+            your app metadata under accounts.slug.
         obj (str, optional): [description]. Defaults to None.
         scene (str, optional): [description]. Defaults to None.
         view (str, optional): [description]. Defaults to None.
