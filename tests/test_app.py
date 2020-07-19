@@ -82,6 +82,45 @@ def test_record_create_delete(app_live, random_pause):
     assert response["delete"]
 
 
+def _update_record_state_create(app_static):
+    records = app_static.get(OBJ)
+    fake_data = "just_a_string"
+    app_static._update_record_state(fake_data, OBJ, "create")
+    assert len(app_static.get(OBJ)) == len(records) + 1
+
+
+def _update_record_state_update(app_static):
+    record_id = app_static.get(OBJ)[0]["id"]
+    fake_data = {"id": record_id}
+    app_static._update_record_state(fake_data, OBJ, "update")
+    assert (
+        len(
+            [
+                record
+                for record in app_static.data[OBJ]
+                if record["id"] == fake_data["id"]
+            ]
+        )
+        == 1
+    )
+
+
+def _update_record_state_delete(app_static):
+    record_id = app_static.get(OBJ)[0]["id"]
+    fake_data = {"delete": True}
+    app_static._update_record_state(fake_data, OBJ, "update", record_id=record_id)
+    assert (
+        len(
+            [
+                record
+                for record in app_static.data[OBJ]
+                if record["id"] == fake_data["id"]
+            ]
+        )
+        == 1
+    )
+
+
 def test_basic_over_the_wire_construction(app_live):
     assert app_live
 

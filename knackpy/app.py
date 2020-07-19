@@ -480,6 +480,44 @@ class App:
 
         return download_count
 
+    def _replace_record(self, record, obj):
+        for rec in self.data[obj]:
+            if rec["id"] == record["id"]:
+                rec = record
+                return self.data[obj]
+
+    def _update_record_state(self, res, obj, method, record_id=None):
+        """ Keep local data and records in sync with CRUD operations.
+
+        Args:
+            res (dict): Knack API response. Either a record `dict` or `{"delete": True}`
+            obj (str): The Knack object key that was updated.
+            method (str): `create`, `update`, or `delete`.
+            record_id (str): The Knack record ID of the affected record, if applicable.
+
+        Side-Effects:
+            Update `self.data[key]` accordingly; regenerate `self.records[key]`.
+
+        Returns:
+            None
+        """
+        if method == "add":
+            self.data[obj].append(res)
+
+        elif method == "update":
+            self.data[obj] = self._replace_record(res, obj)
+
+        elif method == "delete":
+            # the Knack API responds with {"delete": True} when deleting records so we
+            # need to have the record_id of the deleted record explicitly here (ie
+            # there is no `record` response to work with)
+            self.data[obj] = [
+                record for record in self.data[obj] if record["id"] != record_id
+            ]
+
+        self.records[obj] = self._records(obj)
+        return None
+
     def record(
         self, *, data: dict, method: str, obj: str,
     ):
@@ -500,7 +538,7 @@ class App:
         # Knack API raises an HTTPError
         container = self._find_container(obj)
 
-        return api.record(
+        res = api.record(
             app_id=self.app_id,
             api_key=self.api_key,
             data=data,
@@ -510,3 +548,8 @@ class App:
             max_attempts=self.max_attempts,
             timeout=self.timeout,
         )
+
+        if self.data.get(obj):
+            # if data for the affected obj is stored locally, update it accordingly.
+            self._update_record_state(res, obj, method, record_id=data.get("id"))
+        return res
