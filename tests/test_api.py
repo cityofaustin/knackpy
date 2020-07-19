@@ -1,5 +1,4 @@
 import os
-import random
 import time
 
 import knackpy
@@ -26,15 +25,8 @@ UPLOAD_CONFIG = {
 
 
 @pytest.fixture
-def random_pause():
-    """sleep for at least .333 seconds"""
-    seconds = random.randrange(3, 10, 1)
-    time.sleep(seconds / 10)
-
-
-@pytest.fixture
-def records(random_pause):
-    random_pause
+def records():
+    time.sleep(.5)
     return knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, record_limit=1)
 
 
@@ -43,7 +35,7 @@ def test_random_pause():
     assert True
 
 
-def test_upload_file_create_update_delete_record(random_pause):
+def test_upload_file_create_update_delete_record():
     """
     Yes, this is three tests in one. Create a record with a new file. Update the
     record with another file (ok, well, technically the same file), delete that
@@ -62,7 +54,7 @@ def test_upload_file_create_update_delete_record(random_pause):
         field=field,
     )
     assert record1
-    random_pause
+    time.sleep(.5)
     # update
     record2 = knackpy.api.upload(
         app_id=APP_ID,
@@ -75,7 +67,7 @@ def test_upload_file_create_update_delete_record(random_pause):
     )
     # verify a new record was not created
     assert record1["id"] == record2["id"]
-    random_pause
+    time.sleep(.5)
     # delete
     response = knackpy.api.record(
         method="delete",
@@ -87,7 +79,7 @@ def test_upload_file_create_update_delete_record(random_pause):
     assert response["delete"]
 
 
-def test_upload_image_create_update_delete_record(random_pause):
+def test_upload_image_create_update_delete_record():
     """
     Yes, this is three tests in one. Create a record with a new image. Update the
     record with another image (ok, well, technically the same image), delete that
@@ -106,7 +98,7 @@ def test_upload_image_create_update_delete_record(random_pause):
         field=field,
     )
     assert record1
-    random_pause
+    time.sleep(.5)
     # update
     record2 = knackpy.api.upload(
         app_id=APP_ID,
@@ -118,7 +110,7 @@ def test_upload_image_create_update_delete_record(random_pause):
         field=field,
     )
     assert record1["id"] == record2["id"]
-    random_pause
+    time.sleep(.5)
     # delete
     response = knackpy.api.record(
         method="delete",
@@ -135,25 +127,25 @@ def test_get_limit(records):
 
 
 def test_get_no_limit():
-    random_pause
+    time.sleep(.5)
     records = knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ)
     assert len(records) > 1
 
 
 def test_get_filters():
-    random_pause
+    time.sleep(.5)
     records = knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, filters=FILTERS)
     assert len(records) == 1
 
 
 def test_record_create_delete():
     # yes, two tests in one :/
-    random_pause
+    time.sleep(.5)
     new_record = knackpy.api.record(
         method="create", app_id=APP_ID, api_key=API_KEY, data={}, obj=OBJ
     )
     assert new_record
-    random_pause
+    time.sleep(.5)
     response = knackpy.api.record(
         method="delete",
         app_id=APP_ID,
@@ -183,6 +175,6 @@ def test_get_metadata():
     assert metadata["application"]
 
 
-def test_slug_param(random_pause):
-    random_pause
+def test_slug_param():
+    time.sleep(.5)
     assert knackpy.api.get_metadata(app_id=APP_ID, slug="atd")

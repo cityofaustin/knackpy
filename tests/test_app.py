@@ -1,6 +1,5 @@
 import json
 import os
-import random
 import time
 import types
 
@@ -53,13 +52,6 @@ def app_live():
     return knackpy.app.App(app_id=APP_ID, api_key=API_KEY)
 
 
-@pytest.fixture
-def random_pause():
-    """sleep for at least .333 seconds"""
-    seconds = random.randrange(3, 10, 1)
-    time.sleep(seconds / 10)
-
-
 def test_record_update(app_static, app_live):
     """
     Given the first record in our static data, update one value and validate the
@@ -72,12 +64,12 @@ def test_record_update(app_static, app_live):
     assert record_updated[UPDATE_KEY] == update_value
 
 
-def test_record_create_delete(app_live, random_pause):
+def test_record_create_delete(app_live):
     # yes, two tests in one :/
-    random_pause
+    time.sleep(.5)
     new_record = app_live.record(method="create", data={}, obj=OBJ)
     assert new_record
-    random_pause
+    time.sleep(.5)
     response = app_live.record(method="delete", data={"id": new_record["id"]}, obj=OBJ,)
     assert response["delete"]
 
