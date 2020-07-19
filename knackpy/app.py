@@ -51,8 +51,8 @@ class App:
         slug: str = None,
         metadata: str = None,
         tzinfo: datetime.tzinfo = None,
-        max_attempts: int = None,
-        timeout: int = None,
+        max_attempts: int = 5,
+        timeout: int = 30,
     ):
 
         if not api_key:
@@ -181,23 +181,6 @@ class App:
                 f"Unknown container specified: {identifier}. Inspect App.containers for available containers."  # noqa
             )
 
-    def _build_request_kwargs(self, **kwargs) -> dict:
-        """Compile the keyword arguments to be passed to `knackpy.api`. We drop params
-        that are NoneType because we don't want to override the default values for
-        these params that are define in the api methods.
-
-        Args:
-            record_limit (int): the maximum number of records to retrieve.
-            max_attempts (int): The maximum number of attempts to make if a request
-                times out.
-            timeout (int, optional): Number of seconds to wait before a Knack API
-                request times out. Further reading:
-                [Requests docs](https://requests.readthedocs.io/en/master/user/quickstart/).  # noqa:E501
-        """
-        supported_kwargs = ["record_limit", "max_attempts", "timeout"]
-
-        return {key: kwargs[key] for key in supported_kwargs if kwargs.get(key)}
-
     def get(
         self,
         identifier: str = None,
@@ -248,12 +231,6 @@ class App:
         if not self.data.get(container_key) or refresh:
             # to support side-loading of data, we may have a situation where data is
             # present, but records have not never been generated
-            request_kwargs = self._build_request_kwargs(
-                max_attempts=self.max_attempts,
-                timeout=self.timeout,
-                record_limit=record_limit,
-            )
-
             self.data[container_key] = api.get(
                 app_id=self.app_id,
                 api_key=self.api_key,
@@ -262,7 +239,9 @@ class App:
                 view=container.view,
                 filters=filters,
                 slug=self.slug,
-                **request_kwargs,
+                max_attempts=self.max_attempts,
+                timeout=self.timeout,
+                record_limit=record_limit,
             )
 
         self.records[container_key] = self._records(container_key, generate)
