@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" dir=>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="knackpy.fields #  Field Objects #  class Field(object) A container for a single column of Knack data. This is the lowest-level container in the API. The hieracrchy being: App &gt; Records &gt; Record &gt; Field. Typically you would not construct this class directly, but instead an App, which will generate Fields via App.records().
+More specifically, the API is designed so that you would typically interface with a Field instance through the records.">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="Field" />
+<meta property="og:description" content="knackpy.fields #  Field Objects #  class Field(object) A container for a single column of Knack data. This is the lowest-level container in the API. The hieracrchy being: App &gt; Records &gt; Record &gt; Field. Typically you would not construct this class directly, but instead an App, which will generate Fields via App.records().
+More specifically, the API is designed so that you would typically interface with a Field instance through the records." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/api-reference/field/" />
+
+<title>Field | Knackpy</title>
+<link rel="manifest" href="/knackpy/manifest.json">
+<link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/knackpy/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
+<script defer src="/knackpy/en.search.min.cfc62b8d7fcaa307de40b74b1fc55c6fa33e91042c3e2992a007e0019f1664b4.js" integrity="sha256-z8YrjX/KowfeQLdLH8Vcb6M&#43;kQQsPimSoAfgAZ8WZLQ="></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body dir=>
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/knackpy"><span>Knackpy</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <span>API Reference</span>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/api/" class="">API</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/app/" class="">App</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/field/" class="active">Field</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/record/" class="">Record</a>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/user-guide/" class="">User Guide</a>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/knackpy/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Field</strong>
+
+  <label for="toc-control">
+    
+    <img src="/knackpy/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#field-objects">Field Objects</a></li>
+  </ul>
+</nav>
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="knackpyfields">
+  knackpy.fields
+  <a class="anchor" href="#knackpyfields">#</a>
+</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="field-objects">
+  Field Objects
+  <a class="anchor" href="#field-objects">#</a>
+</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Field</span>(object)
+</code></pre></div><p>A container for a single column of Knack data. This is the lowest-level
+container in the API. The hieracrchy being: App &gt; Records &gt; Record &gt; Field.
+Typically you would not construct this class directly, but instead an App, which
+will generate Fields via App.records().</p>
+<p>More specifically, the API is designed so that you would typically interface with a
+Field instance through the records.Record class. That class operates on Fields by
+returning their values through Record[<!-- raw HTML omitted -->] or Record[<!-- raw HTML omitted -->].</p>
+<p>But it&rsquo;s fine to work directly with fields:</p>
+<ul>
+<li>field.value: the unformatted input value</li>
+<li>field.key: the knack field key</li>
+<li>field.name: the knack field name</li>
+</ul>
+<p>And the method of interest here is .format(), which returns the humanized value.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>field_def</code> <em>knackpy.fields.FieldDef</em> - A knackpy FieldDef class object</li>
+<li><code>value</code> <em>object</em> - Anything, really.</li>
+<li><code>timezone</code> <em>[pytz.timezone]</em> - A pytz timezone object.</li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#field-objects">Field Objects</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -11,15 +11,15 @@
     
     
     <item>
-      <title>API Reference</title>
-      <link>https://cityofaustin.github.io/knackpy/docs/api-reference/</link>
+      <title>User Guide</title>
+      <link>https://cityofaustin.github.io/knackpy/docs/user-guide/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://cityofaustin.github.io/knackpy/docs/api-reference/</guid>
-      <description>knackpy #  knackpy.formatters #  default #  default(value: object) Formatter functions handle Knack values by returning a formatted (aka, humanized) value.
-The default() formatter handles any field type for which another formatter function has not been defined. It simply returns the input value without additional formatting.
-You&amp;rsquo;ll notice that each formatter function&amp;rsquo;s name matches its field type. If you want to write a custom formatter, do that.
-See also: knackpy.</description>
+      <guid>https://cityofaustin.github.io/knackpy/docs/user-guide/</guid>
+      <description>Knackpy #  Knackpy is a Python client for interacting with Knack applications.
+Here&amp;rsquo;s the complete documentation.
+Installation #  Knackpy requires Python v3.6+. To use the development version Knackpy v1.0, install with:
+$ pip install knackpy-dev Quick Start #  &amp;gt;&amp;gt;&amp;gt; import knackpy # basic app construction &amp;gt;&amp;gt;&amp;gt; app = knackpy.App(app_id=&amp;#34;myappid&amp;#34;, api_key=&amp;#34;myverysecretapikey&amp;#34;) # fetch all records from &amp;#39;object_1&amp;#39; &amp;gt;&amp;gt;&amp;gt; records = app.get(&amp;#34;object_1&amp;#34;) # get the formatted keys/values of each record &amp;gt;&amp;gt;&amp;gt; records_formatted = [record.</description>
     </item>
     
   </channel>
