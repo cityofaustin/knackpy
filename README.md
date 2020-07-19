@@ -22,7 +22,7 @@ $ pip install knackpy-dev
 # basic app construction
 >>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey")
 # fetch all records from 'object_1'
->>> records = app.get("object_1")]
+>>> records = app.get("object_1")
 # get the formatted keys/values of each record
 >>> records_formatted = [record.format() for record in records]
 # access a record property by name
@@ -158,7 +158,19 @@ Download files from an object or view.
 ... )
 ```
 
-### Uploading Files
+### Upload Files
+
+Upload a file and attach it to a Knack record.
+
+```python
+>>> res = app.upload(
+...     obj="object_1",
+...     field="field_3",
+...     path="file.jpg",
+...     asset_type="file",
+...     record_id="knackrecordidofexistingrecord"
+... )
+```
 
 ### Advanced `App` Usage
 
@@ -278,6 +290,22 @@ Records may look raw, but any timestamps have been [corrected to real unix time]
 ...     obj="object_1",
 ...     record_limit=None,
 ...     timeout=30
+... )
+```
+
+### Uploading Files
+
+Upload a file and attach it to a Knack record.
+
+```python
+>>> res = knackpy.api.upload(
+...     app_id="myappid",
+...     api_key="myverysecretapikey",
+...     obj="object_1",
+...     field="field_3",
+...     path="file.jpg",
+...     asset_type="file",
+...     record_it="knackrecordidofexistingrecord"
 ... )
 ```
 
