@@ -17,19 +17,28 @@ def default(value: object):
     return value
 
 
-def signature(value):
+def address(value: dict):
+    """ return a string of comma-separated address elements, if present. 'latitude' and
+    'longitude' keys are ignored. """
+
+    keys = ["street", "street2", "city", "state", "zip", "country"]
+    values = [value.get(key) for key in keys if value.get(key)]
+    return ", ".join(values) if values else None
+
+
+def signature(value: dict):
     return value.get("base30")
 
 
-def email(value):
+def email(value: dict):
     return value.get("email")
 
 
-def link(value):
+def link(value: dict):
     return value.get("url")
 
 
-def phone(value):
+def phone(value: dict):
     return value.get("full")
 
 

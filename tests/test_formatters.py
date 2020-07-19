@@ -7,6 +7,14 @@ import knackpy
 @pytest.fixture
 def record():
     return {
+        "address_field": {
+            "street": "123 Fake St",
+            "street2": "APT C",
+            "city": "London",
+            "state": "London",
+            "zip": "ABC123",
+            "country": "United Kingdom",
+        },
         "date_time_field": {
             "am_pm": "PM",
             "date": "09/11/2019",
@@ -70,6 +78,13 @@ def test_signature(record):
 def test_email(record):
     assert (
         knackpy.formatters.email(record["email_field"]) == "pizzathehut@spaceballs.town"
+    )
+
+
+def test_address(record):
+    assert (
+        knackpy.formatters.address(record["address_field"])
+        == "123 Fake St, APT C, London, London, ABC123, United Kingdom"
     )
 
 
