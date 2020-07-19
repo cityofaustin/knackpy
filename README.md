@@ -231,7 +231,7 @@ You can side-load record data into your your app as well. Note that you must ass
 >>> with open("my_knack_data.json", "r") as fin:
 ...     data = { "object_3": json.loads(fin.read()) }
 >> app.data = data
->> records = [record.format() for record in app.get("object_3")]
+>> records = app.get("object_3")
 ```
 
 You can use `knackpy.get()` to fetch "raw" data from your Knack app. Be aware that raw Knack timestamps [are problematic](#timestamps-and-localization). See the [Records](#records) documentation.
@@ -281,6 +281,9 @@ Format the keys and/or values of a record.
 # only format the values
 >>> formatted_values = record.format(keys=False)
 { "id": "abc123xyz789", "field_22": "8700 Cameron Rd, Austin, TX, 78754" }
+# format specific keys and values
+>>> formatted_values = record.format(keys=["field_22"], values=["field_22"])
+{ "id": "abc123xyz789", "Customer Address": "8700 Cameron Rd, Austin, TX, 78754" }
 ```
 
 Although a `Record` object looks like a `dict`, it contains `Field` objects (TODO: link to docs). If you want to convert a `Record` object into a plain-old `dict`, use the `dict()` built-in.

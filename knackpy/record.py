@@ -1,4 +1,5 @@
 from collections.abc import MutableMapping
+from typing import Union
 
 from . import utils
 from . import fields as _fields
@@ -117,11 +118,13 @@ class Record(MutableMapping):
         record = self._correct_knack_timestamp(record, self.timezone)
         return record
 
-    def format(self, keys: bool = True, values: bool = True):
+    def format(self, keys: Union[list, bool] = True, values: Union[list, bool] = True):
         """Returns the record as a dict.
         Args:
-            keys (bool, optional): If keys should be formatted.
-            values (bool, optional): If values should be formatted.
+            keys (bool or list, optional): If the keys should be formatted, or a list
+                of field keys specifying the keys to be formatted.
+            values (bool or list, optional): If values should be formatted, or a list
+                of field keys specifying the values to be formatted
 
         Returns:
             dict: A dict of the record values with formatted (aka, humaized) keys
@@ -130,8 +133,19 @@ class Record(MutableMapping):
         record = {}
 
         for key, field in self.fields.items():
-            value = field.format() if values else field.value
-            key = field.name if keys else field.key
+            try:
+                # try to see if key is contained by list keys
+                key = field.name if key in keys else key
+            except TypeError:
+                # assume keys is a bool
+                key = field.name if keys else key
+            try:
+                # try to see if value is contained by list values
+                value = field.format() if key in values else field.value
+            except TypeError:
+                # assume values is a bool
+                value = field.format() if values else field.value
+
             record.update({key: value})
 
         return record
