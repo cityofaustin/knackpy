@@ -178,16 +178,38 @@ https://github.com/alex-shpak/hugo-book
   <a class="anchor" href="#quick-start">#</a>
 </h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> knackpy
+
 <span style="color:#75715e"># basic app construction</span>
 <span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,  api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>)
+
 <span style="color:#75715e"># fetch all records from &#39;object_1&#39;</span>
 <span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)
+
 <span style="color:#75715e"># get the formatted keys/values of each record</span>
 <span style="color:#f92672">&gt;&gt;&gt;</span> records_formatted <span style="color:#f92672">=</span> [record<span style="color:#f92672">.</span>format() <span style="color:#66d9ef">for</span> record <span style="color:#f92672">in</span> records]
+
 <span style="color:#75715e"># access a record property by name</span>
 <span style="color:#f92672">&gt;&gt;&gt;</span> customer_address <span style="color:#f92672">=</span> records[<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#34;Customer Address&#34;</span>]
+
 <span style="color:#75715e"># create a record</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> knackpy<span style="color:#f92672">.</span>record()
+<span style="color:#f92672">&gt;&gt;&gt;</span> data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;field_1&#34;</span>: <span style="color:#e6db74">&#34;pizza&#34;</span>}
+<span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>record(method<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;create&#34;</span>, data<span style="color:#f92672">=</span>data, obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>)
+
+<span style="color:#75715e"># download records</span>
+<span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>download(
+<span style="color:#f92672">...</span>     container<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,
+<span style="color:#f92672">...</span>     field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_1&#34;</span>,
+<span style="color:#f92672">...</span>     out_dir<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;_downloads&#34;</span>
+<span style="color:#f92672">...</span> )
+
+<span style="color:#75715e"># upload a file and attach it to a record</span>
+<span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>upload(
+<span style="color:#f92672">...</span>     obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,
+<span style="color:#f92672">...</span>     field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_3&#34;</span>,
+<span style="color:#f92672">...</span>     path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file.jpg&#34;</span>,
+<span style="color:#f92672">...</span>     asset_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file&#34;</span>,
+<span style="color:#f92672">...</span>     record_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;knackrecordidofexistingrecord&#34;</span>
+<span style="color:#f92672">...</span> )
 </code></pre></div><h2 id="working-with-apps">
   Working with Apps
   <a class="anchor" href="#working-with-apps">#</a>

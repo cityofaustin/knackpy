@@ -19,16 +19,38 @@ $ pip install knackpy-dev
 
 ```python
 >>> import knackpy
+
 # basic app construction
 >>> app = knackpy.App(app_id="myappid",  api_key="myverysecretapikey")
+
 # fetch all records from 'object_1'
 >>> records = app.get("object_1")
+
 # get the formatted keys/values of each record
 >>> records_formatted = [record.format() for record in records]
+
 # access a record property by name
 >>> customer_address = records[0]["Customer Address"]
+
 # create a record
->>> knackpy.record()
+>>> data = {"field_1": "pizza"}
+>>> record = app.record(method="create", data=data, obj="object_1")
+
+# download records
+>>> app.download(
+...     container="object_1",
+...     field="field_1",
+...     out_dir="_downloads"
+... )
+
+# upload a file and attach it to a record
+>>> app.upload(
+...     obj="object_1",
+...     field="field_3",
+...     path="file.jpg",
+...     asset_type="file",
+...     record_id="knackrecordidofexistingrecord"
+... )
 ```
 
 ## Working with Apps
