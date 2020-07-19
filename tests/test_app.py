@@ -9,7 +9,9 @@ import pytest
 
 
 APP_ID = os.environ["KNACK_APP_ID"]
+
 API_KEY = os.environ["KNACK_API_KEY"]
+
 FILTERS = {
     "match": "or",
     "rules": [
@@ -19,8 +21,15 @@ FILTERS = {
 }
 
 OBJ = "object_3"
+
 UPDATE_KEY = "field_25"  # rating field type
 
+UPLOAD_CONFIG = {
+    "path": "tests/plaid.jpg",
+    "obj": OBJ,
+    "file_field": "field_17",
+    "image_field": "field_18",
+}
 
 @pytest.fixture
 def app_data():
@@ -247,3 +256,39 @@ def test_downloads(app_live, tmpdir):
         container="object_3", field="file", out_dir=tmpdir, label_keys=["field_125"]
     )
     assert True
+
+def test_upload_image_create_update_delete_record(app_live):
+    """
+    Yes, this is three tests in one. Create a record with a new image. Update the
+    record with another image (ok, well, technically the same image), delete that
+    record.
+    """
+    path = UPLOAD_CONFIG["path"]
+    field = UPLOAD_CONFIG["image_field"]
+    obj = UPLOAD_CONFIG["obj"]
+    # create
+    record1 = app_live.upload(
+        container=obj,
+        asset_type="image",
+        path=path,
+        field=field,
+    )
+    assert record1
+    time.sleep(.5)
+    # update
+    record2 = app_live.upload(
+        record_id=record1["id"],
+        container=obj,
+        asset_type="image",
+        path=path,
+        field=field,
+    )
+    assert record1["id"] == record2["id"]
+    time.sleep(.5)
+    # delete
+    response = app_live.record(
+        method="delete",
+        data={"id": record2["id"]},
+        obj=OBJ,
+    )
+    assert response["delete"]

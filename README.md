@@ -37,7 +37,7 @@ $ pip install knackpy-dev
 >>> data = {"field_1": "pizza"}
 >>> record = app.record(method="create", data=data, obj="object_1")
 
-# download records
+# download files from an object or view
 >>> app.download(
 ...     container="object_1",
 ...     field="field_1",
@@ -46,11 +46,11 @@ $ pip install knackpy-dev
 
 # upload a file and attach it to a record
 >>> app.upload(
-...     obj="object_1",
+...     container="object_1",  # must be an object key or name
 ...     field="field_3",
 ...     path="file.jpg",
-...     asset_type="file",
-...     record_id="knackrecordidofexistingrecord"
+...     asset_type="file",  # must be 'file' or 'image', depending on field type
+...     record_id="5d7968c8092e7f00106c6399"
 ... )
 ```
 
@@ -158,7 +158,7 @@ Delete a record.
 # response == {"delete": True}
 ```
 
-### Downloading Files
+### Download Files
 
 Download files from an object or view.
 
@@ -187,11 +187,11 @@ Upload a file and attach it to a Knack record.
 
 ```python
 >>> res = app.upload(
-...     obj="object_1",
+...     container="object_1",  # must be an object key or name
 ...     field="field_3",
 ...     path="file.jpg",
-...     asset_type="file",
-...     record_id="knackrecordidofexistingrecord"
+...     asset_type="file",  # must be 'file' or 'image', depending on field type
+...     record_id="5d7968c8092e7f00106c6399"
 ... )
 ```
 
@@ -316,22 +316,6 @@ Records may look raw, but any timestamps have been [corrected to real unix time]
 ...     obj="object_1",
 ...     record_limit=None,
 ...     timeout=30
-... )
-```
-
-### Uploading Files
-
-Upload a file and attach it to a Knack record.
-
-```python
->>> res = knackpy.api.upload(
-...     app_id="myappid",
-...     api_key="myverysecretapikey",
-...     obj="object_1",
-...     field="field_3",
-...     path="file.jpg",
-...     asset_type="file",
-...     record_it="knackrecordidofexistingrecord"
 ... )
 ```
 

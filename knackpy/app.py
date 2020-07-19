@@ -532,3 +532,46 @@ class App:
             # if data for the affected obj is stored locally, update it accordingly.
             self._update_record_state(res, obj, method, record_id=data.get("id"))
         return res
+
+    def upload(
+        self,
+        *,
+        container: str,
+        field: str,
+        path: str,
+        asset_type: str,
+        record_id: str = None,
+    ):
+        """Upload a file or image to Knack. This is a two-step process:
+
+        1) Upload file asset to Knack storage
+        2) Create/update a record that links to the file in storage
+
+        Knack docs: https://www.knack.com/developer-documentation/#file-image-uploads
+
+        Args:
+            container (str): The name or key of the object from which files will be
+                downloaded.
+            field (str): The knack field key of the field you're uploading into.
+            path (str): The path to the file to be uploaded.
+            asset_type (str): The type of Knack field you're uploading to. Must be `file` or
+                `image`.
+            record_id (str, optional): The knack record ID to which the upload will be
+                attached. If `None`, will create a new record. Otherwise will update an
+                existing record.
+        """
+        download_container = self._find_container(container)
+
+        return api.upload(
+            app_id=self.app_id,
+            api_key=self.api_key,
+            obj=download_container.obj,
+            field=field,
+            path=path,
+            asset_type=asset_type,
+            record_id=record_id,
+            slug=self.slug,
+            max_attempts=self.max_attempts,
+            timeout=self.timeout,
+        )
+
