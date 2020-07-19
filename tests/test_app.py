@@ -31,6 +31,7 @@ UPLOAD_CONFIG = {
     "image_field": "field_18",
 }
 
+
 @pytest.fixture
 def app_data():
     with open("tests/_metadata.json", "r") as fin:
@@ -75,10 +76,10 @@ def test_record_update(app_static, app_live):
 
 def test_record_create_delete(app_live):
     # yes, two tests in one :/
-    time.sleep(.5)
+    time.sleep(0.5)
     new_record = app_live.record(method="create", data={}, obj=OBJ)
     assert new_record
-    time.sleep(.5)
+    time.sleep(0.5)
     response = app_live.record(method="delete", data={"id": new_record["id"]}, obj=OBJ,)
     assert response["delete"]
 
@@ -257,6 +258,7 @@ def test_downloads(app_live, tmpdir):
     )
     assert True
 
+
 def test_upload_image_create_update_delete_record(app_live):
     """
     Yes, this is three tests in one. Create a record with a new image. Update the
@@ -268,13 +270,10 @@ def test_upload_image_create_update_delete_record(app_live):
     obj = UPLOAD_CONFIG["obj"]
     # create
     record1 = app_live.upload(
-        container=obj,
-        asset_type="image",
-        path=path,
-        field=field,
+        container=obj, asset_type="image", path=path, field=field,
     )
     assert record1
-    time.sleep(.5)
+    time.sleep(0.5)
     # update
     record2 = app_live.upload(
         record_id=record1["id"],
@@ -284,11 +283,7 @@ def test_upload_image_create_update_delete_record(app_live):
         field=field,
     )
     assert record1["id"] == record2["id"]
-    time.sleep(.5)
+    time.sleep(0.5)
     # delete
-    response = app_live.record(
-        method="delete",
-        data={"id": record2["id"]},
-        obj=OBJ,
-    )
+    response = app_live.record(method="delete", data={"id": record2["id"]}, obj=OBJ,)
     assert response["delete"]

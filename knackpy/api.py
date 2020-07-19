@@ -367,5 +367,3 @@ def upload(
     return record(
         app_id=app_id, api_key=api_key, method=method, data=data, slug=slug, obj=obj
     )
-
-

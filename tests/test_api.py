@@ -26,7 +26,7 @@ UPLOAD_CONFIG = {
 
 @pytest.fixture
 def records():
-    time.sleep(.5)
+    time.sleep(0.5)
     return knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, record_limit=1)
 
 
@@ -54,7 +54,7 @@ def test_upload_file_create_update_delete_record():
         field=field,
     )
     assert record1
-    time.sleep(.5)
+    time.sleep(0.5)
     # update
     record2 = knackpy.api.upload(
         app_id=APP_ID,
@@ -67,7 +67,7 @@ def test_upload_file_create_update_delete_record():
     )
     # verify a new record was not created
     assert record1["id"] == record2["id"]
-    time.sleep(.5)
+    time.sleep(0.5)
     # delete
     response = knackpy.api.record(
         method="delete",
@@ -98,7 +98,7 @@ def test_upload_image_create_update_delete_record():
         field=field,
     )
     assert record1
-    time.sleep(.5)
+    time.sleep(0.5)
     # update
     record2 = knackpy.api.upload(
         app_id=APP_ID,
@@ -110,7 +110,7 @@ def test_upload_image_create_update_delete_record():
         field=field,
     )
     assert record1["id"] == record2["id"]
-    time.sleep(.5)
+    time.sleep(0.5)
     # delete
     response = knackpy.api.record(
         method="delete",
@@ -127,25 +127,25 @@ def test_get_limit(records):
 
 
 def test_get_no_limit():
-    time.sleep(.5)
+    time.sleep(0.5)
     records = knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ)
     assert len(records) > 1
 
 
 def test_get_filters():
-    time.sleep(.5)
+    time.sleep(0.5)
     records = knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, filters=FILTERS)
     assert len(records) == 1
 
 
 def test_record_create_delete():
     # yes, two tests in one :/
-    time.sleep(.5)
+    time.sleep(0.5)
     new_record = knackpy.api.record(
         method="create", app_id=APP_ID, api_key=API_KEY, data={}, obj=OBJ
     )
     assert new_record
-    time.sleep(.5)
+    time.sleep(0.5)
     response = knackpy.api.record(
         method="delete",
         app_id=APP_ID,
@@ -176,5 +176,8 @@ def test_get_metadata():
 
 
 def test_slug_param():
-    time.sleep(.5)
+    time.sleep(0.5)
     assert knackpy.api.get_metadata(app_id=APP_ID, slug="atd")
+
+
+knackpy.api.upload()

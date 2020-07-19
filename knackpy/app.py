@@ -554,8 +554,8 @@ class App:
                 downloaded.
             field (str): The knack field key of the field you're uploading into.
             path (str): The path to the file to be uploaded.
-            asset_type (str): The type of Knack field you're uploading to. Must be `file` or
-                `image`.
+            asset_type (str): The type of Knack field you're uploading to. Must be
+                `file` or `image`.
             record_id (str, optional): The knack record ID to which the upload will be
                 attached. If `None`, will create a new record. Otherwise will update an
                 existing record.
@@ -574,4 +574,3 @@ class App:
             max_attempts=self.max_attempts,
             timeout=self.timeout,
         )
-
