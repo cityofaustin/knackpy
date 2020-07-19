@@ -337,7 +337,7 @@ def upload(
         api_key (str): [Knack API key](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
         obj (str): The Knack object key which holds the record data.
         field (str): The knack field key of the field you're uploading into.
-        path: (str): The path to the file to be uploaded.
+        path (str): The path to the file to be uploaded.
         asset_type (str): The type of Knack field you're uploading to. Must be `file` or
             `image`.
         record_id (str, optional): The knack record ID to which the upload will be
@@ -367,3 +367,5 @@ def upload(
     return record(
         app_id=app_id, api_key=api_key, method=method, data=data, slug=slug, obj=obj
     )
+
+
