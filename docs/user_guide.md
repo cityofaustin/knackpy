@@ -248,7 +248,7 @@ Display summary metrics about the app.
 Write a container to CSV. Be aware that destination files will be overwritten, if they exist.
 
 ```python
->>> app.to_csv("my exciting view", out_dir="data")
+>>> app.to_csv("my exciting view", out_dir="_csv")
 ```
 
 ## Working with `Record` Objects
@@ -338,10 +338,6 @@ Records may look raw, but any timestamps have been [corrected to real unix time]
 - "Raw" data is available with timestamp corrections
 - Reduce API calls with metadata and/or record side-loading
 - Null values are consistently returned as `NoneType`'s
-
-## Issues and Contributions
-
-Issues and pull requests are welcome. Know that your contributions are donated to the [public domain](https://github.com/cityofaustin/knackpy/blob/master/LICENSE.md).
 
 ## Timestamps and Localization
 

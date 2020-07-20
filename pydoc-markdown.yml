@@ -23,7 +23,10 @@ renderer:
       weight: 20
       name: user-guide
       source: docs/user_guide.md
-      
+    - title: Developer Guide
+      weight: 20
+      name: developer-guide
+      source: docs/developer_guide.md
     - title: API Reference
       weight: 50
       children:
