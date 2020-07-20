@@ -20,7 +20,6 @@ def default(value: object):
 def address(value: dict):
     """ return a string of comma-separated address elements, if present. 'latitude' and
     'longitude' keys are ignored. """
-
     keys = ["street", "street2", "city", "state", "zip", "country"]
     values = [value.get(key) for key in keys if value.get(key)]
     return ", ".join(values) if values else None
