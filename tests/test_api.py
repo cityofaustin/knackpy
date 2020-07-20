@@ -178,6 +178,3 @@ def test_get_metadata():
 def test_slug_param():
     time.sleep(0.5)
     assert knackpy.api.get_metadata(app_id=APP_ID, slug="atd")
-
-
-knackpy.api.upload()
