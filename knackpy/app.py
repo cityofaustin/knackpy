@@ -480,7 +480,7 @@ class App:
         Returns:
             None
         """
-        if method == "add":
+        if method == "create":
             self.data[obj].append(res)
 
         elif method == "update":

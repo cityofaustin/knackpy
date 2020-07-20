@@ -62,69 +62,8 @@ def app_live():
     return knackpy.app.App(app_id=APP_ID, api_key=API_KEY)
 
 
-def test_record_update(app_static, app_live):
-    """
-    Given the first record in our static data, update one value and validate the
-    updated data returned in the response.
-    """
-    record = dict(app_static.get(OBJ)[0])
-    update_value = "0.00" if record[UPDATE_KEY] != "0.00" else "1.00"
-    data = {"id": record["id"], UPDATE_KEY: update_value}
-    record_updated = app_live.record(method="update", data=data, obj=OBJ)
-    assert record_updated[UPDATE_KEY] == update_value
-
-
-def test_record_create_delete(app_live):
-    # yes, two tests in one :/
-    time.sleep(0.5)
-    new_record = app_live.record(method="create", data={}, obj=OBJ)
-    assert new_record
-    time.sleep(0.5)
-    response = app_live.record(method="delete", data={"id": new_record["id"]}, obj=OBJ,)
-    assert response["delete"]
-
-
-def _update_record_state_create(app_static):
-    records = app_static.get(OBJ)
-    fake_data = "just_a_string"
-    app_static._update_record_state(fake_data, OBJ, "create")
-    assert len(app_static.get(OBJ)) == len(records) + 1
-
-
-def _update_record_state_update(app_static):
-    record_id = app_static.get(OBJ)[0]["id"]
-    fake_data = {"id": record_id}
-    app_static._update_record_state(fake_data, OBJ, "update")
-    assert (
-        len(
-            [
-                record
-                for record in app_static.data[OBJ]
-                if record["id"] == fake_data["id"]
-            ]
-        )
-        == 1
-    )
-
-
-def _update_record_state_delete(app_static):
-    record_id = app_static.get(OBJ)[0]["id"]
-    fake_data = {"delete": True}
-    app_static._update_record_state(fake_data, OBJ, "update", record_id=record_id)
-    assert (
-        len(
-            [
-                record
-                for record in app_static.data[OBJ]
-                if record["id"] == fake_data["id"]
-            ]
-        )
-        == 1
-    )
-
-
 def test_basic_over_the_wire_construction(app_live):
-    assert app_live
+    assert knackpy.app.App(app_id=APP_ID, api_key=API_KEY)
 
 
 def test_over_the_wire_construction_with_slug(app_live):
@@ -287,3 +226,57 @@ def test_upload_image_create_update_delete_record(app_live):
     # delete
     response = app_live.record(method="delete", data={"id": record2["id"]}, obj=OBJ,)
     assert response["delete"]
+
+
+def test_record_update(app_static, app_live):
+    """Update one record value and validate the updated data returned in the
+    response."""
+    time.sleep(0.5)
+    record = dict(app_live.get(OBJ)[0])
+    update_value = "0.00" if record[UPDATE_KEY] != "0.00" else "1.00"
+    data = {"id": record["id"], UPDATE_KEY: update_value}
+    record_updated = app_live.record(method="update", data=data, obj=OBJ)
+    assert record_updated[UPDATE_KEY] == update_value
+
+
+def test_record_create_delete(app_live):
+    # yes, two tests in one :/
+    time.sleep(0.5)
+    new_record = app_live.record(method="create", data={}, obj=OBJ)
+    assert new_record
+    time.sleep(0.5)
+    response = app_live.record(method="delete", data={"id": new_record["id"]}, obj=OBJ,)
+    assert response["delete"]
+
+
+def test_update_record_state_create(app_static):
+    records = list(app_static.get(OBJ))
+    fake_data = app_static.data.get(OBJ)[0]
+    app_static._update_record_state(fake_data, OBJ, "create")
+    assert len(app_static.get(OBJ)) == len(records) + 1
+
+
+def test_update_record_state_update(app_static):
+    record_id = app_static.get(OBJ)[0]["id"]
+    fake_data = {"id": record_id}
+    app_static._update_record_state(fake_data, OBJ, "update")
+    assert (
+        len(
+            [
+                record
+                for record in app_static.data[OBJ]
+                if record["id"] == fake_data["id"]
+            ]
+        )
+        == 1
+    )
+
+
+def test_update_record_state_delete(app_static):
+    record_id = app_static.get(OBJ)[0]["id"]
+    fake_data = {"delete": True}
+    app_static._update_record_state(fake_data, OBJ, "delete", record_id=record_id)
+    assert (
+        len([record for record in app_static.records[OBJ] if record["id"] == record_id])
+        == 0
+    )
