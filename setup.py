@@ -53,5 +53,5 @@ def build_config(env, readme="README.md"):
 
 
 env = get_env(sys.argv)
-config = build_config("dev")
+config = build_config(env)
 setuptools.setup(**config)
