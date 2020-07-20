@@ -3,6 +3,7 @@ from typing import Union
 
 from . import utils
 from . import fields as _fields
+from .models import FIELD_SETTINGS
 
 
 class Record(MutableMapping):
@@ -44,7 +45,7 @@ class Record(MutableMapping):
         ]
         if match_fields:
             # there can be only one
-            return match_fields[0].value
+            return match_fields[0].raw
         else:
             # try to match by field name
             match_fields = [
@@ -52,7 +53,7 @@ class Record(MutableMapping):
             ]
         if match_fields:
             # there can be only one
-            return match_fields[0].value
+            return match_fields[0].raw
 
         raise KeyError(client_key)
 
@@ -96,19 +97,30 @@ class Record(MutableMapping):
 
     def _handle_fields(self):
         fields = {}
-
         for field_def in self.field_defs:
             key = field_def.key
             key_raw = f"{key}_raw"
-            # we want to handle the raw data, except for a few types as defined by the
-            # "use_knack_format" property in models.py. raw values may not be present
-            # if the field is empty
-            value = (
-                self.raw[key_raw]
-                if not field_def.use_knack_format and self.raw[key] is not None
-                else self.raw[key]
+            # store the raw data if available
+            value = self.raw[key_raw] if self.raw.get(key_raw) else self.raw[key]
+
+            # there are a fiew fields where it's easier to just use knack's formatted
+            # value. E.g. timer and name. in those cases, we want to store knack's
+            # formatted value so that we can reference it when we assign a value to
+            # Field.formatted.
+            try:
+                use_knack_format = FIELD_SETTINGS[field_def.type]["use_knack_format"]
+            except KeyError:
+                use_knack_format = False
+
+            knack_formatted_value = self.raw[key] if use_knack_format else None
+
+            field = _fields.Field(
+                field_def,
+                value,
+                self.timezone,
+                knack_formatted_value=knack_formatted_value,
             )
-            field = _fields.Field(field_def, value, self.timezone)
+
             fields[field.key] = field
 
         return fields
@@ -141,10 +153,10 @@ class Record(MutableMapping):
                 key = field.name if keys else key
             try:
                 # try to see if value is contained by list values
-                value = field.format() if key in values else field.value
+                value = field.formatted if key in values else field.raw
             except TypeError:
                 # assume values is a bool
-                value = field.format() if values else field.value
+                value = field.formatted if values else field.raw
 
             record.update({key: value})
 

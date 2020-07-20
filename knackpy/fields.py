@@ -71,7 +71,7 @@ class FieldDef:
         self.subfields = self.settings.get("subfields") if self.settings else None
         self.use_knack_format = (
             self.settings.get("use_knack_format") if self.settings else False
-        )  # noqa:E501
+        )
 
         try:
             self.formatter = getattr(formatters, self.type)
@@ -135,32 +135,39 @@ class Field(object):
 
     But it's fine to work directly with fields:
         - field.value: the unformatted input value
+        - field.formatted: the formatted value
         - field.key: the knack field key
         - field.name: the knack field name
-
-    And the method of interest here is .format(), which returns the humanized value.
 
     Args:
         field_def (knackpy.fields.FieldDef): A knackpy FieldDef class object
         value (object): Anything, really.
         timezone ([pytz.timezone]): A pytz timezone object.
+        knack_formatted_value (str, optional): There a fiew fields where it's easier to
+            use knack's formatted value as a starting point, rather than the raw value.
+            E.g. timer and name. In those cases, we  assign that value here and pass it
+            on to the self.formatter() function for further formatting.
     """
 
-    def __init__(self, field_def: FieldDef, value: object, timezone):
+    def __init__(
+        self, field_def: FieldDef, value: object, timezone, knack_formatted_value=None
+    ):
         self.key = field_def.key
         self.name = field_def.name
-        self.value = value
+        self.raw = value
         self.field_def = field_def
         self.timezone = timezone
+        self.knack_formatted_value = knack_formatted_value
+        self.formatted = self._format()
 
     def __repr__(self):
-        return f"{self.value}"
+        return f"<Field {{'{self.key}': '{self.formatted}'}}>"
 
     def __contains__(self, item):
-        if item in self.value:
+        if item in self.raw:
             return True
 
-    def format(self):
+    def _format(self):
         """
         Knack applies it's own standard formatting to values, which are always
         available at the non-raw key. Knack includes the raw key in the dict when
@@ -178,10 +185,13 @@ class Field(object):
         kwargs = self._set_formatter_kwargs()
 
         try:
-            return self.field_def.formatter(self.value, **kwargs)
+            input_value = (
+                self.knack_formatted_value if self.knack_formatted_value else self.raw
+            )
+            return self.field_def.formatter(input_value, **kwargs)
         except AttributeError:
             # thrown when value is None
-            return self.value
+            return self.raw
 
     def _set_formatter_kwargs(self):
         kwargs = {}

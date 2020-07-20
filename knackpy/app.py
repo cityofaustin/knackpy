@@ -10,7 +10,7 @@ import pytz
 
 from . import api, fields, utils
 from . import record as knackpy_record
-from .models import TIMEZONES
+from .models import TIMEZONES, FIELD_SETTINGS
 
 
 class App:
@@ -294,6 +294,44 @@ class App:
             and field_def.obj == obj
         ]
 
+    def _unpack_subfields(self, records: list) -> list:
+        """Unpack subfields and for select field types so that they can be handled as
+        individual columns in CSV. See `models.py` for subfield definitions.
+
+        Also formats field data according each field's formatter. Note that any
+        field with subfields does not any formatting applied. It's simply unpacked.
+
+        Receives a list of `Record` objects and returns a list of dicts."""
+        records_formatted = []
+
+        for record in records:
+            record_formatted = {}
+            for field in record.values():
+                if not field:
+                    breakpoint()
+                try:
+                    subfields = FIELD_SETTINGS[field.field_def.type]["subfields"]
+                except KeyError:
+                    subfields = None
+
+                if subfields:
+                    try:
+                        field_dict = {
+                            f"{field.name}_{subfield}": field.value.get(subfield)
+                            for subfield in subfields
+                        }
+                    except AttributeError:
+                        # assume field.value is None. we still want to assign None to
+                        # each subfield, so that each record has the same cols
+                        field_dict = {
+                            f"{field.name}_{subfield}": None for subfield in subfields
+                        }
+                else:
+                    field_dict = {field.name: field.formatted}
+                record_formatted.update(field_dict)
+            records_formatted.append(record_formatted)
+        return records_formatted
+
     def to_csv(self, identifier: str, *, out_dir: str = "_csv", delimiter=",") -> None:
         """Write formatted Knack records to CSV.
 
@@ -309,7 +347,7 @@ class App:
 
         records = self.get(identifier)
 
-        csv_data = [record.format() for record in records]
+        csv_data = self._unpack_subfields(records)
 
         fieldnames = csv_data[0].keys()
 

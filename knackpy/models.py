@@ -13,7 +13,7 @@ FIELD_SETTINGS = {
             "longitude",
         ]
     },
-    "name": {"use_knack_format": True},
+    "name": {"use_knack_format": True, "subfields": ["first", "middle", "last", ]},
     "timer": {"use_knack_format": True},
     "id": {"use_knack_format": True},  # because there is no "raw" format for this field
 }
