@@ -16,7 +16,7 @@ More specifically, the API is designed so that you would typically interface wit
 <link rel="manifest" href="/knackpy/manifest.json">
 <link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/knackpy/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
-<script defer src="/knackpy/en.search.min.cfc62b8d7fcaa307de40b74b1fc55c6fa33e91042c3e2992a007e0019f1664b4.js" integrity="sha256-z8YrjX/KowfeQLdLH8Vcb6M&#43;kQQsPimSoAfgAZ8WZLQ="></script>
+<script defer src="/knackpy/en.search.min.59a18bdbb547bd0ca4c72ffb1c094d3e6bc3d09ae2b3d4f6389b57aae32bea1d.js" integrity="sha256-WaGL27VHvQykxy/7HAlNPmvD0Jris9T2OJtXquMr6h0="></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -131,6 +131,16 @@ https://github.com/alex-shpak/hugo-book
         <li>
           
   
+    <a href="/knackpy/docs/developer-guide/" class="">Developer Guide</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
     <a href="/knackpy/docs/user-guide/" class="">User Guide</a>
   
 
@@ -221,15 +231,19 @@ returning their values through Record[<!-- raw HTML omitted -->] or Record[<!-- 
 <p>But it&rsquo;s fine to work directly with fields:</p>
 <ul>
 <li>field.value: the unformatted input value</li>
+<li>field.formatted: the formatted value</li>
 <li>field.key: the knack field key</li>
 <li>field.name: the knack field name</li>
 </ul>
-<p>And the method of interest here is .format(), which returns the humanized value.</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>field_def</code> <em>knackpy.fields.FieldDef</em> - A knackpy FieldDef class object</li>
 <li><code>value</code> <em>object</em> - Anything, really.</li>
 <li><code>timezone</code> <em>[pytz.timezone]</em> - A pytz timezone object.</li>
+<li><code>knack_formatted_value</code> <em>str, optional</em> - There a fiew fields where it&rsquo;s easier to
+use knack&rsquo;s formatted value as a starting point, rather than the raw value.
+E.g. timer and name. In those cases, we  assign that value here and pass it
+on to the self.formatter() function for further formatting.</li>
 </ul>
 </article>
  

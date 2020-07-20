@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" dir=>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Developer Guide #  Issues and pull requests are welcome. Know that your contributions are donated to the public domain.
+Environment Setup #  Python release candidates are tested against Python 3.6&#43;, so your safest bet when developing is to use v3.6. However, we encourage you to develop in the most current stable release of Python 3 so that you can help us identify potential future compatibility issues.
+Install the development environment requirements from requirements/dev.">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="Developer Guide" />
+<meta property="og:description" content="Developer Guide #  Issues and pull requests are welcome. Know that your contributions are donated to the public domain.
+Environment Setup #  Python release candidates are tested against Python 3.6&#43;, so your safest bet when developing is to use v3.6. However, we encourage you to develop in the most current stable release of Python 3 so that you can help us identify potential future compatibility issues.
+Install the development environment requirements from requirements/dev." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/developer-guide/" />
+
+<title>Developer Guide | Knackpy</title>
+<link rel="manifest" href="/knackpy/manifest.json">
+<link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/knackpy/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
+<script defer src="/knackpy/en.search.min.59a18bdbb547bd0ca4c72ffb1c094d3e6bc3d09ae2b3d4f6389b57aae32bea1d.js" integrity="sha256-WaGL27VHvQykxy/7HAlNPmvD0Jris9T2OJtXquMr6h0="></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body dir=>
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/knackpy"><span>Knackpy</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <span>API Reference</span>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/api/" class="">API</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/app/" class="">App</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/field/" class="">Field</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/record/" class="">Record</a>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/developer-guide/" class="active">Developer Guide</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/user-guide/" class="">User Guide</a>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/knackpy/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Developer Guide</strong>
+
+  <label for="toc-control">
+    
+    <img src="/knackpy/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#environment-setup">Environment Setup</a></li>
+    <li><a href="#tests">Tests</a>
+      <ul>
+        <li><a href="#knacky-development-knack-application">Knacky Development Knack Application</a></li>
+        <li><a href="#writing-tests">Writing Tests</a></li>
+        <li><a href="#running-tests">Running Tests</a></li>
+      </ul>
+    </li>
+    <li><a href="#linting-and-formatting">Linting and Formatting</a></li>
+    <li><a href="#documentation">Documentation</a></li>
+    <li><a href="#automated-tests-and-deployment">Automated Tests and Deployment</a></li>
+  </ul>
+</nav>
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="developer-guide">
+  Developer Guide
+  <a class="anchor" href="#developer-guide">#</a>
+</h1>
+<p>Issues and pull requests are welcome. Know that your contributions are donated to the <a href="https://github.com/cityofaustin/knackpy/blob/master/LICENSE.md">public domain</a>.</p>
+<h2 id="environment-setup">
+  Environment Setup
+  <a class="anchor" href="#environment-setup">#</a>
+</h2>
+<p>Python release candidates are tested against Python 3.6+, so your safest bet when developing is to use v3.6. However, we encourage you to develop in the most current stable release of Python 3 so that you can help us identify potential future compatibility issues.</p>
+<p>Install the development environment requirements from <code>requirements/dev.txt</code>. This will install the test suite and documentation tooling.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pip install -r requirements/dev.txt
+</code></pre></div><p>Clone the Knackpy repo and create a new branch from the <code>dev</code> branch. Use the <code>-e</code> flag to install in development mode:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pip install -e knackpy
+</code></pre></div><h2 id="tests">
+  Tests
+  <a class="anchor" href="#tests">#</a>
+</h2>
+<p>We test with <a href="docs.pytest.org/en/stable"><code>pytest</code></a>, <a href="coverage.readthedocs.io"><code>coverage</code></a>, and <a href="https://github.com/MobileDynasty/pytest-env"><code>pytest-env</code></a>.</p>
+<h3 id="knacky-development-knack-application">
+  Knacky Development Knack Application
+  <a class="anchor" href="#knacky-development-knack-application">#</a>
+</h3>
+<p>Tests for <code>app.py</code> and <code>api.py</code> are dependendent on a City of Austin-owned Knack application which we rely on for over-the-wire API tests. If you work for the City of Austin Transportation Department, the credentials for this app are in our password store, and the app is called &ldquo;Knackpy Development&rdquo;.</p>
+<p>Any modifications you make to the Knackpy Development app may impact tests. You should carefully review our <code>tests/</code> before you modify <em>anything</em> in the development app.</p>
+<p>Some tests rely on static <code>json</code> data stored in the tests directory. After modifying the app, you must refresh the static data by replacing <code>tests/_metadata.json</code> with the most current app metadata, as well as <code>tests._all_fields.json</code> with records exported from the <code>all_fields</code> object in the Knack app.</p>
+<h3 id="writing-tests">
+  Writing Tests
+  <a class="anchor" href="#writing-tests">#</a>
+</h3>
+<p>Ideally, you would add tests for your code to the appropriate test collection in the <code>tests/</code> directory. If you don&rsquo;t have access to our development Knack application, please at least write an example test in your pull request.</p>
+<h3 id="running-tests">
+  Running Tests
+  <a class="anchor" href="#running-tests">#</a>
+</h3>
+<p>You can run ad-hoc tests with:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ coverage run -m pytest -c path/to/your/tests
+</code></pre></div><p>Before you can run the entire test suite, you&rsquo;ll need to create a <code>pytest.ini</code> config with the appropriate environmental variables. You can model it after <a href="https://github.com/cityofaustin/knackpy/blob/dev/tests/pytest.ini_example">this example</a>.</p>
+<p>To run the test suite from <code>pytest.ini</code>, use: <code>$ coverage run -m pytest -c tests/pytest.ini -x</code>.</p>
+<p>After running the tests, you can use <code>$ coverage html</code> to generate HTML documentation of code coverage.</p>
+<p>You can update the coverage badge image with:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ coverage-badge -o coverage.svg
+</code></pre></div><h2 id="linting-and-formatting">
+  Linting and Formatting
+  <a class="anchor" href="#linting-and-formatting">#</a>
+</h2>
+<p>We use<a href="https://black.readthedocs.io/en/stable/"><code>black</code></a> for formatting and <a href="https://flake8.pycqa.org/en/latest/"><code>flake8</code></a> for formatting and linting code.</p>
+<p>Use flake8&rsquo;s <code>--max-line-length</code> param so that the linter matches black&rsquo;s line length opinion:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ flake8 --max-line-length<span style="color:#f92672">=</span><span style="color:#ae81ff">88</span>
+</code></pre></div><h2 id="documentation">
+  Documentation
+  <a class="anchor" href="#documentation">#</a>
+</h2>
+<p>Use <a href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">Google docstring</a> format and <a href="https://docs.python.org/3/library/typing.html">type hints</a>.</p>
+<p>We use <a href="https://github.com/NiklasRosenstein/pydoc-markdown">pydoc-markdown</a> to generate the documentation HTML. You&rsquo;ll need to install <a href="https://gohugo.io/getting-started/quick-start/">Hugo</a> in order to build/serve the documentation site. See also the <a href="https://github.com/cityofaustin/knackpy/blob/dev/pydoc-markdown.yml"><code>pydoc-markdown.yml</code></a> config.</p>
+<p>Rebuild and commit the documentation HTML whenever you update module docstrings or the user guide.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># build html content</span>
+$ pydoc-markdown --build --site-dir docs
+<span style="color:#75715e"># or build and serve locally</span>
+$ pydoc-markdown --server
+</code></pre></div><h2 id="automated-tests-and-deployment">
+  Automated Tests and Deployment
+  <a class="anchor" href="#automated-tests-and-deployment">#</a>
+</h2>
+<p>We use <a href="https://docs.github.com/en/actions">Github Actions</a> to test Knackpy builds and to publish to PyPI. The workflows are defined in <code>.github/workflows</code>.</p>
+<p>Any commit/merge to the <code>dev</code> branch will trigger a PyPI publication to the <code>knackpy-dev</code> package. Any release on the <code>master</code> branch will trigger publication to the <code>knackpy</code> package on PyPI. Note that PyPI publications will fail if don&rsquo;t bump the version number in <code>setup.py</code>.</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#environment-setup">Environment Setup</a></li>
+    <li><a href="#tests">Tests</a>
+      <ul>
+        <li><a href="#knacky-development-knack-application">Knacky Development Knack Application</a></li>
+        <li><a href="#writing-tests">Writing Tests</a></li>
+        <li><a href="#running-tests">Running Tests</a></li>
+      </ul>
+    </li>
+    <li><a href="#linting-and-formatting">Linting and Formatting</a></li>
+    <li><a href="#documentation">Documentation</a></li>
+    <li><a href="#automated-tests-and-deployment">Automated Tests and Deployment</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
