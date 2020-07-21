@@ -1,0 +1,47 @@
+loaders:
+  - type: python
+processors:
+  - type: filter
+  - type: smart
+  - type: crossref
+renderer:
+  type: hugo
+  config:
+    title: Knackpy
+    theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
+    # theme: {clone_url: "https://github.com/JugglerX/hugo-whisper-theme.git"}
+    baseURL: "https://cityofaustin.github.io/knackpy/"
+  # The "book" theme only renders pages in "content/docs" into the nav.
+  content_directory: content/docs
+  default_preamble: {menu: main}
+  pages:
+    - title: Home
+      name: index
+      source: README.md
+      directory: '..'  # Put it directly into the content directory.
+    - title: User Guide
+      weight: 20
+      name: user-guide
+      source: docs/user_guide.md
+    - title: Developer Guide
+      weight: 20
+      name: developer-guide
+      source: docs/developer_guide.md
+    - title: API Reference
+      weight: 50
+      children:
+      - title: App
+        contents:
+        - knackpy.app.App
+      - title: Record
+        contents:
+        - knackpy.record.Record
+      - title: Field
+        contents:
+        - knackpy.fields.Field
+      - title: API
+        contents:
+        - knackpy.api.get
+        - knackpy.api.get_metadata
+        - knackpy.api.record
+        - knackpy.api.upload

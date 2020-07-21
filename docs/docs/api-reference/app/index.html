@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" dir=>
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="knackpy.app #  App Objects #  class App() Knackpy is designed around the App class. It provides helpers for querying and manipulating Knack application data. You should use the App class because:
+ It allows you to query obejcts and views by key or name It takes care of localization issues It let&rsquo;s you download and upload files from your app. It does other things, too.  Arguments:
+ app_id str - Knack application ID # noqa:E501 string.">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="App" />
+<meta property="og:description" content="knackpy.app #  App Objects #  class App() Knackpy is designed around the App class. It provides helpers for querying and manipulating Knack application data. You should use the App class because:
+ It allows you to query obejcts and views by key or name It takes care of localization issues It let&rsquo;s you download and upload files from your app. It does other things, too.  Arguments:
+ app_id str - Knack application ID # noqa:E501 string." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/api-reference/app/" />
+
+<title>App | Knackpy</title>
+<link rel="manifest" href="/knackpy/manifest.json">
+<link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/knackpy/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
+<script defer src="/knackpy/en.search.min.59a18bdbb547bd0ca4c72ffb1c094d3e6bc3d09ae2b3d4f6389b57aae32bea1d.js" integrity="sha256-WaGL27VHvQykxy/7HAlNPmvD0Jris9T2OJtXquMr6h0="></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body dir=>
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/knackpy"><span>Knackpy</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <span>API Reference</span>
+  
+
+          
+  
+  
+  
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/api/" class="">API</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/app/" class="active">App</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/field/" class="">Field</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/api-reference/record/" class="">Record</a>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/developer-guide/" class="">Developer Guide</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+    <a href="/knackpy/docs/user-guide/" class="">User Guide</a>
+  
+
+        </li>
+      
+    
+  </ul>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/knackpy/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>App</strong>
+
+  <label for="toc-control">
+    
+    <img src="/knackpy/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#app-objects">App Objects</a></li>
+  </ul>
+</nav>
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="knackpyapp">
+  knackpy.app
+  <a class="anchor" href="#knackpyapp">#</a>
+</h1>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="app-objects">
+  App Objects
+  <a class="anchor" href="#app-objects">#</a>
+</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">App</span>()
+</code></pre></div><p>Knackpy is designed around the <code>App</code> class. It provides helpers for querying
+and manipulating Knack application data. You should use the <code>App</code> class
+because:</p>
+<ul>
+<li>It allows you to query obejcts and views by key or name</li>
+<li>It takes care of <a href="%60timestamps%60-and-localization">localization issues</a></li>
+<li>It let&rsquo;s you download and upload files from your app.</li>
+<li>It does other things, too.</li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>app_id</code> <em>str</em> - Knack <a href="https://www.knack.com/developer-documentation/%60find%60-your-api-key-amp-application-id">application ID</a>  # noqa:E501
+string.</li>
+<li><code>api_key</code> <em>str, optional, default=<code>None</code></em> - <a href="https://www.knack.com/developer-documentation/%60find%60-your-api-key-amp-application-id">Knack API key</a>.</li>
+<li><code>metadata</code> <em>dict, optional</em> - The Knack app&rsquo;s metadata as a <code>dict</code>. If <code>None</code>
+it will be fetched on init. You can find your apps metadata
+<a href="https://loader.knack.com/v1/applications/5d79512148c4af00106d1507">here</a>.</li>
+<li><code>tzinfo</code> <em><code>pytz.Timezone</code>, optional</em> - [description].  A
+<a href="https://pythonhosted.org/pytz/">pytz.Timezone</a> object. When <code>None</code>, is set
+automatically based on the app&rsquo;s <code>metadadata</code>.</li>
+<li><code>max_attempts</code> <em>int</em> - The maximum number of attempts to make if a request times
+out. Default values that are set in <code>knackpy.api.request</code>.</li>
+<li><code>timeout</code> <em>int, optional</em> - Number of seconds to wait before a Knack API request
+times out. Further reading:
+<a href="https://requests.readthedocs.io/en/master/user/quickstart/">Requests docs</a>.</li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#app-objects">App Objects</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

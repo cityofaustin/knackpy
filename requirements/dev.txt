@@ -1,0 +1,7 @@
+pytz
+requests
+pytest
+pytest-env
+coverage
+coverage-badge
+pydoc-markdown
