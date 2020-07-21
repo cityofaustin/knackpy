@@ -6,13 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Knackpy #  Knackpy is a Python client for interacting with Knack applications.
 Here&rsquo;s the complete documentation.
-Installation #  Knackpy requires Python v3.6&#43;. To use the development version Knackpy v1.0, install with:
-$ pip install knackpy-dev Quick Start #  &gt;&gt;&gt; import knackpy # basic app construction &gt;&gt;&gt; app = knackpy.App(app_id=&#34;myappid&#34;, api_key=&#34;myverysecretapikey&#34;) # fetch all records from &#39;object_1&#39; &gt;&gt;&gt; records = app.get(&#34;object_1&#34;) # get the formatted keys/values of each record &gt;&gt;&gt; records_formatted = [record.">
+Installation #  $ pip install knackpy Quick Start #  &gt;&gt;&gt; import knackpy # basic app construction &gt;&gt;&gt; app = knackpy.App(app_id=&#34;myappid&#34;, api_key=&#34;myverysecretapikey&#34;) # fetch all records from &#39;object_1&#39; &gt;&gt;&gt; records = app.get(&#34;object_1&#34;) # get the formatted keys/values of each record &gt;&gt;&gt; records_formatted = [record.format() for record in records] # access a record property by name &gt;&gt;&gt; customer_address = records[0][&#34;Customer Address&#34;] # create a record &gt;&gt;&gt; data = {&#34;field_1&#34;: &#34;pizza&#34;} &gt;&gt;&gt; record = app.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="User Guide" />
 <meta property="og:description" content="Knackpy #  Knackpy is a Python client for interacting with Knack applications.
 Here&rsquo;s the complete documentation.
-Installation #  Knackpy requires Python v3.6&#43;. To use the development version Knackpy v1.0, install with:
-$ pip install knackpy-dev Quick Start #  &gt;&gt;&gt; import knackpy # basic app construction &gt;&gt;&gt; app = knackpy.App(app_id=&#34;myappid&#34;, api_key=&#34;myverysecretapikey&#34;) # fetch all records from &#39;object_1&#39; &gt;&gt;&gt; records = app.get(&#34;object_1&#34;) # get the formatted keys/values of each record &gt;&gt;&gt; records_formatted = [record." />
+Installation #  $ pip install knackpy Quick Start #  &gt;&gt;&gt; import knackpy # basic app construction &gt;&gt;&gt; app = knackpy.App(app_id=&#34;myappid&#34;, api_key=&#34;myverysecretapikey&#34;) # fetch all records from &#39;object_1&#39; &gt;&gt;&gt; records = app.get(&#34;object_1&#34;) # get the formatted keys/values of each record &gt;&gt;&gt; records_formatted = [record.format() for record in records] # access a record property by name &gt;&gt;&gt; customer_address = records[0][&#34;Customer Address&#34;] # create a record &gt;&gt;&gt; data = {&#34;field_1&#34;: &#34;pizza&#34;} &gt;&gt;&gt; record = app." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/user-guide/" />
 
@@ -20,7 +18,7 @@ $ pip install knackpy-dev Quick Start #  &gt;&gt;&gt; import knackpy # basic app
 <link rel="manifest" href="/knackpy/manifest.json">
 <link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/knackpy/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
-<script defer src="/knackpy/en.search.min.59a18bdbb547bd0ca4c72ffb1c094d3e6bc3d09ae2b3d4f6389b57aae32bea1d.js" integrity="sha256-WaGL27VHvQykxy/7HAlNPmvD0Jris9T2OJtXquMr6h0="></script>
+<script defer src="/knackpy/en.search.min.3f9301b1cf2253dabb6046528c0e5828f51e83d2cc31a32f60dbd4e6632fce98.js" integrity="sha256-P5MBsc8iU9q7YEZSjA5YKPUeg9LMMaMvYNvU5mMvzpg="></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -244,8 +242,7 @@ https://github.com/alex-shpak/hugo-book
   Installation
   <a class="anchor" href="#installation">#</a>
 </h2>
-<p>Knackpy requires Python v3.6+. To use the development version Knackpy v1.0, install with:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ pip install knackpy-dev
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ pip install knackpy
 </code></pre></div><h2 id="quick-start">
   Quick Start
   <a class="anchor" href="#quick-start">#</a>

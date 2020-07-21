@@ -10,10 +10,8 @@ Knackpy is a Python client for interacting with [Knack](https://knack.com) appli
 
 ## Installation
 
-Knackpy requires Python v3.6+. To use the development version Knackpy v1.0, install with:
-
 ```shell
-$ pip install knackpy-dev
+$ pip install knackpy
 ```
 
 ## Quick Start
