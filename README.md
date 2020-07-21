@@ -8,7 +8,9 @@ Knackpy is a Python client for interacting with [Knack](https://knack.com) appli
 
 ## Documentation
 
-[Here's the complete documentation](https://cityofaustin.github.io/knackpy).
+Knackpy v1.0 is now available! [Here's the documentation](https://cityofaustin.github.io/knackpy).
+
+If you're looking for Knackpy v0.1 documentation, it's [here](https://github.com/cityofaustin/knackpy/tree/d57012bfcffae5710ebe15b2a3c8e7ef9da7bd1e).
 
 # Issues and Contributions
 
