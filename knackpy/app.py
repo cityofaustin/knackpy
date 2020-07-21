@@ -307,8 +307,6 @@ class App:
         for record in records:
             record_formatted = {}
             for field in record.values():
-                if not field:
-                    breakpoint()
                 try:
                     subfields = FIELD_SETTINGS[field.field_def.type]["subfields"]
                 except KeyError:
