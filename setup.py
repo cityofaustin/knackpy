@@ -3,23 +3,15 @@ import setuptools
 
 
 def get_env(args):
-    """ args must contain `pypi-prod` or `pypi-dev`"""
-    try:
-        # test if our custom arg is present and delete it so that setuptools doesn't
-        # throw an error
-        args.remove("pypi-prod")
-        return "prod"
-    except ValueError:
-        pass
+    """ If args contain `pypi-dev`, the package name will be `knackpy-dev`. Else the
+    package name will be Knackpy."""
     try:
         # test if our custom arg is present and delete it so that setuptools doesn't
         # throw an error
         args.remove("pypi-dev")
         return "dev"
     except ValueError:
-        raise ValueError(
-            "Missing or unknown env arg. Command must include `pypi-prod` or 'pypi-dev'"
-        )
+        return "prod"
 
 
 def get_package_name(env):
@@ -52,7 +44,7 @@ def build_config(env, readme="README.md"):
         "license": "Public Domain",
         "name": package_name,
         "packages": ["knackpy"],
-        "tests_require": ["pytest"],
+        "tests_require": ["pytest", "coverage"],
         "url": "http://github.com/cityofaustin/knackpy",
         "version": "1.0.8",
     }
