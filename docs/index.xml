@@ -70,8 +70,7 @@ More specifically, the API is designed so that you would typically interface wit
       <guid>https://cityofaustin.github.io/knackpy/docs/user-guide/</guid>
       <description>Knackpy #  Knackpy is a Python client for interacting with Knack applications.
 Here&amp;rsquo;s the complete documentation.
-Installation #  Knackpy requires Python v3.6+. To use the development version Knackpy v1.0, install with:
-$ pip install knackpy-dev Quick Start #  &amp;gt;&amp;gt;&amp;gt; import knackpy # basic app construction &amp;gt;&amp;gt;&amp;gt; app = knackpy.App(app_id=&amp;#34;myappid&amp;#34;, api_key=&amp;#34;myverysecretapikey&amp;#34;) # fetch all records from &amp;#39;object_1&amp;#39; &amp;gt;&amp;gt;&amp;gt; records = app.get(&amp;#34;object_1&amp;#34;) # get the formatted keys/values of each record &amp;gt;&amp;gt;&amp;gt; records_formatted = [record.</description>
+Installation #  $ pip install knackpy Quick Start #  &amp;gt;&amp;gt;&amp;gt; import knackpy # basic app construction &amp;gt;&amp;gt;&amp;gt; app = knackpy.App(app_id=&amp;#34;myappid&amp;#34;, api_key=&amp;#34;myverysecretapikey&amp;#34;) # fetch all records from &amp;#39;object_1&amp;#39; &amp;gt;&amp;gt;&amp;gt; records = app.get(&amp;#34;object_1&amp;#34;) # get the formatted keys/values of each record &amp;gt;&amp;gt;&amp;gt; records_formatted = [record.format() for record in records] # access a record property by name &amp;gt;&amp;gt;&amp;gt; customer_address = records[0][&amp;#34;Customer Address&amp;#34;] # create a record &amp;gt;&amp;gt;&amp;gt; data = {&amp;#34;field_1&amp;#34;: &amp;#34;pizza&amp;#34;} &amp;gt;&amp;gt;&amp;gt; record = app.</description>
     </item>
     
   </channel>
