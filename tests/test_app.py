@@ -1,5 +1,6 @@
 import json
 import os
+import random
 import time
 import types
 
@@ -30,6 +31,9 @@ UPLOAD_CONFIG = {
     "file_field": "field_17",
     "image_field": "field_18",
 }
+# we're trying to randomize sleep time across three+ concurrent tests of this package
+# via github workflows
+SLEEP_TIME = random.random() * 3
 
 
 @pytest.fixture
@@ -212,7 +216,7 @@ def test_upload_image_create_update_delete_record(app_live):
         container=obj, asset_type="image", path=path, field=field,
     )
     assert record1
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     # update
     record2 = app_live.upload(
         record_id=record1["id"],
@@ -222,7 +226,7 @@ def test_upload_image_create_update_delete_record(app_live):
         field=field,
     )
     assert record1["id"] == record2["id"]
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     # delete
     response = app_live.record(method="delete", data={"id": record2["id"]}, obj=OBJ,)
     assert response["delete"]
@@ -231,7 +235,7 @@ def test_upload_image_create_update_delete_record(app_live):
 def test_record_update(app_static, app_live):
     """Update one record value and validate the updated data returned in the
     response."""
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     record = dict(app_live.get(OBJ)[0])
     update_value = "0.00" if record[UPDATE_KEY] != "0.00" else "1.00"
     data = {"id": record["id"], UPDATE_KEY: update_value}
@@ -241,10 +245,10 @@ def test_record_update(app_static, app_live):
 
 def test_record_create_delete(app_live):
     # yes, two tests in one :/
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     new_record = app_live.record(method="create", data={}, obj=OBJ)
     assert new_record
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     response = app_live.record(method="delete", data={"id": new_record["id"]}, obj=OBJ,)
     assert response["delete"]
 

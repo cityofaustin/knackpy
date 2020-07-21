@@ -1,4 +1,5 @@
 import os
+import random
 import time
 
 import knackpy
@@ -22,11 +23,14 @@ UPLOAD_CONFIG = {
     "file_field": "field_17",
     "image_field": "field_18",
 }
+# we're trying to randomize sleep time across three+ concurrent tests of this package
+# via github workflows
+SLEEP_TIME = random.random() * 3
 
 
 @pytest.fixture
 def records():
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     return knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, record_limit=1)
 
 
@@ -54,7 +58,7 @@ def test_upload_file_create_update_delete_record():
         field=field,
     )
     assert record1
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     # update
     record2 = knackpy.api.upload(
         app_id=APP_ID,
@@ -67,7 +71,7 @@ def test_upload_file_create_update_delete_record():
     )
     # verify a new record was not created
     assert record1["id"] == record2["id"]
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     # delete
     response = knackpy.api.record(
         method="delete",
@@ -98,7 +102,7 @@ def test_upload_image_create_update_delete_record():
         field=field,
     )
     assert record1
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     # update
     record2 = knackpy.api.upload(
         app_id=APP_ID,
@@ -110,7 +114,7 @@ def test_upload_image_create_update_delete_record():
         field=field,
     )
     assert record1["id"] == record2["id"]
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     # delete
     response = knackpy.api.record(
         method="delete",
@@ -127,25 +131,25 @@ def test_get_limit(records):
 
 
 def test_get_no_limit():
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     records = knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ)
     assert len(records) > 1
 
 
 def test_get_filters():
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     records = knackpy.api.get(app_id=APP_ID, api_key=API_KEY, obj=OBJ, filters=FILTERS)
     assert len(records) == 1
 
 
 def test_record_create_delete():
     # yes, two tests in one :/
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     new_record = knackpy.api.record(
         method="create", app_id=APP_ID, api_key=API_KEY, data={}, obj=OBJ
     )
     assert new_record
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     response = knackpy.api.record(
         method="delete",
         app_id=APP_ID,
@@ -176,5 +180,5 @@ def test_get_metadata():
 
 
 def test_slug_param():
-    time.sleep(0.5)
+    time.sleep(SLEEP_TIME)
     assert knackpy.api.get_metadata(app_id=APP_ID, slug="atd")
