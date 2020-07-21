@@ -6,14 +6,10 @@
 
 Knackpy is a Python client for interacting with [Knack](https://knack.com) applications.
 
-## Documentation
+## v1.0 is Now Available
 
-Knackpy v1.0 is now available! [Here's the documentation](https://cityofaustin.github.io/knackpy).
+[Knackpy v1.0](https://github.com/cityofaustin/knackpy/releases/tag/v1.0.9) is a complete overhaul of the knackpy API.
 
-If you're looking for Knackpy v0.1 documentation, it's [here](https://github.com/cityofaustin/knackpy/tree/d57012bfcffae5710ebe15b2a3c8e7ef9da7bd1e).
+Get started with our [user guide](https://cityofaustin.github.io/knackpy/docs/user-guide/), [API reference](https://cityofaustin.github.io/knackpy/docs/api-reference/api/), and, for contributors, our [developer guide](https://cityofaustin.github.io/knackpy/developer-guide).
 
-# Issues and Contributions
-
-Issues and pull requests are welcome. Know that your contributions are donated to the [public domain](https://github.com/cityofaustin/knackpy/blob/master/LICENSE.md). See also our [developer guide](https://cityofaustin.github.io/knackpy/developer-guide).
-
-
+The legacy Knackpy v0.1 documentation is available [here](https://github.com/cityofaustin/knackpy/tree/d57012bfcffae5710ebe15b2a3c8e7ef9da7bd1e)
