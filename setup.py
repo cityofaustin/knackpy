@@ -3,17 +3,23 @@ import setuptools
 
 
 def get_env(args):
-    if "pypi-dev" not in args:
-        return "prod"
-
-    # delete our custom args so that setuptools doesn't try to use them and throw
-    # an error
+    """ args must contain `pypi-prod` or `pypi-dev`"""
     try:
-        args.remove("pypi-dev")
+        # test if our custom arg is present and delete it so that setuptools doesn't
+        # throw an error
+        args.remove("pypi-prod")
+        return "prod"
     except ValueError:
         pass
-
-    return "dev"
+    try:
+        # test if our custom arg is present and delete it so that setuptools doesn't
+        # throw an error
+        args.remove("pypi-dev")
+        return "dev"
+    except ValueError:
+        raise ValueError(
+            "Missing or unknown env arg. Command must include `pypi-prod` or 'pypi-dev'"
+        )
 
 
 def get_package_name(env):
@@ -52,6 +58,7 @@ def build_config(env, readme="README.md"):
     }
 
 
-env = get_env(sys.argv)
-config = build_config(env)
-setuptools.setup(**config)
+if __name__ == "__main__":
+    env = get_env(sys.argv)
+    config = build_config(env)
+    setuptools.setup(**config)
