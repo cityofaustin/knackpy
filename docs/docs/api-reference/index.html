@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
+<meta name="description" content="Knackpy API Reference #  To understand knackpy&rsquo;s design, it&rsquo;s helpful to think of it in terms of two entry points:
+ Api: Contains core functions for over-the-wire interactions with the Knack API, as well as helpers for pagination and re-trying on request failures. App: The highest-level container for getting and interacting with Knack records.  The other the knackpy classes act as a hierarchy that are constructed through a chain of side-effects originating from App objects.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="API Reference" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
@@ -14,7 +15,7 @@
 <link rel="manifest" href="/knackpy/manifest.json">
 <link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/knackpy/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
-<script defer src="/knackpy/en.search.min.3f9301b1cf2253dabb6046528c0e5828f51e83d2cc31a32f60dbd4e6632fce98.js" integrity="sha256-P5MBsc8iU9q7YEZSjA5YKPUeg9LMMaMvYNvU5mMvzpg="></script>
+<script defer src="/knackpy/en.search.min.0741e4dc5eec008a404796cf45eee060f2d8adbcd92674a85bddf3c1b4ef7c36.js" integrity="sha256-B0Hk3F7sAIpAR5bPRe7gYPLYrbzZJnSoW93zwbTvfDY="></script>
 <link rel="alternate" type="application/rss+xml" href="https://cityofaustin.github.io/knackpy/docs/api-reference/index.xml" title="Knackpy" />
 <!--
 Made with Book Theme
@@ -69,7 +70,7 @@ https://github.com/alex-shpak/hugo-book
         <li>
           
   
-    <span>API Reference</span>
+    <a href="/knackpy/docs/api-reference/" class="active">API Reference</a>
   
 
           
@@ -104,7 +105,7 @@ https://github.com/alex-shpak/hugo-book
         <li>
           
   
-    <a href="/knackpy/docs/api-reference/field/" class="">Field</a>
+    <a href="/knackpy/docs/api-reference/fields/" class="">Fields</a>
   
 
         </li>
@@ -205,7 +206,22 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"></article>
+  <article class="markdown"><h1 id="knackpy-api-reference">
+  Knackpy API Reference
+  <a class="anchor" href="#knackpy-api-reference">#</a>
+</h1>
+<p>To understand knackpy&rsquo;s design, it&rsquo;s helpful to think of it in terms of two entry points:</p>
+<ul>
+<li><a href="./api"><code>Api</code></a>: Contains core functions for over-the-wire interactions with the Knack API, as well as helpers for pagination and re-trying on request failures.</li>
+<li><a href="./app"><code>App</code></a>: The highest-level container for getting and interacting with Knack records.</li>
+</ul>
+<p>The other the knackpy classes act as a hierarchy that are constructed through a chain of side-effects originating from  <code>App</code> objects.</p>
+<ul>
+<li><a href="./record"><code>Record</code></a>: A <a href="https://docs.python.org/3/library/collections.abc.html">dict-like</a> container for <code>Field</code> objects which supplies helpers for accesing and formatting fields.</li>
+<li><a href="./fields#field-objects"><code>Field</code></a>: A container for a single Knack key/value, with helpers for formatting.</li>
+<li><a href="./fields#fielddef-objects"><code>FieldDef</code></a>: Stores field metadata (type, formatting method, parent objects/views)</li>
+</ul>
+</article>
  
       
 
@@ -224,6 +240,10 @@ https://github.com/alex-shpak/hugo-book
       </footer>
 
       
+  
+  <div class="book-comments">
+
+</div>
   
  
 

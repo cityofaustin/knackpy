@@ -28,8 +28,7 @@ Arguments:
       
       <guid>https://cityofaustin.github.io/knackpy/docs/api-reference/app/</guid>
       <description>knackpy.app #  App Objects #  class App() Knackpy is designed around the App class. It provides helpers for querying and manipulating Knack application data. You should use the App class because:
- It allows you to query obejcts and views by key or name It takes care of localization issues It let&amp;rsquo;s you download and upload files from your app. It does other things, too.  Arguments:
- app_id str - Knack application ID # noqa:E501 string.</description>
+ It allows you to query obejcts and views by key or name It takes care of localization issues # noqa:E501 It let&amp;rsquo;s you download and upload files from your app. It does other things, too.  Arguments:</description>
     </item>
     
     <item>
@@ -44,12 +43,13 @@ Install the development environment requirements from requirements/dev.</descrip
     </item>
     
     <item>
-      <title>Field</title>
-      <link>https://cityofaustin.github.io/knackpy/docs/api-reference/field/</link>
+      <title>Fields</title>
+      <link>https://cityofaustin.github.io/knackpy/docs/api-reference/fields/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://cityofaustin.github.io/knackpy/docs/api-reference/field/</guid>
-      <description>knackpy.fields #  Field Objects #  class Field(object) A container for a single column of Knack data. This is the lowest-level container in the API. The hieracrchy being: App &amp;gt; Records &amp;gt; Record &amp;gt; Field. Typically you would not construct this class directly, but instead an App, which will generate Fields via App.records().
+      <guid>https://cityofaustin.github.io/knackpy/docs/api-reference/fields/</guid>
+      <description>knackpy.fields #  FieldDef Objects #  class FieldDef() Knack field defintion wrapper
+Field Objects #  class Field(object) A container for a single column of Knack data. This is the lowest-level container in the API. The hieracrchy being: App &amp;gt; Records &amp;gt; Record &amp;gt; Field. Typically you would not construct this class directly, but instead an App, which will generate Fields via App.records().
 More specifically, the API is designed so that you would typically interface with a Field instance through the records.</description>
     </item>
     
