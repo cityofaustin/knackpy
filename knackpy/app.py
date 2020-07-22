@@ -19,7 +19,7 @@ class App:
     because:
 
     - It allows you to query obejcts and views by key or name
-    - It takes care of [localization issues](#timestamps-and-localization)
+    - It takes care of [localization issues](https://cityofaustin.github.io/knackpy/docs/user-guide#timestamps-and-localization)  # noqa:E501
     - It let's you download and upload files from your app.
     - It does other things, too.
 
