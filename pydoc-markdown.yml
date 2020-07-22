@@ -29,6 +29,7 @@ renderer:
       source: docs/developer_guide.md
     - title: API Reference
       weight: 50
+      source: docs/api.md
       children:
       - title: App
         contents:
@@ -36,9 +37,10 @@ renderer:
       - title: Record
         contents:
         - knackpy.record.Record
-      - title: Field
+      - title: Fields
         contents:
         - knackpy.fields.Field
+        - knackpy.fields.FieldDef
       - title: API
         contents:
         - knackpy.api.get

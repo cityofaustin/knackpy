@@ -299,11 +299,15 @@ Although a `Record` object looks like a `dict`, it contains `Field` objects (TOD
 
 {{< hint warning >}}
 
-Records may look raw, but any timestamps have been [corrected to real unix time](#timestamps-and-localization). If you want the raw, untouched data, use the `Record.raw` property.
+#### Accessing Raw Knack Data
 
-{{ < /hint > }}
+Records may look raw, but any timestamps have been [corrected to real unix time](#timestamps-and-localization). If you want the raw, untouched data, use the `Record.raw` property.
+{{< /hint >}}
+
 
 ## Accessing the API Directly
+
+If you don't want to fuss with `App` objects, you can use knackpy's direct interface with the Knack API.
 
 ```python
 # This is equivalent to exporting records in JSON format from the Knack Builder
@@ -317,25 +321,7 @@ Records may look raw, but any timestamps have been [corrected to real unix time]
 ... )
 ```
 
-## Crud Operations
-
-## What's New in v1.0
-
-- The `Knack` class is now `App`.
-- Fetch records using object/view names
-- No more rows-per-page or page count limiting; just set a `record_limit`.
-- `App` summary stats:
-
-```python
->>> app.info()
-{'objects': 10, 'scenes': 4, 'records': 6786, 'size': '25.47mb'}
-```
-
-- Pythonic use of `exceptions`, `warnings`, and `logging`.
-- Automatic localization (no need to set TZ info)
-- "Raw" data is available with timestamp corrections
-- Reduce API calls with metadata and/or record side-loading
-- Null values are consistently returned as `NoneType`'s
+See the [API module documentation](../api-reference/api/) for further detail.
 
 ## Timestamps and Localization
 
