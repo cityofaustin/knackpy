@@ -352,11 +352,13 @@ Knackpy uses Python's built-in exceptions, as well as Requests's [exceptions](ht
 If you need to inspect an API exception (for example to see the text content of the response), you can access the `Response` object by handling the exception like so:
 
 ```python
+>>> import requests
+>>>
 >>> app = knackpy.App(api_key="myappid")
 # raises HTTPError. You cannot request object records without supplying an API key
 >>> try:
 ...       records = app.get("object_1")
-... except HTTPError as e:
+... except requests.exceptions.HTTPError as e:
 ...     print(e.response.text)
 ...     raise e
 # 'Unauthorized Object Access'
