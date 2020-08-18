@@ -315,11 +315,11 @@ class App:
                 if subfields:
                     try:
                         field_dict = {
-                            f"{field.name}_{subfield}": field.value.get(subfield)
+                            f"{field.name}_{subfield}": field.raw.get(subfield)
                             for subfield in subfields
                         }
                     except AttributeError:
-                        # assume field.value is None. we still want to assign None to
+                        # assume field.raw is None. we still want to assign None to
                         # each subfield, so that each record has the same cols
                         field_dict = {
                             f"{field.name}_{subfield}": None for subfield in subfields
@@ -330,7 +330,15 @@ class App:
             records_formatted.append(record_formatted)
         return records_formatted
 
-    def to_csv(self, identifier: str, *, out_dir: str = "_csv", delimiter=",") -> None:
+    def to_csv(
+        self,
+        identifier: str,
+        *,
+        out_dir: str = "_csv",
+        delimiter=",",
+        record_limit: int = None,
+        filters: typing.Union[dict, list] = None,
+    ) -> None:
         """Write formatted Knack records to CSV.
 
         Args:
@@ -339,11 +347,15 @@ class App:
             out_dir (str, optional): Relative path to the directory to which files
                 will be written. Defaults to "_csv".
             delimiter (str, optional): [description]. Defaults to ",".
+            record_limit (int): the maximum number of records to retrieve. If
+                `None`, will return all records.
+            filters (dict or list, optional): A dict or of Knack API filiters.
+                See: https://www.knack.com/developer-documentation/#filters.
         """
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        records = self.get(identifier)
+        records = self.get(identifier, record_limit=record_limit, filters=filters)
 
         csv_data = self._unpack_subfields(records)
 
