@@ -34,6 +34,12 @@ renderer:
       - title: App
         contents:
         - knackpy.app.App
+        - knackpy.app.App.get
+        - knackpy.app.App.to_csv
+        - knackpy.app.App.info
+        - knackpy.app.App.download
+        - knackpy.app.App.upload
+        - knackpy.app.App.record
       - title: Record
         contents:
         - knackpy.record.Record
