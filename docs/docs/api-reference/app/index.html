@@ -16,7 +16,7 @@
 <link rel="manifest" href="/knackpy/manifest.json">
 <link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/knackpy/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
-<script defer src="/knackpy/en.search.min.274f6a1b3e2dc6cf15910987386c4a99a1b0f8c05bcd7a0d31598c670c414655.js" integrity="sha256-J09qGz4txs8VkQmHOGxKmaGw&#43;MBbzXoNMVmMZwxBRlU="></script>
+<script defer src="/knackpy/en.search.min.7ff4ba45d16f0dc57fdc19009ed2c65db401a42086adc8a9404243f76e994c51.js" integrity="sha256-f/S6RdFvDcV/3BkAntLGXbQBpCCGrcipQEJD926ZTFE="></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -198,7 +198,11 @@ https://github.com/alex-shpak/hugo-book
     
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#app-objects">App Objects</a></li>
+    <li><a href="#app-objects">App Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 
@@ -247,6 +251,130 @@ out. Default values that are set in <code>knackpy.api.request</code>.</li>
 times out. Further reading:
 <a href="https://requests.readthedocs.io/en/master/user/quickstart/">Requests docs</a>.</li>
 </ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="info">
+  info
+  <a class="anchor" href="#info">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> info()
+</code></pre></div><p>Returns a <code>dict</code> of basic app information:</p>
+<ul>
+<li>Number of objects</li>
+<li>Number of scenes</li>
+<li>Number of records</li>
+<li>Number total file size</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="get">
+  get
+  <a class="anchor" href="#get">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> get(identifier: str <span style="color:#f92672">=</span> None, refresh: bool <span style="color:#f92672">=</span> False, record_limit: int <span style="color:#f92672">=</span> None, filters: typing<span style="color:#f92672">.</span>Union[dict, list] <span style="color:#f92672">=</span> None, generate<span style="color:#f92672">=</span>False)
+</code></pre></div><p>Get records from a knack object or view.</p>
+<p>Note that we accept the request params <code>record_limit</code> and <code>filters</code> here
+because the user would presumably want to set these on a per-object/view
+basis. They are not stored in state. Whereas <code>max_attempts</code> and
+<code>timeout</code> are set on App construction and persist in <code>App</code> state.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>identifier</code> _str, optional*_ - an object or view key or name string that
+exists in the app. If None is provided and only one container has
+been fetched, will return records from that container.</li>
+<li><code>refresh</code> <em>bool, optional</em> - Force the re-querying of data from Knack
+API. Defaults to False.</li>
+<li><code>record_limit</code> <em>int</em> - the maximum number of records to retrieve. If
+<code>None</code>, will return all records.</li>
+<li><code>filters</code> <em>dict or list, optional</em> - A dict or of Knack API filiters.</li>
+<li><code>See</code> - <a href="https://www.knack.com/developer-documentation/%60filters%60">https://www.knack.com/developer-documentation/`filters`</a>.</li>
+<li><code>generate</code> <em>bool, optional</em> - If True, will return a generator which
+yields knacky.Record objects instead of return a list of of them.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<p>A <code>generator</code> which yields knackpy Record objects.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="to_csv">
+  to_csv
+  <a class="anchor" href="#to_csv">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> to_csv(identifier: str, <span style="color:#f92672">*</span>, out_dir: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;_csv&#34;</span>, delimiter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;,&#34;</span>, record_limit: int <span style="color:#f92672">=</span> None, filters: typing<span style="color:#f92672">.</span>Union[dict, list] <span style="color:#f92672">=</span> None) <span style="color:#f92672">-&gt;</span> None
+</code></pre></div><p>Write formatted Knack records to CSV.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>identifier</code> <em>str</em> - an object or view key or name string that exists in the
+app.</li>
+<li><code>out_dir</code> <em>str, optional</em> - Relative path to the directory to which files
+will be written. Defaults to &ldquo;_csv&rdquo;.</li>
+<li><code>delimiter</code> <em>str, optional</em> - [description]. Defaults to &ldquo;,&rdquo;.</li>
+<li><code>record_limit</code> <em>int</em> - the maximum number of records to retrieve. If
+<code>None</code>, will return all records.</li>
+<li><code>filters</code> <em>dict or list, optional</em> - A dict or of Knack API filiters.</li>
+<li><code>See</code> - <a href="https://www.knack.com/developer-documentation/%60filters%60">https://www.knack.com/developer-documentation/`filters`</a>.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="download">
+  download
+  <a class="anchor" href="#download">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> download(<span style="color:#f92672">*</span>, container: str, field: str, out_dir: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;_downloads&#34;</span>, label_keys: list <span style="color:#f92672">=</span> None)
+</code></pre></div><p>Download files and images from Knack records.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>container</code> <em>str</em> - The name or key of the object from which files will be
+downloaded.</li>
+<li><code>out_dir</code> <em>str, optional</em> - Relative path to the directory to which files
+will be written. Defaults to &ldquo;_downloads&rdquo;.</li>
+<li><code>field</code> <em>str</em> - The Knack field key of the file or image field to be
+downloaded.</li>
+<li><code>label_keys</code> <em>list, optional</em> - A list of field keys whose <em>values</em> will be
+prepended to the attachment filename, separated by an underscore.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>[int]</code> - Count of files downloaded.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="record">
+  record
+  <a class="anchor" href="#record">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> record(<span style="color:#f92672">*</span>, data: dict, method: str, obj: str)
+</code></pre></div><p>Create, update, or delete a Knack record.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>data</code> <em>dict</em> - The Knack record data payload.</li>
+<li><code>method</code> <em>str</em> - Choose from <code>create</code>, <code>update</code>, or <code>delete</code>.</li>
+<li><code>obj</code> <em>str, optional</em> - The Knack object key or name which holds the record
+data.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>dict</code> - The updated or newly created Knack record data, or, if deleting a</li>
+<li><code>record</code> - <code>{&quot;delete&quot;: true}</code></li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="upload">
+  upload
+  <a class="anchor" href="#upload">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> upload(<span style="color:#f92672">*</span>, container: str, field: str, path: str, asset_type: str, record_id: str <span style="color:#f92672">=</span> None)
+</code></pre></div><p>Upload a file or image to Knack. This is a two-step process:</p>
+<ol>
+<li>Upload file asset to Knack storage</li>
+<li>Create/update a record that links to the file in storage</li>
+</ol>
+<p>Knack docs: <a href="https://www.knack.com/developer-documentation/%60file%60-image-uploads">https://www.knack.com/developer-documentation/`file`-image-uploads</a></p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>container</code> <em>str</em> - The name or key of the object from which files will be
+downloaded.</li>
+<li><code>field</code> <em>str</em> - The knack field key of the field you&rsquo;re uploading into.</li>
+<li><code>path</code> <em>str</em> - The path to the file to be uploaded.</li>
+<li><code>asset_type</code> <em>str</em> - The type of Knack field you&rsquo;re uploading to. Must be
+<code>file</code> or <code>image</code>.</li>
+<li><code>record_id</code> <em>str, optional</em> - The knack record ID to which the upload will be
+attached. If <code>None</code>, will create a new record. Otherwise will update an
+existing record.</li>
+</ul>
 </article>
  
       
@@ -281,7 +409,11 @@ times out. Further reading:
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#app-objects">App Objects</a></li>
+    <li><a href="#app-objects">App Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 
