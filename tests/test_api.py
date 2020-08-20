@@ -25,7 +25,7 @@ UPLOAD_CONFIG = {
 }
 # we're trying to randomize sleep time across three+ concurrent tests of this package
 # via github workflows
-SLEEP_TIME = random.random() * 3
+SLEEP_TIME = random.random() * 10
 
 
 @pytest.fixture
