@@ -23,9 +23,7 @@ class Record(MutableMapping):
         self.immutable = True
 
     def __repr__(self):
-        identifier_value = self.data[self.identifier]
-        # if the identifier field has no value, use the record ID
-        identifier_value = identifier_value if identifier_value else self.data["id"]
+        identifier_value = self.data[self.identifier] if self.identifier else self.data["id"]
         return f"<Record '{identifier_value}'>"
 
     def __getitem__(self, client_key):
