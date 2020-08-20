@@ -51,7 +51,7 @@ After running the tests, you can use `$ coverage html` to generate HTML document
 You can update the coverage badge image with:
 
 ```bash
-$ coverage-badge -o coverage.svg
+$  coverage-badge -f -o coverage.svg
 ```
 
 ## Linting and Formatting
