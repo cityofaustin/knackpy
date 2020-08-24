@@ -101,7 +101,7 @@ class Record(MutableMapping):
             key = field_def.key
             key_raw = f"{key}_raw"
             # store the raw data if available
-            value = self.raw[key_raw] if self.raw.get(key_raw) else self.raw[key]
+            value = self.raw[key_raw] if key_raw in self.raw else self.raw[key]
 
             # there are a fiew fields where it's easier to just use knack's formatted
             # value. E.g. timer and name. in those cases, we want to store knack's
@@ -126,7 +126,7 @@ class Record(MutableMapping):
         return fields
 
     def _handle_record(self):
-        record = self._replace_empty_strings(self.data)
+        record = self._replace_empty_strings_and_arrays(self.data)
         record = self._correct_knack_timestamp(record, self.timezone)
         return record
 
@@ -162,8 +162,10 @@ class Record(MutableMapping):
 
         return record
 
-    def _replace_empty_strings(self, record):
-        return {key: None if val == "" else val for key, val in record.items()}
+    def _replace_empty_strings_and_arrays(self, record):
+        return {
+            key: None if val == "" or val == [] else val for key, val in record.items()
+        }
 
     def _correct_knack_timestamp(self, record, timezone):
         # see note in knackpy.utils.correct_knack_timestamp
