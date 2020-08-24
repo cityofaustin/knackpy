@@ -88,6 +88,18 @@ def test_address(record):
     )
 
 
+def test_multiple_choice_list(record):
+    assert knackpy.formatters.multiple_choice(["a", "b", "c"]) == "a, b, c"
+
+
+def test_multiple_choice_list_empty(record):
+    assert knackpy.formatters.multiple_choice([None]) is None
+
+
+def test_multiple_choice_single(record):
+    assert knackpy.formatters.multiple_choice("pizza") == "pizza"
+
+
 def test_link(record):
     assert knackpy.formatters.link(record["link_field"]) == "http://spaceballs.town"
 

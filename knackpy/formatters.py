@@ -1,4 +1,5 @@
 import datetime
+from typing import Union
 
 
 def default(value: object):
@@ -23,6 +24,17 @@ def address(value: dict):
     keys = ["street", "street2", "city", "state", "zip", "country"]
     values = [value.get(key) for key in keys if value.get(key)]
     return ", ".join(values) if values else None
+
+
+def multiple_choice(value: Union[list, str]):
+    """ Handle a single string or list of strings """
+    if isinstance(value, list):
+        # account for this odd [None] value for empty multi-select fields
+        if value == [None] or value == []:
+            return None
+        # we use string formatting to handle the possiblity that the list contains ints
+        return ", ".join([f"{val}" for val in value])
+    return value
 
 
 def signature(value: dict):
