@@ -25,6 +25,15 @@ def address(value: dict):
     return ", ".join(values) if values else None
 
 
+def multiple_choice(value: object):
+    if isinstance(value, list):
+        # we see these [None] structure for empty multi-select fields
+        if value == [None] or value == []:
+            return None
+        return ", ".join([f"{val}" for val in value])
+    return value
+
+
 def signature(value: dict):
     return value.get("base30")
 
