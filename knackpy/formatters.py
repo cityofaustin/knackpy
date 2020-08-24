@@ -1,4 +1,5 @@
 import datetime
+from typing import Union
 
 
 def default(value: object):
@@ -25,11 +26,13 @@ def address(value: dict):
     return ", ".join(values) if values else None
 
 
-def multiple_choice(value: object):
+def multiple_choice(value: Union[list, str]):
+    """ Handle a single string or list of strings """
     if isinstance(value, list):
-        # we see these [None] structure for empty multi-select fields
+        # account for this odd [None] value for empty multi-select fields
         if value == [None] or value == []:
             return None
+        # we use string formatting to handle the possiblity that the list contains ints
         return ", ".join([f"{val}" for val in value])
     return value
 
