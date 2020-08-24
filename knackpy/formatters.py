@@ -30,7 +30,7 @@ def multiple_choice(value: Union[list, str]):
     """ Handle a single string or list of strings """
     if isinstance(value, list):
         # account for this odd [None] value for empty multi-select fields
-        if value == [None] or value == []:
+        if value == [None]:
             return None
         # we use string formatting to handle the possiblity that the list contains ints
         return ", ".join([f"{val}" for val in value])
