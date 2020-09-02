@@ -43,6 +43,10 @@ renderer:
       - title: Record
         contents:
         - knackpy.record.Record
+        - knackpy.record.Record.__init__
+        - knackpy.record.Record.__getitem__
+        - knackpy.record.Record.__setitem__
+        - knackpy.record.Record.format
       - title: Fields
         contents:
         - knackpy.fields.Field

@@ -10,6 +10,24 @@ class Record(MutableMapping):
     """A dict-like object for storing record data."""
 
     def __init__(self, data, field_defs, identifier, timezone):
+        """A bunch of side effects happen on initialization:
+            - timestamps are corrected
+            - `Field` classes are constructed for each key/value in the record
+            - the Record is set to `immutable`, preventing further updates to record
+            values via `__setitem__`.
+        Args:
+            data (dict): A single Knack record, such as what is returned from the Knack
+                API or via JSON download in the Knack builder.
+            field_defs (list): A list of `knackpy.fields.FieldDef` objects.
+            identifier (str or None): The Knack field key which should be used in the
+                instance's __repr__. This property is available in the knack object
+                metadata, and is referred to the "Display Field" in the Knack builder
+                under object settings. For some reason, the identifier is not always
+                available in the object's metadata. If the identifier is `None`, "id"
+                will be used.
+            timezone (pytz.timezone): A `pytz.timezone` object representing the record's
+                timezone.
+        """
         self.data = data
         self.field_defs = field_defs
         self.identifier = identifier
@@ -67,7 +85,7 @@ class Record(MutableMapping):
         __setitem__ will raise a TypeError.
 
         Raises:
-            TypeError: 'Record' object does not support item assignment.
+            TypeError: Record object does not support item assignment.
         """
         if self.immutable:
             raise TypeError("'Record' object does not support item assignment")
@@ -84,15 +102,19 @@ class Record(MutableMapping):
         return len(self.fields)
 
     def items(self):
+        """Return a list of the Record's Field objects"""
         return self.fields.items()
 
     def keys(self):
+        """Return a list (not a view) of the record’s field keys"""
         return [key for key in self.fields.keys()]
 
     def values(self):
+        """Return a list of the Record's Field objects"""
         return [value for key, value in self.fields.items()]
 
     def names(self):
+        """Return a list of the record’s field names"""
         return [field.name for key, field in self.fields.items()]
 
     def _handle_fields(self):
