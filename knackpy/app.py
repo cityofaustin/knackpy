@@ -229,8 +229,6 @@ class App:
             return self.records[container_key]
 
         if not self.data.get(container_key) or refresh:
-            # to support side-loading of data, we may have a situation where data is
-            # present, but records have not never been generated
             self.data[container_key] = api.get(
                 app_id=self.app_id,
                 api_key=self.api_key,

@@ -4,9 +4,15 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="knackpy.record #  Record Objects #  class Record(MutableMapping) A dict-like object for storing record data.">
+<meta name="description" content="knackpy.record #  Record Objects #  class Record(MutableMapping) A dict-like object for storing record data.
+__init__ #  | __init__(data, field_defs, identifier, timezone) A bunch of side effects happen on initialization:
+ timestamps are corrected Field classes are constructed for each key/value in the record the Record is set to immutable, preventing further updates to record values via __setitem__.  Arguments:
+ data dict - A single Knack record, such as what is returned from the Knack API or via JSON download in the Knack builder.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="Record" />
-<meta property="og:description" content="knackpy.record #  Record Objects #  class Record(MutableMapping) A dict-like object for storing record data." />
+<meta property="og:description" content="knackpy.record #  Record Objects #  class Record(MutableMapping) A dict-like object for storing record data.
+__init__ #  | __init__(data, field_defs, identifier, timezone) A bunch of side effects happen on initialization:
+ timestamps are corrected Field classes are constructed for each key/value in the record the Record is set to immutable, preventing further updates to record values via __setitem__.  Arguments:
+ data dict - A single Knack record, such as what is returned from the Knack API or via JSON download in the Knack builder." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/api-reference/record/" />
 
@@ -14,7 +20,7 @@
 <link rel="manifest" href="/knackpy/manifest.json">
 <link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/knackpy/book.min.6cd8553a6854f4812343f0f0c8baca31271e686434f381fbe3c7226f66639176.css" integrity="sha256-bNhVOmhU9IEjQ/DwyLrKMSceaGQ084H748cib2ZjkXY=">
-<script defer src="/knackpy/en.search.min.7ff4ba45d16f0dc57fdc19009ed2c65db401a42086adc8a9404243f76e994c51.js" integrity="sha256-f/S6RdFvDcV/3BkAntLGXbQBpCCGrcipQEJD926ZTFE="></script>
+<script defer src="/knackpy/en.search.min.4e3a815a97cf1e36211b86d322d71964705ae41671a4629ce388f43e3a0974e9.js" integrity="sha256-TjqBWpfPHjYhG4bTItcZZHBa5BZxpGKc44j0PjoJdOk="></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -196,7 +202,11 @@ https://github.com/alex-shpak/hugo-book
     
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#record-objects">Record Objects</a></li>
+    <li><a href="#record-objects">Record Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 
@@ -220,6 +230,84 @@ https://github.com/alex-shpak/hugo-book
 </h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Record</span>(MutableMapping)
 </code></pre></div><p>A dict-like object for storing record data.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="__init__">
+  __init__
+  <a class="anchor" href="#__init__">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> __init__(data, field_defs, identifier, timezone)
+</code></pre></div><p>A bunch of side effects happen on initialization:</p>
+<ul>
+<li>timestamps are corrected</li>
+<li><code>Field</code> classes are constructed for each key/value in the record</li>
+<li>the Record is set to <code>immutable</code>, preventing further updates to record
+values via <code>__setitem__</code>.</li>
+</ul>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>data</code> <em>dict</em> - A single Knack record, such as what is returned from the Knack
+API or via JSON download in the Knack builder.</li>
+<li><code>field_defs</code> <em>list</em> - A list of <code>knackpy.fields.FieldDef</code> objects.</li>
+<li><code>identifier</code> <em>str or None</em> - The Knack field key which should be used in the
+instance&rsquo;s <strong>repr</strong>. This property is available in the knack object
+metadata, and is referred to the &ldquo;Display Field&rdquo; in the Knack builder
+under object settings. For some reason, the identifier is not always
+available in the object&rsquo;s metadata. If the identifier is <code>None</code>, &ldquo;id&rdquo;
+will be used.</li>
+<li><code>timezone</code> <em>pytz.timezone</em> - A <code>pytz.timezone</code> object representing the record&rsquo;s
+timezone.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="__getitem__">
+  __getitem__
+  <a class="anchor" href="#__getitem__">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> __getitem__(client_key)
+</code></pre></div><p>Return the field whose key or name matches the client-provided value.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>client_key</code> <em>str</em> - A field key (e.g., &ldquo;field_99&rdquo;) or field name.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>object</code> - The field&rsquo;s value (dict, list, str, int, whatever Knack has in
+store for you.)</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="__setitem__">
+  __setitem__
+  <a class="anchor" href="#__setitem__">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> __setitem__(key, value)
+</code></pre></div><p>Bad things will happen if you re-assign record values to anything other
+than a field class. This is not immediately obvious, because you can assign
+values to the record without issue, but some operations will fail after
+assignment of a non-Field value. e.g., .format() and dict().</p>
+<p>All that to say, we set immutable = True after init, and further attempts to
+<strong>setitem</strong> will raise a TypeError.</p>
+<p><strong>Raises</strong>:</p>
+<ul>
+<li><code>TypeError</code> - Record object does not support item assignment.</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="format">
+  format
+  <a class="anchor" href="#format">#</a>
+</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> format(keys: Union[list, bool] <span style="color:#f92672">=</span> True, values: Union[list, bool] <span style="color:#f92672">=</span> True)
+</code></pre></div><p>Returns the record as a dict.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>keys</code> <em>bool or list, optional</em> - If the keys should be formatted, or a list
+of field keys specifying the keys to be formatted.</li>
+<li><code>values</code> <em>bool or list, optional</em> - If values should be formatted, or a list
+of field keys specifying the values to be formatted</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>dict</code> - A dict of the record values with formatted (aka, humaized) keys
+and/or values.</li>
+</ul>
 </article>
  
       
@@ -254,7 +342,11 @@ https://github.com/alex-shpak/hugo-book
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#record-objects">Record Objects</a></li>
+    <li><a href="#record-objects">Record Objects</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 
