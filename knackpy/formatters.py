@@ -113,4 +113,4 @@ def connection(value):
         # expecting a list of dicts like so:
         # [{'id': '5e7b63a0c279e606c645be7d', 'identifier': 'Some String'}]
         identifiers = [conn["identifier"] for conn in value]
-        return ", ".join(identifiers)
+        return ", ".join(str(v) for v in identifiers)
