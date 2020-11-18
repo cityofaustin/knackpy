@@ -111,6 +111,6 @@ def connection(value):
         return None
     else:
         # expecting a list of dicts like so:
-        # [{'id': '5e7b63a0c279e606c645be7d', 'identifier': 'Some String'}]
-        identifiers = [conn["identifier"] for conn in value]
+        # [{'id': '5e7b63a0c279e606c645be7d', 'identifier': 'Some Val'}]
+        identifiers = [str(conn["identifier"]) for conn in value]
         return ", ".join(identifiers)
