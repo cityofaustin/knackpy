@@ -87,9 +87,17 @@ Use `App.get()` to fetch records from a Knack application. Container identifiers
 >>> records = app.get("My Exciting View")
 ```
 
-{{< hint warning >}}
+For faster performance, set `generate=true` when getting records from your app. This will prevent knackpy from constructing all `Record` instances up-front by returning a generator function instead of a list.
+
+```python
+>>> records = app.get("object_1", generate=true)
+>>> for record in records:
+...     formatted_record = record.format()
+```
 
 #### Be Careful When Using Named References
+
+{{< hint warning >}}
 
 Namespace conflicts are highly likely when fetching by name, because Knack uses object names as the default name for views. If you attempt to query your application by a name that exists as both an object and a view, Knackpy will raise a `ValueError`.
 {{< /hint >}}
