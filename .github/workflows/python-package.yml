@@ -6,11 +6,11 @@ name: Build
 on:
   push:
     branches:
-      - master
+      - production
       - dev
   pull_request:
     branches:
-      - master
+      - production
       - dev
 
 jobs:
