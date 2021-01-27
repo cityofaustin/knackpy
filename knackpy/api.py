@@ -158,11 +158,17 @@ def _get_paginated_records(
                     params=params,
                 )
 
-            except requests.exceptions.Timeout as e:
-                warnings.warn(
-                    f"Request timeout on attempt #{attempts}. Trying again..."
-                )
+            except (requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
+                """5xx errors (a recurring problem with the Knack API) and Timeouts
+                (both  ConnectTimeout and ReadTimeout) are suppresed based on
+                max_attempts. Any other error is raised"""
+                if e.response and e.response.status_code < 500:
+                    raise e
+
                 if attempts < max_attempts:
+                    warnings.warn(
+                        f"Error on attempt #{attempts}: {e.__repr__()}"
+                    )
                     attempts += 1
                     _random_pause()
                     continue
@@ -174,7 +180,6 @@ def _get_paginated_records(
             "total_records"
         ]  # note that this number could change between requests
         records += res.json()["records"]
-
         page += 1
 
     # lazily shaving off any remainder to keep the client happy
