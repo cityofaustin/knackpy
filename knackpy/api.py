@@ -167,7 +167,7 @@ def _get_paginated_records(
 
                 if attempts < max_attempts:
                     warnings.warn(
-                        f"Request timeout on attempt #{attempts}. Trying again..."
+                        f"Error on attempt #{attempts}: {e.__repr__()}"
                     )
                     attempts += 1
                     _random_pause()
