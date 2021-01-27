@@ -5,7 +5,6 @@ import math
 import random
 import time
 import typing
-import warnings
 
 import requests
 
@@ -166,7 +165,7 @@ def _get_paginated_records(
                     raise e
 
                 if attempts < max_attempts:
-                    warnings.warn(
+                    logging.debug(
                         f"Error on attempt #{attempts}: {e.__repr__()}"
                     )
                     attempts += 1
