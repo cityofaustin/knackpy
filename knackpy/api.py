@@ -145,7 +145,6 @@ def _get_paginated_records(
         params = {"page": page, "rows_per_page": rows_per_page, "filters": filters}
 
         while True:
-            print("looping")
             logging.debug(
                 f"Getting {rows_per_page} records from page {page} from {url}"
             )
@@ -181,8 +180,6 @@ def _get_paginated_records(
             "total_records"
         ]  # note that this number could change between requests
         records += res.json()["records"]
-        print("TOTAL:", total_records)
-        print(len(records))
         page += 1
 
     # lazily shaving off any remainder to keep the client happy
