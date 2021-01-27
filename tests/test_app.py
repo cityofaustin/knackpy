@@ -96,15 +96,15 @@ def test_get_object_by_key_live(app_live):
 
 
 def test_view_by_key_static(app_static):
-    assert app_static.get("view_11")
+    assert app_static.get("view_18")
 
 
 def test_get_view_by_key_live(app_live):
-    assert app_live.get("view_11")
+    assert app_live.get("view_18")
 
 
 def test_get_view_by_name(app_live):
-    assert app_live.get("view_11")
+    assert app_live.get("view_18")
 
 
 def test_get_by_key_refresh(app_live):
@@ -132,7 +132,7 @@ def test_get_object_records_with_filters(app_live):
 
 
 def test_get_view_records_with_filters(app_live):
-    records = app_live.get("view_11", filters=FILTERS)
+    records = app_live.get("view_18", filters=FILTERS)
     assert len(records) == 1
 
 
