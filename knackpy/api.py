@@ -99,6 +99,7 @@ def _request(
     url: str,
     headers: dict,
     timeout: int = 30,
+    max_attempts: int = 5,
     params: dict = None,
     data: dict = None,
     files: BufferedReader = None,
@@ -108,18 +109,41 @@ def _request(
         method, url, headers=headers, params=params, json=data, files=files
     )
     prepped = req.prepare()
-    res = session.send(prepped, timeout=timeout)
-    res.raise_for_status()
+
+    attempts = 1
+
+    while True:
+        logging.debug(
+            f"{method} to {url} with {params or 'no params'} (Attempt {attempts}/{max_attempts})"  # noqa:E501
+        )
+
+        try:
+            res = session.send(prepped, timeout=timeout)
+            res.raise_for_status()
+
+        except (requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
+            """5xx errors (a recurring problem with the Knack API) and Timeouts
+            (both  ConnectTimeout and ReadTimeout) are suppresed based on
+            max_attempts. Any other error is raised"""
+            if e.response and e.response.status_code < 500:
+                raise e
+
+            if attempts < max_attempts:
+                logging.debug(f"Error on attempt #{attempts}: {e.__repr__()}")
+                attempts += 1
+                _random_pause()
+                continue
+            else:
+                raise e
+        break
     return res
 
 
 def _continue(total_records: int, current_records: int, record_limit: int) -> bool:
     if total_records is None:
         return True
-
     elif current_records < record_limit and total_records > current_records:
         return True
-
     return False
 
 
@@ -140,47 +164,19 @@ def _get_paginated_records(
     page = 1
 
     while _continue(total_records, len(records), record_limit):
-        attempts = 0
         params = {"page": page, "rows_per_page": rows_per_page, "filters": filters}
-
-        while True:
-            logging.debug(
-                f"Getting {rows_per_page} records from page {page} from {url}"
-            )
-
-            try:
-                res = _request(
-                    method="GET",
-                    url=url,
-                    headers=headers,
-                    timeout=timeout,
-                    params=params,
-                )
-
-            except (requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
-                """5xx errors (a recurring problem with the Knack API) and Timeouts
-                (both  ConnectTimeout and ReadTimeout) are suppresed based on
-                max_attempts. Any other error is raised"""
-                if e.response and e.response.status_code < 500:
-                    raise e
-
-                if attempts < max_attempts:
-                    logging.debug(
-                        f"Error on attempt #{attempts}: {e.__repr__()}"
-                    )
-                    attempts += 1
-                    _random_pause()
-                    continue
-                else:
-                    raise e
-            break
-
-        total_records = res.json()[
-            "total_records"
-        ]  # note that this number could change between requests
+        logging.debug(f"Getting {rows_per_page} records from page {page} from {url}")
+        res = _request(
+            method="GET",
+            url=url,
+            headers=headers,
+            timeout=timeout,
+            max_attempts=max_attempts,
+            params=params,
+        )
+        total_records = res.json()["total_records"]
         records += res.json()["records"]
         page += 1
-
     # lazily shaving off any remainder to keep the client happy
     return records[0:record_limit] if record_limit < math.inf else records
 
@@ -220,17 +216,12 @@ def get(
         list: Knack records.
     """
     route = _route(obj=obj, scene=scene, view=view)
-
     url = _url(slug=slug, route=route)
-
     record_limit = record_limit if record_limit else math.inf
-
     filters = json.dumps(filters) if filters else None
-
     rows_per_page = (
         MAX_ROWS_PER_PAGE if record_limit >= MAX_ROWS_PER_PAGE else record_limit
     )
-
     return _get_paginated_records(
         app_id=app_id,
         api_key=api_key,
@@ -242,7 +233,9 @@ def get(
     )
 
 
-def get_metadata(*, app_id: str, slug: str = None, timeout: int = 30) -> dict:
+def get_metadata(
+    *, app_id: str, slug: str = None, timeout: int = 30, max_attempts: int = 5
+) -> dict:
     """Fetch Knack application metadata. You can find your app's metadata at:
     `https://api.knack.com/v1/applications/<app_id:str>`.
 
@@ -256,7 +249,9 @@ def get_metadata(*, app_id: str, slug: str = None, timeout: int = 30) -> dict:
     """
     route = _route(app_id=app_id)
     url = _url(slug=slug, route=route)
-    return _request(method="GET", url=url, headers=None).json()
+    return _request(
+        method="GET", url=url, headers=None, max_attempts=max_attempts
+    ).json()
 
 
 def _handle_method(method: str):
@@ -305,14 +300,22 @@ def record(
             [Requests docs](https://requests.readthedocs.io/en/master/user/quickstart/).
 
     Returns:
-        dict: The updated or newly created Knack record data, or, if deleting a record: `{"delete": true}`
+        dict: The updated or newly created Knack record data, or, if deleting a
+        record: `{"delete": true}`
     """
     record_id = data["id"] if method != "create" else ""
     headers = _headers(app_id, api_key)
     route = _route(obj=obj, record_id=record_id)
     method = _handle_method(method)
     url = _url(slug=slug, route=route)
-    return _request(method=method, url=url, headers=headers, data=data).json()
+    return _request(
+        method=method,
+        url=url,
+        headers=headers,
+        data=data,
+        max_attempts=max_attempts,
+        timeout=timeout,
+    ).json()
 
 
 def upload(
@@ -338,7 +341,7 @@ def upload(
     Args:
         app_id (str): Knack [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id)  # noqa:E501
             string.
-        api_key (str): [Knack API key](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
+        api_key (str): [Knack API key](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).  # noqa:E501
         obj (str): The Knack object key which holds the record data.
         field (str): The knack field key of the field you're uploading into.
         path (str): The path to the file to be uploaded.
