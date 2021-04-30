@@ -7,7 +7,8 @@ def default(value: object):
     (aka, humanized) value.
 
     The `default()` formatter handles any field type for which another formatter
-    function has not been defined. It simply returns the input value without additional
+    function has not been defined. If the input value is a list, it returns a comma separated
+    string of list values. Otherwise, it simply returns the input value without additional
     formatting.
 
     You'll notice that each formatter function's name matches its field type. If you
@@ -15,6 +16,8 @@ def default(value: object):
 
     See also: knackpy.Fields
     """
+    if isinstance(value, list):
+      return ", ".join(str(v) for v in value)
     return value
 
 

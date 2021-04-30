@@ -22,9 +22,9 @@ $ pip install -e knackpy
 
 We test with [`pytest`](docs.pytest.org/en/stable), [`coverage`](coverage.readthedocs.io), and [`pytest-env`](https://github.com/MobileDynasty/pytest-env).
 
-### Knacky Development Knack Application
+### Knackpy Development Knack Application
 
-Tests for `app.py` and `api.py` are dependendent on a City of Austin-owned Knack application which we rely on for over-the-wire API tests. If you work for the City of Austin Transportation Department, the credentials for this app are in our password store, and the app is called "Knackpy Development".
+Tests for `app.py` and `api.py` are dependent on a City of Austin-owned Knack application which we rely on for over-the-wire API tests. If you work for the City of Austin Transportation Department, the credentials for this app are in our password store, and the app is called "Knackpy Development".
 
 Any modifications you make to the Knackpy Development app may impact tests. You should carefully review our `tests/` before you modify _anything_ in the development app.
 
