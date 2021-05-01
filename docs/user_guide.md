@@ -58,9 +58,9 @@ Knackpy is designed around the `App` class. It provides helpers for querying
 and manipulating Knack application data. You should use the `App` class
 because:
 
-- It allows you to query obejcts and views by key or name
+- It allows you to query objects and views by key or name
 - It takes care of [localization issues](#timestamps-and-localization)
-- It let's you download and upload files from your app.
+- It lets you download and upload files from your app.
 - It does other things, too.
 
 To create an `App` instance, the bare minimum you need to provide is your [application ID](https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id).
@@ -102,7 +102,7 @@ For faster performance, set `generate=true` when getting records from your app. 
 Namespace conflicts are highly likely when fetching by name, because Knack uses object names as the default name for views. If you attempt to query your application by a name that exists as both an object and a view, Knackpy will raise a `ValueError`.
 {{< /hint >}}
 
-You can resuse the same `App` instance to fetch records from other objects and views.
+You can reuse the same `App` instance to fetch records from other objects and views.
 
 ```python
 >>> app.get("my_exciting_object")

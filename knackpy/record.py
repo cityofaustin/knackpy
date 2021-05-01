@@ -125,7 +125,7 @@ class Record(MutableMapping):
             # store the raw data if available
             value = self.raw[key_raw] if key_raw in self.raw else self.raw[key]
 
-            # there are a fiew fields where it's easier to just use knack's formatted
+            # there are a few fields where it's easier to just use knack's formatted
             # value. E.g. timer and name. in those cases, we want to store knack's
             # formatted value so that we can reference it when we assign a value to
             # Field.formatted.
