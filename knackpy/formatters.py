@@ -7,9 +7,9 @@ def default(value: object):
     (aka, humanized) value.
 
     The `default()` formatter handles any field type for which another formatter
-    function has not been defined. If the input value is a list, it returns a comma separated
-    string of list values. Otherwise, it simply returns the input value without additional
-    formatting.
+    function has not been defined. If the input value is a list, it returns a comma
+    separated string of list values. Otherwise, it simply returns the input value
+    without additional formatting.
 
     You'll notice that each formatter function's name matches its field type. If you
     want to write a custom formatter, do that.
@@ -17,7 +17,7 @@ def default(value: object):
     See also: knackpy.Fields
     """
     if isinstance(value, list):
-      return ", ".join(str(v) for v in value)
+        return ", ".join(str(v) for v in value)
     return value
 
 
@@ -35,7 +35,7 @@ def multiple_choice(value: Union[list, str]):
         # account for this odd [None] value for empty multi-select fields
         if value == [None]:
             return None
-        # we use string formatting to handle the possiblity that the list contains ints
+        # we use string formatting to handle the possibility that the list contains ints
         return ", ".join([f"{val}" for val in value])
     return value
 
