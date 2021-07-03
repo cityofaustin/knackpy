@@ -10,6 +10,7 @@ import requests
 
 from .models import MAX_ROWS_PER_PAGE
 
+logger = logging.getLogger(__name__)
 
 def _random_pause():
     """sleep for at least .333 seconds"""
@@ -113,7 +114,7 @@ def _request(
     attempts = 1
 
     while True:
-        logging.debug(
+        logger.debug(
             f"{method} to {url} with {params or 'no params'} (Attempt {attempts}/{max_attempts})"  # noqa:E501
         )
 
@@ -129,7 +130,7 @@ def _request(
                 raise e
 
             if attempts < max_attempts:
-                logging.debug(f"Error on attempt #{attempts}: {e.__repr__()}")
+                logger.debug(f"Error on attempt #{attempts}: {e.__repr__()}")
                 attempts += 1
                 _random_pause()
                 continue
@@ -139,10 +140,11 @@ def _request(
     return res
 
 
-def _continue(total_records: int, current_records: int, record_limit: int) -> bool:
+def _continue(total_records: int, current_record_count: int, record_limit: int) -> bool:
     if total_records is None:
+        # this case only happens on the *first* API request
         return True
-    elif current_records < record_limit and total_records > current_records:
+    elif current_record_count < record_limit and total_records > current_record_count:
         return True
     return False
 
@@ -165,7 +167,7 @@ def _get_paginated_records(
 
     while _continue(total_records, len(records), record_limit):
         params = {"page": page, "rows_per_page": rows_per_page, "filters": filters}
-        logging.debug(f"Getting {rows_per_page} records from page {page} from {url}")
+        logger.debug(f"Getting {rows_per_page} records from page {page} from {url}")
         res = _request(
             method="GET",
             url=url,
@@ -174,9 +176,17 @@ def _get_paginated_records(
             max_attempts=max_attempts,
             params=params,
         )
-        total_records = res.json()["total_records"]
-        records += res.json()["records"]
+
+        fetched_records = res.json()["records"]        
+        if len(fetched_records) == 0:
+            """Failsafe to handle edge case in which Knack returns fewer records than expected from 
+            total_records. Consider `total_records` an estimate"""
+            break
+
+        records += fetched_records
         page += 1
+        total_records = res.json()["total_records"]
+
     # lazily shaving off any remainder to keep the client happy
     return records[0:record_limit] if record_limit < math.inf else records
 
