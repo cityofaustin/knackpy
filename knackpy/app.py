@@ -12,6 +12,7 @@ from . import api, fields, utils
 from . import record as knackpy_record
 from .models import TIMEZONES, FIELD_SETTINGS
 
+logger = logging.getLogger(__name__)
 
 class App:
     """Knackpy is designed around the `App` class. It provides helpers for querying
@@ -78,7 +79,7 @@ class App:
         self.containers = utils.generate_containers(self.metadata)
         self.data = {}
         self.records = {}
-        logging.debug(self)
+        logger.debug(self)
 
     def _get_metadata(self):
         return api.get_metadata(app_id=self.app_id, timeout=self.timeout)
@@ -450,7 +451,7 @@ class App:
         for file_info in downloads:
             filename = file_info["filename"]
             filesize = utils.humanize_bytes(file_info["size"])
-            logging.debug(f"\nDownloading {file_info['url']} - size: {filesize}")
+            logger.debug(f"\nDownloading {file_info['url']} - size: {filesize}")
 
             res = requests.get(file_info["url"], allow_redirects=True)
 
@@ -501,7 +502,7 @@ class App:
 
         download_count = self._download_files(downloads)
 
-        logging.debug(f"{download_count} files downloaded.")
+        logger.debug(f"{download_count} files downloaded.")
 
         return download_count
 

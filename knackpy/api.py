@@ -10,6 +10,7 @@ import requests
 
 from .models import MAX_ROWS_PER_PAGE
 
+logger = logging.getLogger(__name__)
 
 def _random_pause():
     """sleep for at least .333 seconds"""
@@ -113,7 +114,7 @@ def _request(
     attempts = 1
 
     while True:
-        logging.debug(
+        logger.debug(
             f"{method} to {url} with {params or 'no params'} (Attempt {attempts}/{max_attempts})"  # noqa:E501
         )
 
@@ -129,7 +130,7 @@ def _request(
                 raise e
 
             if attempts < max_attempts:
-                logging.debug(f"Error on attempt #{attempts}: {e.__repr__()}")
+                logger.debug(f"Error on attempt #{attempts}: {e.__repr__()}")
                 attempts += 1
                 _random_pause()
                 continue
@@ -165,7 +166,7 @@ def _get_paginated_records(
 
     while _continue(total_records, len(records), record_limit):
         params = {"page": page, "rows_per_page": rows_per_page, "filters": filters}
-        logging.debug(f"Getting {rows_per_page} records from page {page} from {url}")
+        logger.debug(f"Getting {rows_per_page} records from page {page} from {url}")
         res = _request(
             method="GET",
             url=url,
