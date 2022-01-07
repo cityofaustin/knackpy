@@ -205,7 +205,7 @@ class App:
                     API. Defaults to False.
                 record_limit (int): the maximum number of records to retrieve. If
                     `None`, will return all records.
-                filters (dict or list, optional): A dict or of Knack API filiters.
+                filters (dict or list, optional): A dict or of Knack API filters.
                     See: https://www.knack.com/developer-documentation/#filters.
                 generate (bool, optional): If True, will return a generator which
                     yields knacky.Record objects instead of return a list of of them.
