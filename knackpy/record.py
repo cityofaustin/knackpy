@@ -166,16 +166,16 @@ class Record(MutableMapping):
         """
         record = {}
 
-        for key, field in self.fields.items():
+        for field_key, field in self.fields.items():
             try:
                 # try to see if key is contained by list keys
-                key = field.name if key in keys else key
+                key = field.name if field_key in keys else field_key
             except TypeError:
                 # assume keys is a bool
-                key = field.name if keys else key
+                key = field.name if keys else field_key
             try:
                 # try to see if value is contained by list values
-                value = field.formatted if key in values else field.raw
+                value = field.formatted if field_key in values else field.raw
             except TypeError:
                 # assume values is a bool
                 value = field.formatted if values else field.raw
