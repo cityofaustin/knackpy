@@ -6,6 +6,7 @@ import pytest
 OBJ_KEY = "object_3"
 FIELD_TO_FORMAT = {"key": "field_127", "name": "address_international_with_country"}
 FIELD_TO_NOT_FORMAT = {"key": "field_126", "name": "address_international"}
+EQUATION_FIELD_TO_TEST = {"key": "field_129"}
 
 
 @pytest.fixture
@@ -65,6 +66,20 @@ def test_format_record_value_list(app, records):
     assert isinstance(record[FIELD_TO_FORMAT["key"]], str) and isinstance(
         record[FIELD_TO_NOT_FORMAT["key"]], dict
     )
+
+
+def test_use_knack_format(records):
+    """
+    Were testing that Knack's formatted value is returned from an equation field
+    which uses the `use_knack_format` setting = True. The equation field itself
+    is set to calculate a decimal (auto-increment * 1.333333) and render
+    an integer
+    """
+    formatted_record = records[0].format(keys=False)
+    raw_value = records[0][EQUATION_FIELD_TO_TEST["key"]]
+    formatted_value = formatted_record[EQUATION_FIELD_TO_TEST["key"]]
+    assert isinstance(raw_value, float)
+    assert isinstance(formatted_value, int)
 
 
 def test_names(records):
