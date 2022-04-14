@@ -76,8 +76,10 @@ def test_use_knack_format(records):
     an integer
     """
     formatted_record = records[0].format(keys=False)
+    raw_value = records[0].raw
     formatted_value = formatted_record[EQUATION_FIELD_TO_TEST["key"]]
     assert isinstance(formatted_value, int)
+    assert isinstance(raw_value, float)
 
 
 def test_names(records):
