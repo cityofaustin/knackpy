@@ -2,22 +2,26 @@
 <html lang="en" dir=>
 
 <head>
-  <meta name="generator" content="Hugo 0.74.1" />
+  <meta name="generator" content="Hugo 0.97.0" />
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="knackpy.app #  App Objects #  class App() Knackpy is designed around the App class. It provides helpers for querying and manipulating Knack application data. You should use the App class because:
- It allows you to query obejcts and views by key or name It takes care of localization issues # noqa:E501 It let&rsquo;s you download and upload files from your app. It does other things, too.  Arguments:">
+<meta name="description" content="knackpy.app #  
+App Objects #  class App() Knackpy is designed around the App class. It provides helpers for querying and manipulating Knack application data. You should use the App class because:
+ It allows you to query obejcts and views by key or name It takes care of localization issues # noqa:E501 It let&rsquo;s you download and upload files from your app. It does other things, too.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="App" />
-<meta property="og:description" content="knackpy.app #  App Objects #  class App() Knackpy is designed around the App class. It provides helpers for querying and manipulating Knack application data. You should use the App class because:
- It allows you to query obejcts and views by key or name It takes care of localization issues # noqa:E501 It let&rsquo;s you download and upload files from your app. It does other things, too.  Arguments:" />
+<meta property="og:description" content="knackpy.app #  
+App Objects #  class App() Knackpy is designed around the App class. It provides helpers for querying and manipulating Knack application data. You should use the App class because:
+ It allows you to query obejcts and views by key or name It takes care of localization issues # noqa:E501 It let&rsquo;s you download and upload files from your app. It does other things, too." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/api-reference/app/" />
+<meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/api-reference/app/" /><meta property="article:section" content="docs" />
+
+
 
 <title>App | Knackpy</title>
 <link rel="manifest" href="/knackpy/manifest.json">
 <link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
-<link rel="stylesheet" href="/knackpy/book.min.134b70e5316650a530cb42e4e8630b2a01d532bebfc0337028211175336e4806.css" integrity="sha256-E0tw5TFmUKUwy0Lk6GMLKgHVMr6/wDNwKCERdTNuSAY=">
-<script defer src="/knackpy/en.search.min.918334cf30e386ef49c8a26f51ed1e56c68d191b4678f3075af4baf1dece1fee.js" integrity="sha256-kYM0zzDjhu9JyKJvUe0eVsaNGRtGePMHWvS68d7OH&#43;4="></script>
+<link rel="stylesheet" href="/knackpy/book.min.bf064a71a8e587ec4bfe3f4ec7da33e2110269e1cd15b03e0a984aa16eeec2ab.css" integrity="sha256-vwZKcajlh&#43;xL/j9Ox9oz4hECaeHNFbA&#43;CphKoW7uwqs=">
+<script defer src="/knackpy/en.search.min.f02c68b749284000fba8fe6404e0e70d71cd1c4c084baaf281891dd8ccbcdcc2.js" integrity="sha256-8Cxot0koQAD7qP5kBODnDXHNHEwIS6rygYkd2My83MI="></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -179,7 +183,7 @@ https://github.com/alex-shpak/hugo-book
 
 
 
-  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+  <script>(function(){var e=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
 
 
  
@@ -224,18 +228,18 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+  <article class="markdown"><p><a id="knackpy.app"></a></p>
 <h1 id="knackpyapp">
   knackpy.app
   <a class="anchor" href="#knackpyapp">#</a>
 </h1>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><a id="knackpy.app.App"></a></p>
 <h2 id="app-objects">
   App Objects
   <a class="anchor" href="#app-objects">#</a>
 </h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">App</span>()
-</code></pre></div><p>Knackpy is designed around the <code>App</code> class. It provides helpers for querying
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">App</span>()
+</span></span></code></pre></div><p>Knackpy is designed around the <code>App</code> class. It provides helpers for querying
 and manipulating Knack application data. You should use the <code>App</code> class
 because:</p>
 <ul>
@@ -261,53 +265,62 @@ out. Default values that are set in <code>knackpy.api.request</code>.</li>
 times out. Further reading:
 <a href="https://requests.readthedocs.io/en/master/user/quickstart/">Requests docs</a>.</li>
 </ul>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><a id="knackpy.app.App.info"></a></p>
 <h4 id="info">
   info
   <a class="anchor" href="#info">#</a>
 </h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> info()
-</code></pre></div><p>Returns a <code>dict</code> of basic app information:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">info</span>()
+</span></span></code></pre></div><p>Returns a <code>dict</code> of basic app information:</p>
 <ul>
 <li>Number of objects</li>
 <li>Number of scenes</li>
 <li>Number of records</li>
 <li>Number total file size</li>
 </ul>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><a id="knackpy.app.App.get"></a></p>
 <h4 id="get">
   get
   <a class="anchor" href="#get">#</a>
 </h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> get(identifier: str <span style="color:#f92672">=</span> None, refresh: bool <span style="color:#f92672">=</span> False, record_limit: int <span style="color:#f92672">=</span> None, filters: typing<span style="color:#f92672">.</span>Union[dict, list] <span style="color:#f92672">=</span> None, generate<span style="color:#f92672">=</span>False)
-</code></pre></div><p>Get records from a knack object or view.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get</span>(identifier: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>        refresh: bool <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>,
+</span></span><span style="display:flex;"><span>        record_limit: int <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>        filters: typing<span style="color:#f92672">.</span>Union[dict, list] <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>        generate<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span></code></pre></div><p>Get records from a knack object or view.</p>
 <p>Note that we accept the request params <code>record_limit</code> and <code>filters</code> here
 because the user would presumably want to set these on a per-object/view
 basis. They are not stored in state. Whereas <code>max_attempts</code> and
 <code>timeout</code> are set on App construction and persist in <code>App</code> state.</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><code>identifier</code> _str, optional*_ - an object or view key or name string that
+<li><code>identifier</code> <em>str, optional*</em> - an object or view key or name string that
 exists in the app. If None is provided and only one container has
 been fetched, will return records from that container.</li>
 <li><code>refresh</code> <em>bool, optional</em> - Force the re-querying of data from Knack
 API. Defaults to False.</li>
 <li><code>record_limit</code> <em>int</em> - the maximum number of records to retrieve. If
 <code>None</code>, will return all records.</li>
-<li><code>filters</code> <em>dict or list, optional</em> - A dict or of Knack API filiters.</li>
+<li><code>filters</code> <em>dict or list, optional</em> - A dict or list of Knack API filters.</li>
 <li><code>See</code> - <a href="https://www.knack.com/developer-documentation/%60filters%60">https://www.knack.com/developer-documentation/`filters`</a>.</li>
 <li><code>generate</code> <em>bool, optional</em> - If True, will return a generator which
 yields knacky.Record objects instead of return a list of of them.</li>
 </ul>
 <p><strong>Returns</strong>:</p>
 <p>A <code>generator</code> which yields knackpy Record objects.</p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><a id="knackpy.app.App.to_csv"></a></p>
 <h4 id="to_csv">
   to_csv
   <a class="anchor" href="#to_csv">#</a>
 </h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> to_csv(identifier: str, <span style="color:#f92672">*</span>, out_dir: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;_csv&#34;</span>, delimiter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;,&#34;</span>, record_limit: int <span style="color:#f92672">=</span> None, filters: typing<span style="color:#f92672">.</span>Union[dict, list] <span style="color:#f92672">=</span> None) <span style="color:#f92672">-&gt;</span> None
-</code></pre></div><p>Write formatted Knack records to CSV.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">to_csv</span>(identifier: str,
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>           out_dir: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;_csv&#34;</span>,
+</span></span><span style="display:flex;"><span>           delimiter<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;,&#34;</span>,
+</span></span><span style="display:flex;"><span>           record_limit: int <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>           filters: typing<span style="color:#f92672">.</span>Union[dict, list] <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">None</span>
+</span></span></code></pre></div><p>Write formatted Knack records to CSV.</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>identifier</code> <em>str</em> - an object or view key or name string that exists in the
@@ -320,13 +333,17 @@ will be written. Defaults to &ldquo;_csv&rdquo;.</li>
 <li><code>filters</code> <em>dict or list, optional</em> - A dict or of Knack API filiters.</li>
 <li><code>See</code> - <a href="https://www.knack.com/developer-documentation/%60filters%60">https://www.knack.com/developer-documentation/`filters`</a>.</li>
 </ul>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><a id="knackpy.app.App.download"></a></p>
 <h4 id="download">
   download
   <a class="anchor" href="#download">#</a>
 </h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> download(<span style="color:#f92672">*</span>, container: str, field: str, out_dir: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;_downloads&#34;</span>, label_keys: list <span style="color:#f92672">=</span> None)
-</code></pre></div><p>Download files and images from Knack records.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">download</span>(<span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>             container: str,
+</span></span><span style="display:flex;"><span>             field: str,
+</span></span><span style="display:flex;"><span>             out_dir: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;_downloads&#34;</span>,
+</span></span><span style="display:flex;"><span>             label_keys: list <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>)
+</span></span></code></pre></div><p>Download files and images from Knack records.</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>container</code> <em>str</em> - The name or key of the object from which files will be
@@ -342,13 +359,13 @@ prepended to the attachment filename, separated by an underscore.</li>
 <ul>
 <li><code>[int]</code> - Count of files downloaded.</li>
 </ul>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><a id="knackpy.app.App.record"></a></p>
 <h4 id="record">
   record
   <a class="anchor" href="#record">#</a>
 </h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> record(<span style="color:#f92672">*</span>, data: dict, method: str, obj: str)
-</code></pre></div><p>Create, update, or delete a Knack record.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">record</span>(<span style="color:#f92672">*</span>, data: dict, method: str, obj: str)
+</span></span></code></pre></div><p>Create, update, or delete a Knack record.</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>data</code> <em>dict</em> - The Knack record data payload.</li>
@@ -361,13 +378,18 @@ data.</li>
 <li><code>dict</code> - The updated or newly created Knack record data, or, if deleting a</li>
 <li><code>record</code> - <code>{&quot;delete&quot;: true}</code></li>
 </ul>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><a id="knackpy.app.App.upload"></a></p>
 <h4 id="upload">
   upload
   <a class="anchor" href="#upload">#</a>
 </h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> <span style="color:#f92672">|</span> upload(<span style="color:#f92672">*</span>, container: str, field: str, path: str, asset_type: str, record_id: str <span style="color:#f92672">=</span> None)
-</code></pre></div><p>Upload a file or image to Knack. This is a two-step process:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload</span>(<span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>           container: str,
+</span></span><span style="display:flex;"><span>           field: str,
+</span></span><span style="display:flex;"><span>           path: str,
+</span></span><span style="display:flex;"><span>           asset_type: str,
+</span></span><span style="display:flex;"><span>           record_id: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>)
+</span></span></code></pre></div><p>Upload a file or image to Knack. This is a two-step process:</p>
 <ol>
 <li>Upload file asset to Knack storage</li>
 <li>Create/update a record that links to the file in storage</li>

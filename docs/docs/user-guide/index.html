@@ -2,24 +2,26 @@
 <html lang="en" dir=>
 
 <head>
-  <meta name="generator" content="Hugo 0.74.1" />
+  <meta name="generator" content="Hugo 0.97.0" />
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Knackpy #  Knackpy is a Python client for interacting with Knack applications.
 Here&rsquo;s the complete documentation.
-Installation #  $ pip install knackpy Quick Start #  &gt;&gt;&gt; import knackpy # basic app construction &gt;&gt;&gt; app = knackpy.App(app_id=&#34;myappid&#34;, api_key=&#34;myverysecretapikey&#34;) # fetch all records from &#39;object_1&#39; &gt;&gt;&gt; records = app.get(&#34;object_1&#34;) # get the formatted keys/values of each record &gt;&gt;&gt; records_formatted = [record.format() for record in records] # access a record property by name &gt;&gt;&gt; customer_address = records[0][&#34;Customer Address&#34;] # create a record &gt;&gt;&gt; data = {&#34;field_1&#34;: &#34;pizza&#34;} &gt;&gt;&gt; record = app.">
-<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="User Guide" />
+Installation #  $ pip install knackpy Quick Start #  &gt;&gt;&gt; import knackpy  # basic app construction &gt;&gt;&gt; app = knackpy.App(app_id=&#34;myappid&#34;, api_key=&#34;myverysecretapikey&#34;)  # fetch all records from &#39;object_1&#39; &gt;&gt;&gt; records = app.get(&#34;object_1&#34;)  # get the formatted keys/values of each record &gt;&gt;&gt; records_formatted = [record.format() for record in records]  # access a record property by name &gt;&gt;&gt; customer_address = records[0][&#34;Customer Address&#34;]  # create a record &gt;&gt;&gt; data = {&#34;field_1&#34;: &#34;pizza&#34;} &gt;&gt;&gt; record = app.">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
 <meta property="og:description" content="Knackpy #  Knackpy is a Python client for interacting with Knack applications.
 Here&rsquo;s the complete documentation.
-Installation #  $ pip install knackpy Quick Start #  &gt;&gt;&gt; import knackpy # basic app construction &gt;&gt;&gt; app = knackpy.App(app_id=&#34;myappid&#34;, api_key=&#34;myverysecretapikey&#34;) # fetch all records from &#39;object_1&#39; &gt;&gt;&gt; records = app.get(&#34;object_1&#34;) # get the formatted keys/values of each record &gt;&gt;&gt; records_formatted = [record.format() for record in records] # access a record property by name &gt;&gt;&gt; customer_address = records[0][&#34;Customer Address&#34;] # create a record &gt;&gt;&gt; data = {&#34;field_1&#34;: &#34;pizza&#34;} &gt;&gt;&gt; record = app." />
+Installation #  $ pip install knackpy Quick Start #  &gt;&gt;&gt; import knackpy  # basic app construction &gt;&gt;&gt; app = knackpy.App(app_id=&#34;myappid&#34;, api_key=&#34;myverysecretapikey&#34;)  # fetch all records from &#39;object_1&#39; &gt;&gt;&gt; records = app.get(&#34;object_1&#34;)  # get the formatted keys/values of each record &gt;&gt;&gt; records_formatted = [record.format() for record in records]  # access a record property by name &gt;&gt;&gt; customer_address = records[0][&#34;Customer Address&#34;]  # create a record &gt;&gt;&gt; data = {&#34;field_1&#34;: &#34;pizza&#34;} &gt;&gt;&gt; record = app." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/user-guide/" />
+<meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/user-guide/" /><meta property="article:section" content="docs" />
+
+
 
 <title>User Guide | Knackpy</title>
 <link rel="manifest" href="/knackpy/manifest.json">
 <link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
-<link rel="stylesheet" href="/knackpy/book.min.134b70e5316650a530cb42e4e8630b2a01d532bebfc0337028211175336e4806.css" integrity="sha256-E0tw5TFmUKUwy0Lk6GMLKgHVMr6/wDNwKCERdTNuSAY=">
-<script defer src="/knackpy/en.search.min.918334cf30e386ef49c8a26f51ed1e56c68d191b4678f3075af4baf1dece1fee.js" integrity="sha256-kYM0zzDjhu9JyKJvUe0eVsaNGRtGePMHWvS68d7OH&#43;4="></script>
+<link rel="stylesheet" href="/knackpy/book.min.bf064a71a8e587ec4bfe3f4ec7da33e2110269e1cd15b03e0a984aa16eeec2ab.css" integrity="sha256-vwZKcajlh&#43;xL/j9Ox9oz4hECaeHNFbA&#43;CphKoW7uwqs=">
+<script defer src="/knackpy/en.search.min.f02c68b749284000fba8fe6404e0e70d71cd1c4c084baaf281891dd8ccbcdcc2.js" integrity="sha256-8Cxot0koQAD7qP5kBODnDXHNHEwIS6rygYkd2My83MI="></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -181,7 +183,7 @@ https://github.com/alex-shpak/hugo-book
 
 
 
-  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+  <script>(function(){var e=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
 
 
  
@@ -231,6 +233,8 @@ https://github.com/alex-shpak/hugo-book
     <li><a href="#accessing-the-api-directly">Accessing the API Directly</a></li>
     <li><a href="#timestamps-and-localization">Timestamps and Localization</a></li>
     <li><a href="#exceptions">Exceptions</a></li>
+    <li><a href="#title-user-guide">menu: main
+title: User Guide</a></li>
   </ul>
 </nav>
 
@@ -255,45 +259,45 @@ https://github.com/alex-shpak/hugo-book
   Installation
   <a class="anchor" href="#installation">#</a>
 </h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ pip install knackpy
-</code></pre></div><h2 id="quick-start">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ pip install knackpy
+</span></span></code></pre></div><h2 id="quick-start">
   Quick Start
   <a class="anchor" href="#quick-start">#</a>
 </h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> knackpy
-
-<span style="color:#75715e"># basic app construction</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,  api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>)
-
-<span style="color:#75715e"># fetch all records from &#39;object_1&#39;</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)
-
-<span style="color:#75715e"># get the formatted keys/values of each record</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> records_formatted <span style="color:#f92672">=</span> [record<span style="color:#f92672">.</span>format() <span style="color:#66d9ef">for</span> record <span style="color:#f92672">in</span> records]
-
-<span style="color:#75715e"># access a record property by name</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> customer_address <span style="color:#f92672">=</span> records[<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#34;Customer Address&#34;</span>]
-
-<span style="color:#75715e"># create a record</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;field_1&#34;</span>: <span style="color:#e6db74">&#34;pizza&#34;</span>}
-<span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>record(method<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;create&#34;</span>, data<span style="color:#f92672">=</span>data, obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>)
-
-<span style="color:#75715e"># download files from an object or view</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>download(
-<span style="color:#f92672">...</span>     container<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,
-<span style="color:#f92672">...</span>     field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_1&#34;</span>,
-<span style="color:#f92672">...</span>     out_dir<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;_downloads&#34;</span>
-<span style="color:#f92672">...</span> )
-
-<span style="color:#75715e"># upload a file and attach it to a record</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>upload(
-<span style="color:#f92672">...</span>     container<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,  <span style="color:#75715e"># must be an object key or name</span>
-<span style="color:#f92672">...</span>     field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_3&#34;</span>,
-<span style="color:#f92672">...</span>     path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file.jpg&#34;</span>,
-<span style="color:#f92672">...</span>     asset_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file&#34;</span>,  <span style="color:#75715e"># must be &#39;file&#39; or &#39;image&#39;, depending on field type</span>
-<span style="color:#f92672">...</span>     record_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;5d7968c8092e7f00106c6399&#34;</span>
-<span style="color:#f92672">...</span> )
-</code></pre></div><h2 id="working-with-apps">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> knackpy
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># basic app construction</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,  api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># fetch all records from &#39;object_1&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># get the formatted keys/values of each record</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> records_formatted <span style="color:#f92672">=</span> [record<span style="color:#f92672">.</span>format() <span style="color:#66d9ef">for</span> record <span style="color:#f92672">in</span> records]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># access a record property by name</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> customer_address <span style="color:#f92672">=</span> records[<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#34;Customer Address&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># create a record</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;field_1&#34;</span>: <span style="color:#e6db74">&#34;pizza&#34;</span>}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>record(method<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;create&#34;</span>, data<span style="color:#f92672">=</span>data, obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># download files from an object or view</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>download(
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     container<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_1&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     out_dir<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;_downloads&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span> )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># upload a file and attach it to a record</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>upload(
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     container<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,  <span style="color:#75715e"># must be an object key or name</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_3&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file.jpg&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     asset_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file&#34;</span>,  <span style="color:#75715e"># must be &#39;file&#39; or &#39;image&#39;, depending on field type</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     record_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;5d7968c8092e7f00106c6399&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span> )
+</span></span></code></pre></div><h2 id="working-with-apps">
   Working with Apps
   <a class="anchor" href="#working-with-apps">#</a>
 </h2>
@@ -301,32 +305,32 @@ https://github.com/alex-shpak/hugo-book
 and manipulating Knack application data. You should use the <code>App</code> class
 because:</p>
 <ul>
-<li>It allows you to query obejcts and views by key or name</li>
+<li>It allows you to query objects and views by key or name</li>
 <li>It takes care of <a href="#timestamps-and-localization">localization issues</a></li>
-<li>It let&rsquo;s you download and upload files from your app.</li>
+<li>It lets you download and upload files from your app.</li>
 <li>It does other things, too.</li>
 </ul>
 <p>To create an <code>App</code> instance, the bare minimum you need to provide is your <a href="https://www.knack.com/developer-documentation/#find-your-api-key-amp-application-id">application ID</a>.</p>
 <p>If you construct an <code>App</code> instance without providing an API key, you will only be able to fetch records from publicly-availble views.</p>
 <p>Note that fetching data from public views is a smart way to avoid hitting your <a href="https://www.knack.com/developer-documentation/#api-limits">API limit</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># basic app construction with api key</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> knackpy
-<span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>, api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>)
-</code></pre></div><h3 id="getting-records">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># basic app construction with api key</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> knackpy
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>, api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>)
+</span></span></code></pre></div><h3 id="getting-records">
   Getting Records
   <a class="anchor" href="#getting-records">#</a>
 </h3>
 <p>Use <code>App.get()</code> to fetch records from a Knack application. Container identifiers can be supplied as a key (<code>object_1</code>, <code>view_1</code>) or a name (<code>my_exciting_object</code>, <code>My Exciting View</code>).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># fetch all records from object_1</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)
-<span style="color:#75715e"># or</span>
-<span style="color:#75715e"># fetch all records from view named &#34;My Exciting View&#34;</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;My Exciting View&#34;</span>)
-</code></pre></div><p>For faster performance, set <code>generate=true</code> when getting records from your app. This will prevent knackpy from constructing all <code>Record</code> instances up-front by returning a generator function instead of a list.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>, generate<span style="color:#f92672">=</span>true)
-<span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">for</span> record <span style="color:#f92672">in</span> records:
-<span style="color:#f92672">...</span>     formatted_record <span style="color:#f92672">=</span> record<span style="color:#f92672">.</span>format()
-</code></pre></div><h4 id="be-careful-when-using-named-references">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># fetch all records from object_1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># or</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># fetch all records from view named &#34;My Exciting View&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;My Exciting View&#34;</span>)
+</span></span></code></pre></div><p>For faster performance, set <code>generate=true</code> when getting records from your app. This will prevent knackpy from constructing all <code>Record</code> instances up-front by returning a generator function instead of a list.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>, generate<span style="color:#f92672">=</span>true)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">for</span> record <span style="color:#f92672">in</span> records:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     formatted_record <span style="color:#f92672">=</span> record<span style="color:#f92672">.</span>format()
+</span></span></code></pre></div><h4 id="be-careful-when-using-named-references">
   Be Careful When Using Named References
   <a class="anchor" href="#be-careful-when-using-named-references">#</a>
 </h4>
@@ -334,45 +338,48 @@ because:</p>
   Namespace conflicts are highly likely when fetching by name, because Knack uses object names as the default name for views. If you attempt to query your application by a name that exists as both an object and a view, Knackpy will raise a <code>ValueError</code>.
 </blockquote>
 
-<p>You can resuse the same <code>App</code> instance to fetch records from other objects and views.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;my_exciting_object&#34;</span>)
-<span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;my_boring_object&#34;</span>)
-<span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;view_1&#34;</span>)
-</code></pre></div><blockquote class="book-hint info">
-  <h4 id="omitting-the-container-name">Omitting the Container Name</h4>
+<p>You can reuse the same <code>App</code> instance to fetch records from other objects and views.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;my_exciting_object&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;my_boring_object&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;view_1&#34;</span>)
+</span></span></code></pre></div><blockquote class="book-hint info">
+  <h4 id="omitting-the-container-name">
+  Omitting the Container Name
+  <a class="anchor" href="#omitting-the-container-name">#</a>
+</h4>
 <p>If you&rsquo;ve only fetched one container, you can omit the container name when accessing your records. This is helpful during development, but for readability we suggest you avoid this practice in production code.
 </blockquote>
 
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;My Exciting View&#34;</span>)
-<span style="color:#75715e"># you can omit the container name if you want to access your records again</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> same_records_without_accessor <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get()
-</code></pre></div><p>You can refine your record requests by specififying a <code>record_limit</code>, <code>filters</code>, and <code>timeout</code>. See the <a href="">module documentaiton</a> for details.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> filters <span style="color:#f92672">=</span> {
-    <span style="color:#e6db74">&#34;match&#34;</span>: <span style="color:#e6db74">&#34;or&#34;</span>,
-    <span style="color:#e6db74">&#34;rules&#34;</span>: [
-        {<span style="color:#e6db74">&#34;field&#34;</span>: <span style="color:#e6db74">&#34;field_1&#34;</span>, <span style="color:#e6db74">&#34;operator&#34;</span>: <span style="color:#e6db74">&#34;is&#34;</span>, <span style="color:#e6db74">&#34;value&#34;</span>: <span style="color:#ae81ff">1</span>},
-        {<span style="color:#e6db74">&#34;field&#34;</span>: <span style="color:#e6db74">&#34;field_2&#34;</span>, <span style="color:#e6db74">&#34;operator&#34;</span>: <span style="color:#e6db74">&#34;is&#34;</span>, <span style="color:#e6db74">&#34;value&#34;</span>: <span style="color:#e6db74">&#34;Pizza&#34;</span>},
-    ],
-}
-<span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>, record_limit<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, filters<span style="color:#f92672">=</span>filters)
-</code></pre></div><h3 id="creating-updating-and-deleting-records">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;My Exciting View&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># you can omit the container name if you want to access your records again</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> same_records_without_accessor <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get()
+</span></span></code></pre></div><p>You can refine your record requests by specififying a <code>record_limit</code>, <code>filters</code>, and <code>timeout</code>. See the <a href="">module documentaiton</a> for details.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> filters <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;match&#34;</span>: <span style="color:#e6db74">&#34;or&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;rules&#34;</span>: [
+</span></span><span style="display:flex;"><span>        {<span style="color:#e6db74">&#34;field&#34;</span>: <span style="color:#e6db74">&#34;field_1&#34;</span>, <span style="color:#e6db74">&#34;operator&#34;</span>: <span style="color:#e6db74">&#34;is&#34;</span>, <span style="color:#e6db74">&#34;value&#34;</span>: <span style="color:#ae81ff">1</span>},
+</span></span><span style="display:flex;"><span>        {<span style="color:#e6db74">&#34;field&#34;</span>: <span style="color:#e6db74">&#34;field_2&#34;</span>, <span style="color:#e6db74">&#34;operator&#34;</span>: <span style="color:#e6db74">&#34;is&#34;</span>, <span style="color:#e6db74">&#34;value&#34;</span>: <span style="color:#e6db74">&#34;Pizza&#34;</span>},
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>, record_limit<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, filters<span style="color:#f92672">=</span>filters)
+</span></span></code></pre></div><h3 id="creating-updating-and-deleting-records">
   Creating, Updating, and Deleting Records
   <a class="anchor" href="#creating-updating-and-deleting-records">#</a>
 </h3>
 <p>Create a record.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,  api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>)
-<span style="color:#f92672">&gt;&gt;&gt;</span> data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;field_1&#34;</span>: <span style="color:#e6db74">&#34;pizza&#34;</span>}
-<span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>record(method<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;create&#34;</span>, data<span style="color:#f92672">=</span>data, obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>)
-</code></pre></div><p>Update a record.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,  api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>)
-<span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)[<span style="color:#ae81ff">0</span>]
-<span style="color:#f92672">&gt;&gt;&gt;</span> data <span style="color:#f92672">=</span> dict(record)
-<span style="color:#f92672">&gt;&gt;&gt;</span> data[<span style="color:#e6db74">&#34;field_1&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;new value&#34;</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>record(method<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;update&#34;</span>, data<span style="color:#f92672">=</span>data, obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>)
-</code></pre></div><p>Delete a record.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> response <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>record(method<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;delete&#34;</span>, data<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;abc123xyz789&#34;</span>}, obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>)
-<span style="color:#75715e"># response == {&#34;delete&#34;: True}</span>
-</code></pre></div><h3 id="download-files">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,  api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> data <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;field_1&#34;</span>: <span style="color:#e6db74">&#34;pizza&#34;</span>}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>record(method<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;create&#34;</span>, data<span style="color:#f92672">=</span>data, obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>)
+</span></span></code></pre></div><p>Update a record.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,  api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> data <span style="color:#f92672">=</span> dict(record)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> data[<span style="color:#e6db74">&#34;field_1&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;new value&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>record(method<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;update&#34;</span>, data<span style="color:#f92672">=</span>data, obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>)
+</span></span></code></pre></div><p>Delete a record.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> response <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>record(method<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;delete&#34;</span>, data<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;abc123xyz789&#34;</span>}, obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># response == {&#34;delete&#34;: True}</span>
+</span></span></code></pre></div><h3 id="download-files">
   Download Files
   <a class="anchor" href="#download-files">#</a>
 </h3>
@@ -393,93 +400,93 @@ will be written. Defaults to &ldquo;_downloads&rdquo;.</p>
 <p><code>label_keys</code> (<code>list</code>, optional): A list of field keys whose <em>values</em> will be prepended to the attachment filename, separated by an underscore.</p>
 </li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>download(
-<span style="color:#f92672">...</span>     container<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,
-<span style="color:#f92672">...</span>     field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_1&#34;</span>,
-<span style="color:#f92672">...</span>     out_dir<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;_downloads&#34;</span>,
-<span style="color:#f92672">...</span>     label_keys<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_2&#34;</span>
-<span style="color:#f92672">...</span> )
-</code></pre></div><h3 id="upload-files">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>download(
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     container<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_1&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     out_dir<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;_downloads&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     label_keys<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_2&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span> )
+</span></span></code></pre></div><h3 id="upload-files">
   Upload Files
   <a class="anchor" href="#upload-files">#</a>
 </h3>
 <p>Upload a file and attach it to a Knack record.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> res <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>upload(
-<span style="color:#f92672">...</span>     container<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,  <span style="color:#75715e"># must be an object key or name</span>
-<span style="color:#f92672">...</span>     field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_3&#34;</span>,
-<span style="color:#f92672">...</span>     path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file.jpg&#34;</span>,
-<span style="color:#f92672">...</span>     asset_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file&#34;</span>,  <span style="color:#75715e"># must be &#39;file&#39; or &#39;image&#39;, depending on field type</span>
-<span style="color:#f92672">...</span>     record_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;5d7968c8092e7f00106c6399&#34;</span>
-<span style="color:#f92672">...</span> )
-</code></pre></div><h3 id="advanced-app-usage">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> res <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>upload(
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     container<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,  <span style="color:#75715e"># must be an object key or name</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;field_3&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     path<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file.jpg&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     asset_type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;file&#34;</span>,  <span style="color:#75715e"># must be &#39;file&#39; or &#39;image&#39;, depending on field type</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     record_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;5d7968c8092e7f00106c6399&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span> )
+</span></span></code></pre></div><h3 id="advanced-app-usage">
   Advanced <code>App</code> Usage
   <a class="anchor" href="#advanced-app-usage">#</a>
 </h3>
 <p>Raw record data is available at <code>App.data</code>. You can use this property to check the readily available data in your App instance.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>keys()
-[<span style="color:#e6db74">&#34;object_1&#34;</span>, <span style="color:#e6db74">&#34;object_2&#34;</span>, <span style="color:#e6db74">&#34;view_1&#34;</span>]
-</code></pre></div><p>References to all available endpoints are stored at <code>App.containers</code>. This is handy if you want to check the name of a container, or its key:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>containers
-[
-    Container(obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;object_1&#39;</span>, view<span style="color:#f92672">=</span>None, scene<span style="color:#f92672">=</span>None, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;my_boring_object&#39;</span>),
-    Container(obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;object_2&#39;</span>, view<span style="color:#f92672">=</span>None, scene<span style="color:#f92672">=</span>None, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;my_exciting_object&#39;</span>),
-    Container(obj<span style="color:#f92672">=</span>None, view<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;view_1&#39;</span>, scene<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;scene_1&#39;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;My Exciting View&#39;</span>),
-]
-</code></pre></div><p>You can avoid an API call by providing your own Knack metadata when creating an <code>App</code> instance (unclear if metadata requests count against <a href="https://www.knack.com/developer-documentation/#api-limits">API limits</a>)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> json
-<span style="color:#75715e"># get your app&#39;s metadata here: https://loader.knack.com/v1/applications/&lt;app_id:str&gt;&#34;</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;my_metadata.json&#34;</span>, <span style="color:#e6db74">&#34;r&#34;</span>) <span style="color:#66d9ef">as</span> fin:
-<span style="color:#f92672">...</span>     metadata <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>loads(fin<span style="color:#f92672">.</span>read())
-<span style="color:#f92672">&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id,  metadata<span style="color:#f92672">=</span>metadata)
-</code></pre></div><p>You can side-load record data into your your app as well. Note that you must assign your data to a valid key that exists in your app.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;my_knack_data.json&#34;</span>, <span style="color:#e6db74">&#34;r&#34;</span>) <span style="color:#66d9ef">as</span> fin:
-<span style="color:#f92672">...</span>     data <span style="color:#f92672">=</span> { <span style="color:#e6db74">&#34;object_3&#34;</span>: json<span style="color:#f92672">.</span>loads(fin<span style="color:#f92672">.</span>read()) }
-<span style="color:#f92672">&gt;&gt;</span> app<span style="color:#f92672">.</span>data <span style="color:#f92672">=</span> data
-<span style="color:#f92672">&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_3&#34;</span>)
-</code></pre></div><p>You can use <code>knackpy.get()</code> to fetch &ldquo;raw&rdquo; data from your Knack app. Be aware that raw Knack timestamps <a href="#timestamps-and-localization">are problematic</a>. See the <a href="#records">Records</a> documentation.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>data<span style="color:#f92672">.</span>keys()
+</span></span><span style="display:flex;"><span>[<span style="color:#e6db74">&#34;object_1&#34;</span>, <span style="color:#e6db74">&#34;object_2&#34;</span>, <span style="color:#e6db74">&#34;view_1&#34;</span>]
+</span></span></code></pre></div><p>References to all available endpoints are stored at <code>App.containers</code>. This is handy if you want to check the name of a container, or its key:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>containers
+</span></span><span style="display:flex;"><span>[
+</span></span><span style="display:flex;"><span>    Container(obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;object_1&#39;</span>, view<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, scene<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;my_boring_object&#39;</span>),
+</span></span><span style="display:flex;"><span>    Container(obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;object_2&#39;</span>, view<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, scene<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;my_exciting_object&#39;</span>),
+</span></span><span style="display:flex;"><span>    Container(obj<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, view<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;view_1&#39;</span>, scene<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;scene_1&#39;</span>, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;My Exciting View&#39;</span>),
+</span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div><p>You can avoid an API call by providing your own Knack metadata when creating an <code>App</code> instance (unclear if metadata requests count against <a href="https://www.knack.com/developer-documentation/#api-limits">API limits</a>)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> json
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># get your app&#39;s metadata here: https://loader.knack.com/v1/applications/&lt;app_id:str&gt;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;my_metadata.json&#34;</span>, <span style="color:#e6db74">&#34;r&#34;</span>) <span style="color:#66d9ef">as</span> fin:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     metadata <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>loads(fin<span style="color:#f92672">.</span>read())
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id,  metadata<span style="color:#f92672">=</span>metadata)
+</span></span></code></pre></div><p>You can side-load record data into your your app as well. Note that you must assign your data to a valid key that exists in your app.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;my_knack_data.json&#34;</span>, <span style="color:#e6db74">&#34;r&#34;</span>) <span style="color:#66d9ef">as</span> fin:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     data <span style="color:#f92672">=</span> { <span style="color:#e6db74">&#34;object_3&#34;</span>: json<span style="color:#f92672">.</span>loads(fin<span style="color:#f92672">.</span>read()) }
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> app<span style="color:#f92672">.</span>data <span style="color:#f92672">=</span> data
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;</span> records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_3&#34;</span>)
+</span></span></code></pre></div><p>You can use <code>knackpy.get()</code> to fetch &ldquo;raw&rdquo; data from your Knack app. Be aware that raw Knack timestamps <a href="#timestamps-and-localization">are problematic</a>. See the <a href="#records">Records</a> documentation.</p>
 <h3 id="other-app-methods">
   Other <code>App</code> Methods
   <a class="anchor" href="#other-app-methods">#</a>
 </h3>
 <p>Display summary metrics about the app.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>info()
-{<span style="color:#e6db74">&#39;objects&#39;</span>: <span style="color:#ae81ff">10</span>, <span style="color:#e6db74">&#39;scenes&#39;</span>: <span style="color:#ae81ff">4</span>, <span style="color:#e6db74">&#39;records&#39;</span>: <span style="color:#ae81ff">6786</span>, <span style="color:#e6db74">&#39;size&#39;</span>: <span style="color:#e6db74">&#39;25.47mb&#39;</span>}
-</code></pre></div><p>Write a container to CSV. Be aware that destination files will be overwritten, if they exist.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">&#34;my exciting view&#34;</span>, out_dir<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;_csv&#34;</span>)
-</code></pre></div><h2 id="working-with-record-objects">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>info()
+</span></span><span style="display:flex;"><span>{<span style="color:#e6db74">&#39;objects&#39;</span>: <span style="color:#ae81ff">10</span>, <span style="color:#e6db74">&#39;scenes&#39;</span>: <span style="color:#ae81ff">4</span>, <span style="color:#e6db74">&#39;records&#39;</span>: <span style="color:#ae81ff">6786</span>, <span style="color:#e6db74">&#39;size&#39;</span>: <span style="color:#e6db74">&#39;25.47mb&#39;</span>}
+</span></span></code></pre></div><p>Write a container to CSV. Be aware that destination files will be overwritten, if they exist.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app<span style="color:#f92672">.</span>to_csv(<span style="color:#e6db74">&#34;my exciting view&#34;</span>, out_dir<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;_csv&#34;</span>)
+</span></span></code></pre></div><h2 id="working-with-record-objects">
   Working with <code>Record</code> Objects
   <a class="anchor" href="#working-with-record-objects">#</a>
 </h2>
 <p><code>Record</code> objects are <code>dict</code>-like containers for Knack record data. Note that all timestamps have been <a href="#timestamps-and-localization">correctly set to unix time</a>.</p>
 <p>You can access a record value like you would a <code>dict</code>, using the field key or field name.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)[<span style="color:#ae81ff">0</span>]
-<span style="color:#75715e"># access a value via field key</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> record[<span style="color:#e6db74">&#34;field_22&#34;</span>]
-{<span style="color:#e6db74">&#34;city&#34;</span>: <span style="color:#e6db74">&#34;Austin&#34;</span>, <span style="color:#e6db74">&#34;state&#34;</span>: <span style="color:#e6db74">&#34;TX&#34;</span>, <span style="color:#e6db74">&#34;street&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd&#34;</span>, <span style="color:#e6db74">&#34;street2&#34;</span>: <span style="color:#e6db74">&#34;Suite 1&#34;</span>, <span style="color:#e6db74">&#34;zip&#34;</span>: <span style="color:#e6db74">&#34;78754&#34;</span>}
-<span style="color:#75715e"># access a value via field name</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> record[<span style="color:#e6db74">&#34;Customer Address&#34;</span>]
-{<span style="color:#e6db74">&#34;city&#34;</span>: <span style="color:#e6db74">&#34;Austin&#34;</span>, <span style="color:#e6db74">&#34;state&#34;</span>: <span style="color:#e6db74">&#34;TX&#34;</span>, <span style="color:#e6db74">&#34;street&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd&#34;</span>, <span style="color:#e6db74">&#34;street2&#34;</span>: <span style="color:#e6db74">&#34;Suite 1&#34;</span>, <span style="color:#e6db74">&#34;zip&#34;</span>: <span style="color:#e6db74">&#34;78754&#34;</span>}
-</code></pre></div><h3 id="formatting-records">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># access a value via field key</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> record[<span style="color:#e6db74">&#34;field_22&#34;</span>]
+</span></span><span style="display:flex;"><span>{<span style="color:#e6db74">&#34;city&#34;</span>: <span style="color:#e6db74">&#34;Austin&#34;</span>, <span style="color:#e6db74">&#34;state&#34;</span>: <span style="color:#e6db74">&#34;TX&#34;</span>, <span style="color:#e6db74">&#34;street&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd&#34;</span>, <span style="color:#e6db74">&#34;street2&#34;</span>: <span style="color:#e6db74">&#34;Suite 1&#34;</span>, <span style="color:#e6db74">&#34;zip&#34;</span>: <span style="color:#e6db74">&#34;78754&#34;</span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># access a value via field name</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> record[<span style="color:#e6db74">&#34;Customer Address&#34;</span>]
+</span></span><span style="display:flex;"><span>{<span style="color:#e6db74">&#34;city&#34;</span>: <span style="color:#e6db74">&#34;Austin&#34;</span>, <span style="color:#e6db74">&#34;state&#34;</span>: <span style="color:#e6db74">&#34;TX&#34;</span>, <span style="color:#e6db74">&#34;street&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd&#34;</span>, <span style="color:#e6db74">&#34;street2&#34;</span>: <span style="color:#e6db74">&#34;Suite 1&#34;</span>, <span style="color:#e6db74">&#34;zip&#34;</span>: <span style="color:#e6db74">&#34;78754&#34;</span>}
+</span></span></code></pre></div><h3 id="formatting-records">
   Formatting Records
   <a class="anchor" href="#formatting-records">#</a>
 </h3>
 <p>Format the keys and/or values of a record.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># format keys and values</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> formatted_record <span style="color:#f92672">=</span> record<span style="color:#f92672">.</span>format()
-{ <span style="color:#e6db74">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;abc123xyz789&#34;</span>, <span style="color:#e6db74">&#34;Customer Address&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd, Austin, TX, 78754&#34;</span> }
-<span style="color:#75715e"># only format the keys</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> formatted_keys <span style="color:#f92672">=</span> record<span style="color:#f92672">.</span>format(values<span style="color:#f92672">=</span>False)
-{ <span style="color:#e6db74">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;abc123xyz789&#34;</span>, <span style="color:#e6db74">&#34;Customer Address&#34;</span>: {<span style="color:#e6db74">&#34;city&#34;</span>: <span style="color:#e6db74">&#34;Austin&#34;</span>, <span style="color:#e6db74">&#34;state&#34;</span>: <span style="color:#e6db74">&#34;TX&#34;</span>, <span style="color:#e6db74">&#34;street&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd&#34;</span>, <span style="color:#e6db74">&#34;street2&#34;</span>: <span style="color:#e6db74">&#34;Suite 1&#34;</span>, <span style="color:#e6db74">&#34;zip&#34;</span>: <span style="color:#e6db74">&#34;78754&#34;</span>}}
-<span style="color:#75715e"># only format the values</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> formatted_values <span style="color:#f92672">=</span> record<span style="color:#f92672">.</span>format(keys<span style="color:#f92672">=</span>False)
-{ <span style="color:#e6db74">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;abc123xyz789&#34;</span>, <span style="color:#e6db74">&#34;field_22&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd, Austin, TX, 78754&#34;</span> }
-<span style="color:#75715e"># format specific keys and values</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> formatted_values <span style="color:#f92672">=</span> record<span style="color:#f92672">.</span>format(keys<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;field_22&#34;</span>], values<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;field_22&#34;</span>])
-{ <span style="color:#e6db74">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;abc123xyz789&#34;</span>, <span style="color:#e6db74">&#34;Customer Address&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd, Austin, TX, 78754&#34;</span> }
-</code></pre></div><p>Although a <code>Record</code> object looks like a <code>dict</code>, it contains <code>Field</code> objects (TODO: link to docs). If you want to convert a <code>Record</code> object into a plain-old <code>dict</code>, use the <code>dict()</code> built-in.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)[<span style="color:#ae81ff">0</span>]
-<span style="color:#f92672">&gt;&gt;&gt;</span> data <span style="color:#f92672">=</span> dict(record)
-</code></pre></div><h3 id="dict-like-record-methods-items-keys-and-names">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># format keys and values</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> formatted_record <span style="color:#f92672">=</span> record<span style="color:#f92672">.</span>format()
+</span></span><span style="display:flex;"><span>{ <span style="color:#e6db74">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;abc123xyz789&#34;</span>, <span style="color:#e6db74">&#34;Customer Address&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd, Austin, TX, 78754&#34;</span> }
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># only format the keys</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> formatted_keys <span style="color:#f92672">=</span> record<span style="color:#f92672">.</span>format(values<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>{ <span style="color:#e6db74">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;abc123xyz789&#34;</span>, <span style="color:#e6db74">&#34;Customer Address&#34;</span>: {<span style="color:#e6db74">&#34;city&#34;</span>: <span style="color:#e6db74">&#34;Austin&#34;</span>, <span style="color:#e6db74">&#34;state&#34;</span>: <span style="color:#e6db74">&#34;TX&#34;</span>, <span style="color:#e6db74">&#34;street&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd&#34;</span>, <span style="color:#e6db74">&#34;street2&#34;</span>: <span style="color:#e6db74">&#34;Suite 1&#34;</span>, <span style="color:#e6db74">&#34;zip&#34;</span>: <span style="color:#e6db74">&#34;78754&#34;</span>}}
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># only format the values</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> formatted_values <span style="color:#f92672">=</span> record<span style="color:#f92672">.</span>format(keys<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>{ <span style="color:#e6db74">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;abc123xyz789&#34;</span>, <span style="color:#e6db74">&#34;field_22&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd, Austin, TX, 78754&#34;</span> }
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># format specific keys and values</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> formatted_values <span style="color:#f92672">=</span> record<span style="color:#f92672">.</span>format(keys<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;field_22&#34;</span>], values<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;field_22&#34;</span>])
+</span></span><span style="display:flex;"><span>{ <span style="color:#e6db74">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;abc123xyz789&#34;</span>, <span style="color:#e6db74">&#34;Customer Address&#34;</span>: <span style="color:#e6db74">&#34;8700 Cameron Rd, Austin, TX, 78754&#34;</span> }
+</span></span></code></pre></div><p>Although a <code>Record</code> object looks like a <code>dict</code>, it contains <code>Field</code> objects (TODO: link to docs). If you want to convert a <code>Record</code> object into a plain-old <code>dict</code>, use the <code>dict()</code> built-in.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> record <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> data <span style="color:#f92672">=</span> dict(record)
+</span></span></code></pre></div><h3 id="dict-like-record-methods-items-keys-and-names">
   Dict-like <code>Record</code> methods (Items, Keys, and Names)
   <a class="anchor" href="#dict-like-record-methods-items-keys-and-names">#</a>
 </h3>
@@ -489,7 +496,10 @@ will be written. Defaults to &ldquo;_downloads&rdquo;.</p>
 <li><code>Record.names()</code>: returns a list of the record&rsquo;s field names.</li>
 </ul>
 <blockquote class="book-hint warning">
-  <h4 id="accessing-raw-knack-data">Accessing Raw Knack Data</h4>
+  <h4 id="accessing-raw-knack-data">
+  Accessing Raw Knack Data
+  <a class="anchor" href="#accessing-raw-knack-data">#</a>
+</h4>
 <p>Records may look raw, but any timestamps have been <a href="#timestamps-and-localization">corrected to real unix time</a>. If you want the raw, untouched data, use the <code>Record.raw</code> property.
 </blockquote>
 
@@ -498,47 +508,53 @@ will be written. Defaults to &ldquo;_downloads&rdquo;.</p>
   <a class="anchor" href="#accessing-the-api-directly">#</a>
 </h2>
 <p>If you don&rsquo;t want to fuss with <code>App</code> objects, you can use knackpy&rsquo;s direct interface with the Knack API.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># This is equivalent to exporting records in JSON format from the Knack Builder</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> knackpy
-<span style="color:#f92672">&gt;&gt;&gt;</span> data <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>get(
-<span style="color:#f92672">...</span>     app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,
-<span style="color:#f92672">...</span>     api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>,
-<span style="color:#f92672">...</span>     obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,
-<span style="color:#f92672">...</span>     record_limit<span style="color:#f92672">=</span>None,
-<span style="color:#f92672">...</span>     timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">30</span>
-<span style="color:#f92672">...</span> )
-</code></pre></div><p>See the <a href="../api-reference/api/">API module documentation</a> for further detail.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># This is equivalent to exporting records in JSON format from the Knack Builder</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> knackpy
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> data <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>get(
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     obj<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_1&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     record_limit<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">30</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span> )
+</span></span></code></pre></div><p>See the <a href="../api-reference/api/">API module documentation</a> for further detail.</p>
 <h2 id="timestamps-and-localization">
   Timestamps and Localization
   <a class="anchor" href="#timestamps-and-localization">#</a>
 </h2>
 <p>Although the Knack API returns timestamp values as Unix timestamps in millesconds, these raw values represent millisecond timestamps <em>in your localized timezone</em>. For example a Knack timestamp value of <code>1578254700000</code> represents Sunday, January 5, 2020 8:05:00 PM <em>local time</em>.</p>
 <p>To address this, the <code>App</code> class converts Knack timestamps into <em>real</em> (UTC-based) unix timestamps. Timestamps are corrected by referencing the timezone info in your apps metadata. You can manually override your app&rsquo;s timezone information by passing an <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">IANA-compliant</a> timezone string to your <code>App</code> instance, like so:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,  api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>, tzinfo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;US/Eastern&#34;</span>)
-</code></pre></div><p>If you&rsquo;d like to access your raw, uncorrected records, they can be found at <code>App.data[&lt;container_name:str&gt;]</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,  api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>, tzinfo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;US/Eastern&#34;</span>)
+</span></span></code></pre></div><p>If you&rsquo;d like to access your raw, uncorrected records, they can be found at <code>App.data[&lt;container_name:str&gt;]</code>.</p>
 <p>Note also that <code>Record</code> objects return corrected timestamps via <code>Record.raw</code> and <code>Record.format()</code>. So,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,  api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>, tzinfo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;US/Eastern&#34;</span>)
-<span style="color:#75715e"># yields raw records with corrected millisecond timestamps</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> records_raw <span style="color:#f92672">=</span> [record<span style="color:#f92672">.</span>raw <span style="color:#66d9ef">for</span> record <span style="color:#f92672">in</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_3&#34;</span>)]
-<span style="color:#75715e"># yields corrected timestamps as ISO-8601 strings</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> records_formatted <span style="color:#f92672">=</span> [record<span style="color:#f92672">.</span>format() <span style="color:#66d9ef">for</span> record <span style="color:#f92672">in</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_3&#34;</span>)]
-</code></pre></div><h2 id="exceptions">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(app_id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>,  api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myverysecretapikey&#34;</span>, tzinfo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;US/Eastern&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># yields raw records with corrected millisecond timestamps</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> records_raw <span style="color:#f92672">=</span> [record<span style="color:#f92672">.</span>raw <span style="color:#66d9ef">for</span> record <span style="color:#f92672">in</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_3&#34;</span>)]
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># yields corrected timestamps as ISO-8601 strings</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> records_formatted <span style="color:#f92672">=</span> [record<span style="color:#f92672">.</span>format() <span style="color:#66d9ef">for</span> record <span style="color:#f92672">in</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_3&#34;</span>)]
+</span></span></code></pre></div><h2 id="exceptions">
   Exceptions
   <a class="anchor" href="#exceptions">#</a>
 </h2>
 <p>Knackpy uses Python&rsquo;s built-in exceptions, as well as Requests&rsquo;s <a href="https://requests.readthedocs.io/en/master/user/quickstart/#errors-and-exceptions">exceptions</a> when interacting with the Knack API.</p>
 <p>If you need to inspect an API exception (for example to see the text content of the response), you can access the <code>Response</code> object by handling the exception like so:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> requests
-<span style="color:#f92672">&gt;&gt;&gt;</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>)
-<span style="color:#75715e"># raises HTTPError. You cannot request object records without supplying an API key</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">try</span>:
-<span style="color:#f92672">...</span>       records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)
-<span style="color:#f92672">...</span> <span style="color:#66d9ef">except</span> requests<span style="color:#f92672">.</span>exceptions<span style="color:#f92672">.</span>HTTPError <span style="color:#66d9ef">as</span> e:
-<span style="color:#f92672">...</span>     <span style="color:#66d9ef">print</span>(e<span style="color:#f92672">.</span>response<span style="color:#f92672">.</span>text)
-<span style="color:#f92672">...</span>     <span style="color:#66d9ef">raise</span> e
-<span style="color:#75715e"># &#39;Unauthorized Object Access&#39;</span>
-</code></pre></div></article>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> app <span style="color:#f92672">=</span> knackpy<span style="color:#f92672">.</span>App(api_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;myappid&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># raises HTTPError. You cannot request object records without supplying an API key</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>       records <span style="color:#f92672">=</span> app<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;object_1&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span> <span style="color:#66d9ef">except</span> requests<span style="color:#f92672">.</span>exceptions<span style="color:#f92672">.</span>HTTPError <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     print(e<span style="color:#f92672">.</span>response<span style="color:#f92672">.</span>text)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>     <span style="color:#66d9ef">raise</span> e
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &#39;Unauthorized Object Access&#39;</span>
+</span></span></code></pre></div><hr>
+<h2 id="title-user-guide">
+  menu: main
+title: User Guide
+  <a class="anchor" href="#title-user-guide">#</a>
+</h2>
+</article>
  
       
 
@@ -593,6 +609,8 @@ will be written. Defaults to &ldquo;_downloads&rdquo;.</p>
     <li><a href="#accessing-the-api-directly">Accessing the API Directly</a></li>
     <li><a href="#timestamps-and-localization">Timestamps and Localization</a></li>
     <li><a href="#exceptions">Exceptions</a></li>
+    <li><a href="#title-user-guide">menu: main
+title: User Guide</a></li>
   </ul>
 </nav>
 
