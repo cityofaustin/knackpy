@@ -2,24 +2,26 @@
 <html lang="en" dir=>
 
 <head>
-  <meta name="generator" content="Hugo 0.74.1" />
+  <meta name="generator" content="Hugo 0.97.0" />
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Developer Guide #  Issues and pull requests are welcome. Know that your contributions are donated to the public domain.
 Environment Setup #  Python release candidates are tested against Python 3.6&#43;, so your safest bet when developing is to use v3.6. However, we encourage you to develop in the most current stable release of Python 3 so that you can help us identify potential future compatibility issues.
 Install the development environment requirements from requirements/dev.">
-<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="Developer Guide" />
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
 <meta property="og:description" content="Developer Guide #  Issues and pull requests are welcome. Know that your contributions are donated to the public domain.
 Environment Setup #  Python release candidates are tested against Python 3.6&#43;, so your safest bet when developing is to use v3.6. However, we encourage you to develop in the most current stable release of Python 3 so that you can help us identify potential future compatibility issues.
 Install the development environment requirements from requirements/dev." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/developer-guide/" />
+<meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/developer-guide/" /><meta property="article:section" content="docs" />
+
+
 
 <title>Developer Guide | Knackpy</title>
 <link rel="manifest" href="/knackpy/manifest.json">
 <link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
-<link rel="stylesheet" href="/knackpy/book.min.134b70e5316650a530cb42e4e8630b2a01d532bebfc0337028211175336e4806.css" integrity="sha256-E0tw5TFmUKUwy0Lk6GMLKgHVMr6/wDNwKCERdTNuSAY=">
-<script defer src="/knackpy/en.search.min.918334cf30e386ef49c8a26f51ed1e56c68d191b4678f3075af4baf1dece1fee.js" integrity="sha256-kYM0zzDjhu9JyKJvUe0eVsaNGRtGePMHWvS68d7OH&#43;4="></script>
+<link rel="stylesheet" href="/knackpy/book.min.bf064a71a8e587ec4bfe3f4ec7da33e2110269e1cd15b03e0a984aa16eeec2ab.css" integrity="sha256-vwZKcajlh&#43;xL/j9Ox9oz4hECaeHNFbA&#43;CphKoW7uwqs=">
+<script defer src="/knackpy/en.search.min.f02c68b749284000fba8fe6404e0e70d71cd1c4c084baaf281891dd8ccbcdcc2.js" integrity="sha256-8Cxot0koQAD7qP5kBODnDXHNHEwIS6rygYkd2My83MI="></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -181,7 +183,7 @@ https://github.com/alex-shpak/hugo-book
 
 
 
-  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+  <script>(function(){var e=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
 
 
  
@@ -213,7 +215,7 @@ https://github.com/alex-shpak/hugo-book
     <li><a href="#environment-setup">Environment Setup</a></li>
     <li><a href="#tests">Tests</a>
       <ul>
-        <li><a href="#knacky-development-knack-application">Knacky Development Knack Application</a></li>
+        <li><a href="#knackpy-development-knack-application">Knackpy Development Knack Application</a></li>
         <li><a href="#writing-tests">Writing Tests</a></li>
         <li><a href="#running-tests">Running Tests</a></li>
       </ul>
@@ -221,6 +223,9 @@ https://github.com/alex-shpak/hugo-book
     <li><a href="#linting-and-formatting">Linting and Formatting</a></li>
     <li><a href="#documentation">Documentation</a></li>
     <li><a href="#automated-tests-and-deployment">Automated Tests and Deployment</a></li>
+    <li><a href="#any-commitmerge-to-the-dev-branch-will-trigger-a-pypi-publication-to-the-knackpy-dev-package-any-release-on-the-master-branch-will-trigger-publication-to-the-knackpy-package-on-pypi-note-that-pypi-publications-will-fail-if-dont-bump-the-version-number-in-setuppy">Any commit/merge to the <code>dev</code> branch will trigger a PyPI publication to the <code>knackpy-dev</code> package. Any release on the <code>master</code> branch will trigger publication to the <code>knackpy</code> package on PyPI. Note that PyPI publications will fail if don&rsquo;t bump the version number in <code>setup.py</code>.</a></li>
+    <li><a href="#title-developer-guide">menu: main
+title: Developer Guide</a></li>
   </ul>
 </nav>
 
@@ -243,19 +248,19 @@ https://github.com/alex-shpak/hugo-book
 </h2>
 <p>Python release candidates are tested against Python 3.6+, so your safest bet when developing is to use v3.6. However, we encourage you to develop in the most current stable release of Python 3 so that you can help us identify potential future compatibility issues.</p>
 <p>Install the development environment requirements from <code>requirements/dev.txt</code>. This will install the test suite and documentation tooling.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pip install -r requirements/dev.txt
-</code></pre></div><p>Clone the Knackpy repo and create a new branch from the <code>dev</code> branch. Use the <code>-e</code> flag to install in development mode:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pip install -e knackpy
-</code></pre></div><h2 id="tests">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ pip install -r requirements/dev.txt
+</span></span></code></pre></div><p>Clone the Knackpy repo and create a new branch from the <code>dev</code> branch. Use the <code>-e</code> flag to install in development mode:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ pip install -e knackpy
+</span></span></code></pre></div><h2 id="tests">
   Tests
   <a class="anchor" href="#tests">#</a>
 </h2>
 <p>We test with <a href="docs.pytest.org/en/stable"><code>pytest</code></a>, <a href="coverage.readthedocs.io"><code>coverage</code></a>, and <a href="https://github.com/MobileDynasty/pytest-env"><code>pytest-env</code></a>.</p>
-<h3 id="knacky-development-knack-application">
-  Knacky Development Knack Application
-  <a class="anchor" href="#knacky-development-knack-application">#</a>
+<h3 id="knackpy-development-knack-application">
+  Knackpy Development Knack Application
+  <a class="anchor" href="#knackpy-development-knack-application">#</a>
 </h3>
-<p>Tests for <code>app.py</code> and <code>api.py</code> are dependendent on a City of Austin-owned Knack application which we rely on for over-the-wire API tests. If you work for the City of Austin Transportation Department, the credentials for this app are in our password store, and the app is called &ldquo;Knackpy Development&rdquo;.</p>
+<p>Tests for <code>app.py</code> and <code>api.py</code> are dependent on a City of Austin-owned Knack application which we rely on for over-the-wire API tests. If you work for the City of Austin Transportation Department, the credentials for this app are in our password store, and the app is called &ldquo;Knackpy Development&rdquo;.</p>
 <p>Any modifications you make to the Knackpy Development app may impact tests. You should carefully review our <code>tests/</code> before you modify <em>anything</em> in the development app.</p>
 <p>Some tests rely on static <code>json</code> data stored in the tests directory. After modifying the app, you must refresh the static data by replacing <code>tests/_metadata.json</code> with the most current app metadata, as well as <code>tests._all_fields.json</code> with records exported from the <code>all_fields</code> object in the Knack app.</p>
 <h3 id="writing-tests">
@@ -268,36 +273,44 @@ https://github.com/alex-shpak/hugo-book
   <a class="anchor" href="#running-tests">#</a>
 </h3>
 <p>You can run ad-hoc tests with:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ coverage run -m pytest -c path/to/your/tests
-</code></pre></div><p>Before you can run the entire test suite, you&rsquo;ll need to create a <code>pytest.ini</code> config with the appropriate environmental variables. You can model it after <a href="https://github.com/cityofaustin/knackpy/blob/dev/tests/pytest.ini_example">this example</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ coverage run -m pytest -c path/to/your/tests
+</span></span></code></pre></div><p>Before you can run the entire test suite, you&rsquo;ll need to create a <code>pytest.ini</code> config with the appropriate environmental variables. You can model it after <a href="https://github.com/cityofaustin/knackpy/blob/dev/tests/pytest.ini_example">this example</a>.</p>
 <p>To run the test suite from <code>pytest.ini</code>, use: <code>$ coverage run -m pytest -c tests/pytest.ini -x</code>.</p>
 <p>After running the tests, you can use <code>$ coverage html</code> to generate HTML documentation of code coverage.</p>
 <p>You can update the coverage badge image with:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$  coverage-badge -f -o coverage.svg
-</code></pre></div><h2 id="linting-and-formatting">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$  coverage-badge -f -o coverage.svg
+</span></span></code></pre></div><h2 id="linting-and-formatting">
   Linting and Formatting
   <a class="anchor" href="#linting-and-formatting">#</a>
 </h2>
 <p>We use<a href="https://black.readthedocs.io/en/stable/"><code>black</code></a> for formatting and <a href="https://flake8.pycqa.org/en/latest/"><code>flake8</code></a> for formatting and linting code.</p>
 <p>Use flake8&rsquo;s <code>--max-line-length</code> param so that the linter matches black&rsquo;s line length opinion:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ flake8 --max-line-length<span style="color:#f92672">=</span><span style="color:#ae81ff">88</span>
-</code></pre></div><h2 id="documentation">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ flake8 --max-line-length<span style="color:#f92672">=</span><span style="color:#ae81ff">88</span>
+</span></span></code></pre></div><h2 id="documentation">
   Documentation
   <a class="anchor" href="#documentation">#</a>
 </h2>
 <p>Use <a href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">Google docstring</a> format and <a href="https://docs.python.org/3/library/typing.html">type hints</a>.</p>
 <p>We use <a href="https://github.com/NiklasRosenstein/pydoc-markdown">pydoc-markdown</a> to generate the documentation HTML. You&rsquo;ll need to install <a href="https://gohugo.io/getting-started/quick-start/">Hugo</a> in order to build/serve the documentation site. See also the <a href="https://github.com/cityofaustin/knackpy/blob/dev/pydoc-markdown.yml"><code>pydoc-markdown.yml</code></a> config.</p>
 <p>Rebuild and commit the documentation HTML whenever you update module docstrings or the user guide.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># build html content</span>
-$ pydoc-markdown --build --site-dir docs
-<span style="color:#75715e"># or build and serve locally</span>
-$ pydoc-markdown --server
-</code></pre></div><h2 id="automated-tests-and-deployment">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># build html content</span>
+</span></span><span style="display:flex;"><span>$ pydoc-markdown --build --site-dir docs
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># or build and serve locally</span>
+</span></span><span style="display:flex;"><span>$ pydoc-markdown --server
+</span></span></code></pre></div><h2 id="automated-tests-and-deployment">
   Automated Tests and Deployment
   <a class="anchor" href="#automated-tests-and-deployment">#</a>
 </h2>
 <p>We use <a href="https://docs.github.com/en/actions">Github Actions</a> to test Knackpy builds and to publish to PyPI. The workflows are defined in <code>.github/workflows</code>.</p>
-<p>Any commit/merge to the <code>dev</code> branch will trigger a PyPI publication to the <code>knackpy-dev</code> package. Any release on the <code>master</code> branch will trigger publication to the <code>knackpy</code> package on PyPI. Note that PyPI publications will fail if don&rsquo;t bump the version number in <code>setup.py</code>.</p>
+<h2 id="any-commitmerge-to-the-dev-branch-will-trigger-a-pypi-publication-to-the-knackpy-dev-package-any-release-on-the-master-branch-will-trigger-publication-to-the-knackpy-package-on-pypi-note-that-pypi-publications-will-fail-if-dont-bump-the-version-number-in-setuppy">
+  Any commit/merge to the <code>dev</code> branch will trigger a PyPI publication to the <code>knackpy-dev</code> package. Any release on the <code>master</code> branch will trigger publication to the <code>knackpy</code> package on PyPI. Note that PyPI publications will fail if don&rsquo;t bump the version number in <code>setup.py</code>.
+  <a class="anchor" href="#any-commitmerge-to-the-dev-branch-will-trigger-a-pypi-publication-to-the-knackpy-dev-package-any-release-on-the-master-branch-will-trigger-publication-to-the-knackpy-package-on-pypi-note-that-pypi-publications-will-fail-if-dont-bump-the-version-number-in-setuppy">#</a>
+</h2>
+<h2 id="title-developer-guide">
+  menu: main
+title: Developer Guide
+  <a class="anchor" href="#title-developer-guide">#</a>
+</h2>
 </article>
  
       
@@ -335,7 +348,7 @@ $ pydoc-markdown --server
     <li><a href="#environment-setup">Environment Setup</a></li>
     <li><a href="#tests">Tests</a>
       <ul>
-        <li><a href="#knacky-development-knack-application">Knacky Development Knack Application</a></li>
+        <li><a href="#knackpy-development-knack-application">Knackpy Development Knack Application</a></li>
         <li><a href="#writing-tests">Writing Tests</a></li>
         <li><a href="#running-tests">Running Tests</a></li>
       </ul>
@@ -343,6 +356,9 @@ $ pydoc-markdown --server
     <li><a href="#linting-and-formatting">Linting and Formatting</a></li>
     <li><a href="#documentation">Documentation</a></li>
     <li><a href="#automated-tests-and-deployment">Automated Tests and Deployment</a></li>
+    <li><a href="#any-commitmerge-to-the-dev-branch-will-trigger-a-pypi-publication-to-the-knackpy-dev-package-any-release-on-the-master-branch-will-trigger-publication-to-the-knackpy-package-on-pypi-note-that-pypi-publications-will-fail-if-dont-bump-the-version-number-in-setuppy">Any commit/merge to the <code>dev</code> branch will trigger a PyPI publication to the <code>knackpy-dev</code> package. Any release on the <code>master</code> branch will trigger publication to the <code>knackpy</code> package on PyPI. Note that PyPI publications will fail if don&rsquo;t bump the version number in <code>setup.py</code>.</a></li>
+    <li><a href="#title-developer-guide">menu: main
+title: Developer Guide</a></li>
   </ul>
 </nav>
 

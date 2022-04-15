@@ -5,13 +5,9 @@
     <link>https://cityofaustin.github.io/knackpy/docs/</link>
     <description>Recent content in Docs on Knackpy</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    
-	<atom:link href="https://cityofaustin.github.io/knackpy/docs/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <language>en-us</language><atom:link href="https://cityofaustin.github.io/knackpy/docs/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Developer Guide</title>
+      <title></title>
       <link>https://cityofaustin.github.io/knackpy/docs/developer-guide/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -22,14 +18,14 @@ Install the development environment requirements from requirements/dev.</descrip
     </item>
     
     <item>
-      <title>User Guide</title>
+      <title></title>
       <link>https://cityofaustin.github.io/knackpy/docs/user-guide/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://cityofaustin.github.io/knackpy/docs/user-guide/</guid>
       <description>Knackpy #  Knackpy is a Python client for interacting with Knack applications.
 Here&amp;rsquo;s the complete documentation.
-Installation #  $ pip install knackpy Quick Start #  &amp;gt;&amp;gt;&amp;gt; import knackpy # basic app construction &amp;gt;&amp;gt;&amp;gt; app = knackpy.App(app_id=&amp;#34;myappid&amp;#34;, api_key=&amp;#34;myverysecretapikey&amp;#34;) # fetch all records from &amp;#39;object_1&amp;#39; &amp;gt;&amp;gt;&amp;gt; records = app.get(&amp;#34;object_1&amp;#34;) # get the formatted keys/values of each record &amp;gt;&amp;gt;&amp;gt; records_formatted = [record.format() for record in records] # access a record property by name &amp;gt;&amp;gt;&amp;gt; customer_address = records[0][&amp;#34;Customer Address&amp;#34;] # create a record &amp;gt;&amp;gt;&amp;gt; data = {&amp;#34;field_1&amp;#34;: &amp;#34;pizza&amp;#34;} &amp;gt;&amp;gt;&amp;gt; record = app.</description>
+Installation #  $ pip install knackpy Quick Start #  &amp;gt;&amp;gt;&amp;gt; import knackpy  # basic app construction &amp;gt;&amp;gt;&amp;gt; app = knackpy.App(app_id=&amp;#34;myappid&amp;#34;, api_key=&amp;#34;myverysecretapikey&amp;#34;)  # fetch all records from &amp;#39;object_1&amp;#39; &amp;gt;&amp;gt;&amp;gt; records = app.get(&amp;#34;object_1&amp;#34;)  # get the formatted keys/values of each record &amp;gt;&amp;gt;&amp;gt; records_formatted = [record.format() for record in records]  # access a record property by name &amp;gt;&amp;gt;&amp;gt; customer_address = records[0][&amp;#34;Customer Address&amp;#34;]  # create a record &amp;gt;&amp;gt;&amp;gt; data = {&amp;#34;field_1&amp;#34;: &amp;#34;pizza&amp;#34;} &amp;gt;&amp;gt;&amp;gt; record = app.</description>
     </item>
     
   </channel>

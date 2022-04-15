@@ -1,38 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home on Knackpy</title>
+    <title>Knackpy</title>
     <link>https://cityofaustin.github.io/knackpy/</link>
-    <description>Recent content in Home on Knackpy</description>
+    <description>Recent content on Knackpy</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    
-	<atom:link href="https://cityofaustin.github.io/knackpy/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <language>en-us</language><atom:link href="https://cityofaustin.github.io/knackpy/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>API</title>
-      <link>https://cityofaustin.github.io/knackpy/docs/api-reference/api/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://cityofaustin.github.io/knackpy/docs/api-reference/api/</guid>
-      <description>knackpy.api #  get #  get(*, app_id: str, api_key: str = None, slug: str = None, obj: str = None, scene: str = None, view: str = None, record_limit: int = None, filters: dict = None, max_attempts: int = 5, timeout: int = 30) -&amp;gt; [list, requests.Response] Get records from a knack object or view. This is the raw stuff with incorrect timestamps!
-Arguments:
- app_id str - [description] api_key str, optional - [description].</description>
-    </item>
-    
-    <item>
-      <title>App</title>
-      <link>https://cityofaustin.github.io/knackpy/docs/api-reference/app/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://cityofaustin.github.io/knackpy/docs/api-reference/app/</guid>
-      <description>knackpy.app #  App Objects #  class App() Knackpy is designed around the App class. It provides helpers for querying and manipulating Knack application data. You should use the App class because:
- It allows you to query obejcts and views by key or name It takes care of localization issues # noqa:E501 It let&amp;rsquo;s you download and upload files from your app. It does other things, too.  Arguments:</description>
-    </item>
-    
-    <item>
-      <title>Developer Guide</title>
+      <title></title>
       <link>https://cityofaustin.github.io/knackpy/docs/developer-guide/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -43,12 +18,46 @@ Install the development environment requirements from requirements/dev.</descrip
     </item>
     
     <item>
+      <title></title>
+      <link>https://cityofaustin.github.io/knackpy/docs/user-guide/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://cityofaustin.github.io/knackpy/docs/user-guide/</guid>
+      <description>Knackpy #  Knackpy is a Python client for interacting with Knack applications.
+Here&amp;rsquo;s the complete documentation.
+Installation #  $ pip install knackpy Quick Start #  &amp;gt;&amp;gt;&amp;gt; import knackpy  # basic app construction &amp;gt;&amp;gt;&amp;gt; app = knackpy.App(app_id=&amp;#34;myappid&amp;#34;, api_key=&amp;#34;myverysecretapikey&amp;#34;)  # fetch all records from &amp;#39;object_1&amp;#39; &amp;gt;&amp;gt;&amp;gt; records = app.get(&amp;#34;object_1&amp;#34;)  # get the formatted keys/values of each record &amp;gt;&amp;gt;&amp;gt; records_formatted = [record.format() for record in records]  # access a record property by name &amp;gt;&amp;gt;&amp;gt; customer_address = records[0][&amp;#34;Customer Address&amp;#34;]  # create a record &amp;gt;&amp;gt;&amp;gt; data = {&amp;#34;field_1&amp;#34;: &amp;#34;pizza&amp;#34;} &amp;gt;&amp;gt;&amp;gt; record = app.</description>
+    </item>
+    
+    <item>
+      <title>API</title>
+      <link>https://cityofaustin.github.io/knackpy/docs/api-reference/api/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://cityofaustin.github.io/knackpy/docs/api-reference/api/</guid>
+      <description>knackpy.api #  
+get #  def get(*,  app_id: str,  api_key: str = None,  slug: str = None,  obj: str = None,  scene: str = None,  view: str = None,  record_limit: int = None,  filters: dict = None,  max_attempts: int = 5,  timeout: int = 30) -&amp;gt; [list, requests.Response] Get records from a knack object or view. This is the raw stuff with incorrect timestamps!</description>
+    </item>
+    
+    <item>
+      <title>App</title>
+      <link>https://cityofaustin.github.io/knackpy/docs/api-reference/app/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://cityofaustin.github.io/knackpy/docs/api-reference/app/</guid>
+      <description>knackpy.app #  
+App Objects #  class App() Knackpy is designed around the App class. It provides helpers for querying and manipulating Knack application data. You should use the App class because:
+ It allows you to query obejcts and views by key or name It takes care of localization issues # noqa:E501 It let&amp;rsquo;s you download and upload files from your app. It does other things, too.</description>
+    </item>
+    
+    <item>
       <title>Fields</title>
       <link>https://cityofaustin.github.io/knackpy/docs/api-reference/fields/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://cityofaustin.github.io/knackpy/docs/api-reference/fields/</guid>
-      <description>knackpy.fields #  FieldDef Objects #  class FieldDef() Knack field defintion wrapper
+      <description>knackpy.fields #  
+FieldDef Objects #  class FieldDef() Knack field defintion wrapper
+
 Field Objects #  class Field(object) A container for a single column of Knack data. This is the lowest-level container in the API. The hieracrchy being: App &amp;gt; Records &amp;gt; Record &amp;gt; Field. Typically you would not construct this class directly, but instead an App, which will generate Fields via App.records().
 More specifically, the API is designed so that you would typically interface with a Field instance through the records.</description>
     </item>
@@ -59,21 +68,12 @@ More specifically, the API is designed so that you would typically interface wit
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://cityofaustin.github.io/knackpy/docs/api-reference/record/</guid>
-      <description>knackpy.record #  Record Objects #  class Record(MutableMapping) A dict-like object for storing record data.
-__init__ #  | __init__(data, field_defs, identifier, timezone) A bunch of side effects happen on initialization:
+      <description>knackpy.record #  
+Record Objects #  class Record(MutableMapping) A dict-like object for storing record data.
+
+__init__ #  def __init__(data, field_defs, identifier, timezone) A bunch of side effects happen on initialization:
  timestamps are corrected Field classes are constructed for each key/value in the record the Record is set to immutable, preventing further updates to record values via __setitem__.  Arguments:
  data dict - A single Knack record, such as what is returned from the Knack API or via JSON download in the Knack builder.</description>
-    </item>
-    
-    <item>
-      <title>User Guide</title>
-      <link>https://cityofaustin.github.io/knackpy/docs/user-guide/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://cityofaustin.github.io/knackpy/docs/user-guide/</guid>
-      <description>Knackpy #  Knackpy is a Python client for interacting with Knack applications.
-Here&amp;rsquo;s the complete documentation.
-Installation #  $ pip install knackpy Quick Start #  &amp;gt;&amp;gt;&amp;gt; import knackpy # basic app construction &amp;gt;&amp;gt;&amp;gt; app = knackpy.App(app_id=&amp;#34;myappid&amp;#34;, api_key=&amp;#34;myverysecretapikey&amp;#34;) # fetch all records from &amp;#39;object_1&amp;#39; &amp;gt;&amp;gt;&amp;gt; records = app.get(&amp;#34;object_1&amp;#34;) # get the formatted keys/values of each record &amp;gt;&amp;gt;&amp;gt; records_formatted = [record.format() for record in records] # access a record property by name &amp;gt;&amp;gt;&amp;gt; customer_address = records[0][&amp;#34;Customer Address&amp;#34;] # create a record &amp;gt;&amp;gt;&amp;gt; data = {&amp;#34;field_1&amp;#34;: &amp;#34;pizza&amp;#34;} &amp;gt;&amp;gt;&amp;gt; record = app.</description>
     </item>
     
   </channel>
