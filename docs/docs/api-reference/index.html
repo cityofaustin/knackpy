@@ -2,12 +2,12 @@
 <html lang="en" dir=>
 
 <head>
-  <meta name="generator" content="Hugo 0.74.1" />
+  <meta name="generator" content="Hugo 0.97.0" />
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Knackpy API Reference #  To understand knackpy&rsquo;s design, it&rsquo;s helpful to think of it in terms of two entry points:
  Api: Contains core functions for over-the-wire interactions with the Knack API, as well as helpers for pagination and re-trying on request failures. App: The highest-level container for getting and interacting with Knack records.  The other the knackpy classes act as a hierarchy that are constructed through a chain of side-effects originating from App objects.">
-<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="API Reference" />
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/api-reference/" />
@@ -15,8 +15,8 @@
 <title>API Reference | Knackpy</title>
 <link rel="manifest" href="/knackpy/manifest.json">
 <link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
-<link rel="stylesheet" href="/knackpy/book.min.134b70e5316650a530cb42e4e8630b2a01d532bebfc0337028211175336e4806.css" integrity="sha256-E0tw5TFmUKUwy0Lk6GMLKgHVMr6/wDNwKCERdTNuSAY=">
-<script defer src="/knackpy/en.search.min.918334cf30e386ef49c8a26f51ed1e56c68d191b4678f3075af4baf1dece1fee.js" integrity="sha256-kYM0zzDjhu9JyKJvUe0eVsaNGRtGePMHWvS68d7OH&#43;4="></script>
+<link rel="stylesheet" href="/knackpy/book.min.bf064a71a8e587ec4bfe3f4ec7da33e2110269e1cd15b03e0a984aa16eeec2ab.css" integrity="sha256-vwZKcajlh&#43;xL/j9Ox9oz4hECaeHNFbA&#43;CphKoW7uwqs=">
+<script defer src="/knackpy/en.search.min.f02c68b749284000fba8fe6404e0e70d71cd1c4c084baaf281891dd8ccbcdcc2.js" integrity="sha256-8Cxot0koQAD7qP5kBODnDXHNHEwIS6rygYkd2My83MI="></script>
 <link rel="alternate" type="application/rss+xml" href="https://cityofaustin.github.io/knackpy/docs/api-reference/index.xml" title="Knackpy" />
 <!--
 Made with Book Theme
@@ -179,7 +179,7 @@ https://github.com/alex-shpak/hugo-book
 
 
 
-  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+  <script>(function(){var e=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
 
 
  
@@ -206,7 +206,12 @@ https://github.com/alex-shpak/hugo-book
   
   <aside class="hidden clearfix">
     
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#title-api-reference">menu: main
+title: API Reference</a></li>
+  </ul>
+</nav>
 
 
   </aside>
@@ -231,6 +236,12 @@ https://github.com/alex-shpak/hugo-book
 <li><a href="./fields#field-objects"><code>Field</code></a>: A container for a single Knack key/value, with helpers for formatting.</li>
 <li><a href="./fields#fielddef-objects"><code>FieldDef</code></a>: Stores field metadata (type, formatting method, parent objects/views)</li>
 </ul>
+<hr>
+<h2 id="title-api-reference">
+  menu: main
+title: API Reference
+  <a class="anchor" href="#title-api-reference">#</a>
+</h2>
 </article>
  
       
@@ -263,7 +274,12 @@ https://github.com/alex-shpak/hugo-book
     
     <aside class="book-toc">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#title-api-reference">menu: main
+title: API Reference</a></li>
+  </ul>
+</nav>
 
  
     </aside>

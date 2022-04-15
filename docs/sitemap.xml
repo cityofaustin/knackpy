@@ -1,49 +1,28 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
-  <url>
-    <loc>https://cityofaustin.github.io/knackpy/docs/api-reference/api/</loc>
-  </url>
-  
-  <url>
-    <loc>https://cityofaustin.github.io/knackpy/docs/api-reference/</loc>
-  </url>
-  
-  <url>
-    <loc>https://cityofaustin.github.io/knackpy/docs/api-reference/app/</loc>
-  </url>
-  
-  <url>
-    <loc>https://cityofaustin.github.io/knackpy/categories/</loc>
-  </url>
-  
-  <url>
-    <loc>https://cityofaustin.github.io/knackpy/docs/developer-guide/</loc>
-  </url>
-  
-  <url>
-    <loc>https://cityofaustin.github.io/knackpy/docs/</loc>
-  </url>
-  
-  <url>
-    <loc>https://cityofaustin.github.io/knackpy/docs/api-reference/fields/</loc>
-  </url>
-  
   <url>
     <loc>https://cityofaustin.github.io/knackpy/</loc>
-  </url>
-  
-  <url>
+    <priority>0</priority>
+  </url><url>
+    <loc>https://cityofaustin.github.io/knackpy/docs/api-reference/</loc>
+  </url><url>
+    <loc>https://cityofaustin.github.io/knackpy/docs/developer-guide/</loc>
+  </url><url>
+    <loc>https://cityofaustin.github.io/knackpy/docs/user-guide/</loc>
+  </url><url>
+    <loc>https://cityofaustin.github.io/knackpy/docs/api-reference/api/</loc>
+  </url><url>
+    <loc>https://cityofaustin.github.io/knackpy/docs/api-reference/app/</loc>
+  </url><url>
+    <loc>https://cityofaustin.github.io/knackpy/categories/</loc>
+  </url><url>
+    <loc>https://cityofaustin.github.io/knackpy/docs/</loc>
+  </url><url>
+    <loc>https://cityofaustin.github.io/knackpy/docs/api-reference/fields/</loc>
+  </url><url>
     <loc>https://cityofaustin.github.io/knackpy/docs/api-reference/record/</loc>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://cityofaustin.github.io/knackpy/tags/</loc>
   </url>
-  
-  <url>
-    <loc>https://cityofaustin.github.io/knackpy/docs/user-guide/</loc>
-  </url>
-  
 </urlset>

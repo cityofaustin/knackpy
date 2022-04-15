@@ -2,24 +2,24 @@
 <html lang="en" dir=>
 
 <head>
-  <meta name="generator" content="Hugo 0.74.1" />
+  <meta name="generator" content="Hugo 0.97.0" />
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="knackpy.api #  get #  get(*, app_id: str, api_key: str = None, slug: str = None, obj: str = None, scene: str = None, view: str = None, record_limit: int = None, filters: dict = None, max_attempts: int = 5, timeout: int = 30) -&gt; [list, requests.Response] Get records from a knack object or view. This is the raw stuff with incorrect timestamps!
-Arguments:
- app_id str - [description] api_key str, optional - [description].">
+<meta name="description" content="knackpy.api #  
+get #  def get(*,  app_id: str,  api_key: str = None,  slug: str = None,  obj: str = None,  scene: str = None,  view: str = None,  record_limit: int = None,  filters: dict = None,  max_attempts: int = 5,  timeout: int = 30) -&gt; [list, requests.Response] Get records from a knack object or view. This is the raw stuff with incorrect timestamps!">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="API" />
-<meta property="og:description" content="knackpy.api #  get #  get(*, app_id: str, api_key: str = None, slug: str = None, obj: str = None, scene: str = None, view: str = None, record_limit: int = None, filters: dict = None, max_attempts: int = 5, timeout: int = 30) -&gt; [list, requests.Response] Get records from a knack object or view. This is the raw stuff with incorrect timestamps!
-Arguments:
- app_id str - [description] api_key str, optional - [description]." />
+<meta property="og:description" content="knackpy.api #  
+get #  def get(*,  app_id: str,  api_key: str = None,  slug: str = None,  obj: str = None,  scene: str = None,  view: str = None,  record_limit: int = None,  filters: dict = None,  max_attempts: int = 5,  timeout: int = 30) -&gt; [list, requests.Response] Get records from a knack object or view. This is the raw stuff with incorrect timestamps!" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/api-reference/api/" />
+<meta property="og:url" content="https://cityofaustin.github.io/knackpy/docs/api-reference/api/" /><meta property="article:section" content="docs" />
+
+
 
 <title>API | Knackpy</title>
 <link rel="manifest" href="/knackpy/manifest.json">
 <link rel="icon" href="/knackpy/favicon.png" type="image/x-icon">
-<link rel="stylesheet" href="/knackpy/book.min.134b70e5316650a530cb42e4e8630b2a01d532bebfc0337028211175336e4806.css" integrity="sha256-E0tw5TFmUKUwy0Lk6GMLKgHVMr6/wDNwKCERdTNuSAY=">
-<script defer src="/knackpy/en.search.min.918334cf30e386ef49c8a26f51ed1e56c68d191b4678f3075af4baf1dece1fee.js" integrity="sha256-kYM0zzDjhu9JyKJvUe0eVsaNGRtGePMHWvS68d7OH&#43;4="></script>
+<link rel="stylesheet" href="/knackpy/book.min.bf064a71a8e587ec4bfe3f4ec7da33e2110269e1cd15b03e0a984aa16eeec2ab.css" integrity="sha256-vwZKcajlh&#43;xL/j9Ox9oz4hECaeHNFbA&#43;CphKoW7uwqs=">
+<script defer src="/knackpy/en.search.min.f02c68b749284000fba8fe6404e0e70d71cd1c4c084baaf281891dd8ccbcdcc2.js" integrity="sha256-8Cxot0koQAD7qP5kBODnDXHNHEwIS6rygYkd2My83MI="></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -181,7 +181,7 @@ https://github.com/alex-shpak/hugo-book
 
 
 
-  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+  <script>(function(){var e=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
 
 
  
@@ -226,18 +226,28 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+  <article class="markdown"><p><a id="knackpy.api"></a></p>
 <h1 id="knackpyapi">
   knackpy.api
   <a class="anchor" href="#knackpyapi">#</a>
 </h1>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><a id="knackpy.api.get"></a></p>
 <h4 id="get">
   get
   <a class="anchor" href="#get">#</a>
 </h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">get(<span style="color:#f92672">*</span>, app_id: str, api_key: str <span style="color:#f92672">=</span> None, slug: str <span style="color:#f92672">=</span> None, obj: str <span style="color:#f92672">=</span> None, scene: str <span style="color:#f92672">=</span> None, view: str <span style="color:#f92672">=</span> None, record_limit: int <span style="color:#f92672">=</span> None, filters: dict <span style="color:#f92672">=</span> None, max_attempts: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>, timeout: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>) <span style="color:#f92672">-&gt;</span> [list, requests<span style="color:#f92672">.</span>Response]
-</code></pre></div><p>Get records from a knack object or view. This is the raw stuff with
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get</span>(<span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>        app_id: str,
+</span></span><span style="display:flex;"><span>        api_key: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>        slug: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>        obj: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>        scene: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>        view: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>        record_limit: int <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>        filters: dict <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>        max_attempts: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>,
+</span></span><span style="display:flex;"><span>        timeout: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>) <span style="color:#f92672">-&gt;</span> [list, requests<span style="color:#f92672">.</span>Response]
+</span></span></code></pre></div><p>Get records from a knack object or view. This is the raw stuff with
 incorrect timestamps!</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -259,13 +269,17 @@ to None.</li>
 <ul>
 <li><code>list</code> - Knack records.</li>
 </ul>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><a id="knackpy.api.get_metadata"></a></p>
 <h4 id="get_metadata">
   get_metadata
   <a class="anchor" href="#get_metadata">#</a>
 </h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">get_metadata(<span style="color:#f92672">*</span>, app_id: str, slug: str <span style="color:#f92672">=</span> None, timeout: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>) <span style="color:#f92672">-&gt;</span> dict
-</code></pre></div><p>Fetch Knack application metadata. You can find your app&rsquo;s metadata at:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_metadata</span>(<span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>                 app_id: str,
+</span></span><span style="display:flex;"><span>                 slug: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>                 timeout: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>,
+</span></span><span style="display:flex;"><span>                 max_attempts: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>) <span style="color:#f92672">-&gt;</span> dict
+</span></span></code></pre></div><p>Fetch Knack application metadata. You can find your app&rsquo;s metadata at:
 <code>https://api.knack.com/v1/applications/&lt;app_id:str&gt;</code>.</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -277,13 +291,21 @@ your app metadata under accounts/slug.</li>
 <ul>
 <li><code>dict</code> - A dictionary of Knack application metadata.</li>
 </ul>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><a id="knackpy.api.record"></a></p>
 <h4 id="record">
   record
   <a class="anchor" href="#record">#</a>
 </h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">record(<span style="color:#f92672">*</span>, app_id: str, api_key: str, data: dict, method: str, obj: str, slug: str <span style="color:#f92672">=</span> None, max_attempts: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>, timeout: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>)
-</code></pre></div><p>Create, update, or delete a Knack record.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">record</span>(<span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>           app_id: str,
+</span></span><span style="display:flex;"><span>           api_key: str,
+</span></span><span style="display:flex;"><span>           data: dict,
+</span></span><span style="display:flex;"><span>           method: str,
+</span></span><span style="display:flex;"><span>           obj: str,
+</span></span><span style="display:flex;"><span>           slug: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>           max_attempts: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>,
+</span></span><span style="display:flex;"><span>           timeout: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>)
+</span></span></code></pre></div><p>Create, update, or delete a Knack record.</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>app_id</code> <em>str</em> - Knack <a href="https://www.knack.com/developer-documentation/%60find%60-your-api-key-amp-application-id">application ID</a>  # noqa:E501
@@ -302,15 +324,26 @@ times out. Further reading:
 </ul>
 <p><strong>Returns</strong>:</p>
 <ul>
-<li><code>dict</code> - The updated or newly created Knack record data, or, if deleting a record: <code>{&quot;delete&quot;: true}</code></li>
+<li><code>dict</code> - The updated or newly created Knack record data, or, if deleting a</li>
+<li><code>record</code> - <code>{&quot;delete&quot;: true}</code></li>
 </ul>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><a id="knackpy.api.upload"></a></p>
 <h4 id="upload">
   upload
   <a class="anchor" href="#upload">#</a>
 </h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">upload(<span style="color:#f92672">*</span>, app_id: str, api_key: str, obj: str, field: str, path: str, asset_type: str, record_id: str <span style="color:#f92672">=</span> None, slug: str <span style="color:#f92672">=</span> None, max_attempts: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>, timeout: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>)
-</code></pre></div><p>Upload a file or image to Knack. This is a two-step process:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">upload</span>(<span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>           app_id: str,
+</span></span><span style="display:flex;"><span>           api_key: str,
+</span></span><span style="display:flex;"><span>           obj: str,
+</span></span><span style="display:flex;"><span>           field: str,
+</span></span><span style="display:flex;"><span>           path: str,
+</span></span><span style="display:flex;"><span>           asset_type: str,
+</span></span><span style="display:flex;"><span>           record_id: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>           slug: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>,
+</span></span><span style="display:flex;"><span>           max_attempts: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>,
+</span></span><span style="display:flex;"><span>           timeout: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>)
+</span></span></code></pre></div><p>Upload a file or image to Knack. This is a two-step process:</p>
 <ol>
 <li>Upload file asset to Knack storage</li>
 <li>Create/update a record that links to the file in storage</li>
@@ -320,7 +353,7 @@ times out. Further reading:
 <ul>
 <li><code>app_id</code> <em>str</em> - Knack <a href="https://www.knack.com/developer-documentation/%60find%60-your-api-key-amp-application-id">application ID</a>  # noqa:E501
 string.</li>
-<li><code>api_key</code> <em>str</em> - <a href="https://www.knack.com/developer-documentation/%60find%60-your-api-key-amp-application-id">Knack API key</a>.</li>
+<li><code>api_key</code> <em>str</em> - <a href="https://www.knack.com/developer-documentation/%60find%60-your-api-key-amp-application-id">Knack API key</a>.  # noqa:E501</li>
 <li><code>obj</code> <em>str</em> - The Knack object key which holds the record data.</li>
 <li><code>field</code> <em>str</em> - The knack field key of the field you&rsquo;re uploading into.</li>
 <li><code>path</code> <em>str</em> - The path to the file to be uploaded.</li>
